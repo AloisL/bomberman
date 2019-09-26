@@ -3,7 +3,6 @@ package view;
 import model.Game;
 
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
@@ -27,6 +26,7 @@ public class ViewSimpleGame extends SwingWorker<String, Object> implements Obser
         Point centerPoint = ge.getCenterPoint();
         int dx = centerPoint.x - windowSize.width / 2;
         int dy = centerPoint.y - (windowSize.height / 2) - 350;
+
         jFrame.setLocation(dx, dy);
 
         turnDisplay = new JLabel("");
@@ -41,16 +41,15 @@ public class ViewSimpleGame extends SwingWorker<String, Object> implements Obser
     public void update(Observable observable, Object o) {
         Game game = (Game) observable;
         turn = game.getTurn();
-        System.out.println("test");
+        display();
+    }
+
+    private void display() {
+        turnDisplay.setText(turn.toString());
     }
 
     @Override
-    protected String doInBackground() throws Exception {
-        display();
+    protected String doInBackground() {
         return null;
-    }
-
-    private void display()    {
-        turnDisplay.setText("test" + turn.toString());
     }
 }

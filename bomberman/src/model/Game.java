@@ -1,12 +1,8 @@
 package model;
 
-import view.ViewCommand;
-import view.ViewSimpleGame;
-
-import javax.swing.text.View;
 import java.util.Observable;
 
-public abstract class Game extends Observable implements Runnable{
+public abstract class Game extends Observable implements Runnable {
 
     protected Integer turn;
     protected Integer maxturn;
@@ -24,12 +20,13 @@ public abstract class Game extends Observable implements Runnable{
         turn = 0;
         isRunning = Boolean.TRUE;
         initializeGame();
+        setChanged();
         notifyObservers();
     }
 
     @Override
     public void run() {
-        while (isRunning) {
+        while (isRunning.booleanValue()) {
             step();
             try {
                 Thread.sleep(sleepTime);
@@ -47,19 +44,16 @@ public abstract class Game extends Observable implements Runnable{
             isRunning = Boolean.FALSE;
             gameOver();
         }
+        setChanged();
         notifyObservers();
     }
 
     public void stop() {
         isRunning = Boolean.FALSE;
+        setChanged();
         notifyObservers();
     }
 
-    public void launch()    {
-        isRunning = Boolean.FALSE;
-        thread = new Thread(this);
-        thread.start();
-    }
 
     public abstract void initializeGame();
 
@@ -77,11 +71,11 @@ public abstract class Game extends Observable implements Runnable{
         return maxturn;
     }
 
-    public Boolean getIsRunning()   {
+    public Boolean getIsRunning() {
         return isRunning;
     }
 
-    public Long getSleepTime()  {
+    public Long getSleepTime() {
         return sleepTime;
     }
 }
