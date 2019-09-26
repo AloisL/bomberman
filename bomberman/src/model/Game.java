@@ -1,6 +1,12 @@
-package seance1;
+package model;
 
-public abstract class Game implements Runnable {
+import view.ViewCommand;
+import view.ViewSimpleGame;
+
+import javax.swing.text.View;
+import java.util.Observable;
+
+public abstract class Game extends Observable implements Runnable{
 
     protected Integer turn;
     protected Integer maxturn;
@@ -18,6 +24,7 @@ public abstract class Game implements Runnable {
         turn = 0;
         isRunning = Boolean.TRUE;
         initializeGame();
+        notifyObservers();
     }
 
     @Override
@@ -40,10 +47,12 @@ public abstract class Game implements Runnable {
             isRunning = Boolean.FALSE;
             gameOver();
         }
+        notifyObservers();
     }
 
     public void stop() {
         isRunning = Boolean.FALSE;
+        notifyObservers();
     }
 
     public void launch()    {
@@ -60,4 +69,19 @@ public abstract class Game implements Runnable {
 
     public abstract boolean gameContinue();
 
+    public Integer getTurn() {
+        return turn;
+    }
+
+    public Integer getMaxturn() {
+        return maxturn;
+    }
+
+    public Boolean getIsRunning()   {
+        return isRunning;
+    }
+
+    public Long getSleepTime()  {
+        return sleepTime;
+    }
 }

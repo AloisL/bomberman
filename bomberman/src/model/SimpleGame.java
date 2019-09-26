@@ -1,4 +1,4 @@
-package seance1;
+package model;
 
 public class SimpleGame extends Game {
 
