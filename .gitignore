@@ -1,0 +1,8 @@
+*.iml
+out/
+.idea/
+META-INF/
+.classpath
+.project
+.settings
+.factorypath)
