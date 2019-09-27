@@ -9,19 +9,17 @@ public class SimpleGame extends Game {
     @Override
     public void initializeGame() {
         System.out.println("Le jeu est initialisé !");
-
     }
 
     @Override
     public void takeTurn() {
-        System.out.println("Tour " + this.turn + " du jeu en cours");
-
+        System.out.println("Tour " + getTurn() + " du jeu en cours");
     }
 
     @Override
     public void gameOver() {
         System.out.println("Le jeu est fini");
-
+        Thread.currentThread().interrupt();
     }
 
     @Override

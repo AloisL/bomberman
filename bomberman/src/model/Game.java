@@ -1,19 +1,15 @@
 package model;
 
-import view.ViewCommand;
-import view.ViewSimpleGame;
-
-import javax.swing.text.View;
 import java.util.Observable;
 
-public abstract class Game extends Observable implements Runnable{
+public abstract class Game extends Observable implements Runnable {
+    private Integer turn;
+    private Integer maxturn;
+    private Boolean isRunning = Boolean.FALSE;
 
-    protected Integer turn;
-    protected Integer maxturn;
-    protected Boolean isRunning;
+    private Thread thread;
 
-    protected Thread thread;
-    protected Long sleepTime;
+    private Long sleepTime;
 
     public Game(Integer maxturn, Long sleepTime) {
         this.maxturn = maxturn;
@@ -22,8 +18,8 @@ public abstract class Game extends Observable implements Runnable{
 
     public void init() {
         turn = 0;
-        isRunning = Boolean.TRUE;
         initializeGame();
+        setChanged();
         notifyObservers();
     }
 
@@ -32,7 +28,8 @@ public abstract class Game extends Observable implements Runnable{
         while (isRunning) {
             step();
             try {
-                Thread.sleep(sleepTime);
+                if (!Thread.currentThread().isInterrupted())
+                    Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -47,16 +44,20 @@ public abstract class Game extends Observable implements Runnable{
             isRunning = Boolean.FALSE;
             gameOver();
         }
+        setChanged();
         notifyObservers();
     }
 
     public void stop() {
         isRunning = Boolean.FALSE;
+        setChanged();
         notifyObservers();
     }
 
-    public void launch()    {
-        isRunning = Boolean.FALSE;
+    public void launch() {
+        isRunning = Boolean.TRUE;
+        setChanged();
+        notifyObservers();
         thread = new Thread(this);
         thread.start();
     }
@@ -73,15 +74,11 @@ public abstract class Game extends Observable implements Runnable{
         return turn;
     }
 
-    public Integer getMaxturn() {
-        return maxturn;
+    public void setSleepTime(Long sleepTime) {
+        this.sleepTime = sleepTime;
     }
 
-    public Boolean getIsRunning()   {
+    public Boolean getIsRunning() {
         return isRunning;
-    }
-
-    public Long getSleepTime()  {
-        return sleepTime;
     }
 }
