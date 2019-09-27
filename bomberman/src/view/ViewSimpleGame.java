@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
-public class ViewSimpleGame extends SwingWorker<String, Object> implements Observer {
+public class ViewSimpleGame implements Observer {
 
     private JFrame jFrame;
     private JLabel turnDisplay;
@@ -48,8 +48,4 @@ public class ViewSimpleGame extends SwingWorker<String, Object> implements Obser
         turnDisplay.setText(turn.toString());
     }
 
-    @Override
-    protected String doInBackground() {
-        return null;
-    }
 }
