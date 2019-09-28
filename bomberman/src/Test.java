@@ -1,12 +1,10 @@
-import controller.SimpleGameController;
-import model.SimpleGame;
-import view.ViewCommand;
+import bomberman.controller.BombermanController;
+import bomberman.model.Bomberman;
 
 public class Test {
 
     public static void main(String... args) {
-        SimpleGame simpleGame = new SimpleGame(10, Long.valueOf(1000));
-        //ViewSimpleGame viewSimpleGame = new ViewSimpleGame(simpleGame);
-        ViewCommand viewCommand = new ViewCommand(simpleGame, new SimpleGameController(simpleGame));
+        Bomberman bomberman = new Bomberman(10);
+        new BombermanController(bomberman);
     }
 }
