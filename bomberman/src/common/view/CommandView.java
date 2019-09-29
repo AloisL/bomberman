@@ -1,55 +1,87 @@
 package common.view;
 
-import common.controller.Controller;
+import bomberman.controller.BombermanController;
 import common.model.Game;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.io.File;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
 public class CommandView implements Observer {
-    private Controller controller;
 
+    private BombermanController controller;
     private Integer currentTurn;
 
-    private JFrame jFrame;
+    // Utiliser JPanel si l'on souhaite ajouter ces commandes à une fenetre de jeu (via getter du JPanel)
+    private JFrame window;
 
+    private JPanel mainPanel;
+    private JPanel commandPanel;
     private JPanel topPanel;
     private JPanel botPanel;
-
+    private JPanel panelBomberman;
+    private JComboBox<String> layoutChooser;
     private JLabel currentTurnLabel;
 
-    public CommandView(Controller controller, String title) {
+    public CommandView(BombermanController controller, String title) {
         this.controller = controller;
-
         initFrame(title);
         setPanels();
+        initLayoutChooser();
         initInputs();
         initOutputs();
-
-        jFrame.setVisible(true);
+        window.setVisible(true);
     }
 
     private void initFrame(String title) {
-        jFrame = new JFrame();
-        jFrame.setTitle(title);
-        jFrame.setSize(new Dimension(500, 200));
-        Dimension windowSize = jFrame.getSize();
+        window = new JFrame();
+
+        // Permet de fermer l'application après avoir quitter la vue.
+        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        window.setTitle(title);
+        window.setSize(new Dimension(500, 200));
+        Dimension windowSize = window.getSize();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Point centerPoint = ge.getCenterPoint();
         int dx = centerPoint.x - windowSize.width / 2;
         int dy = centerPoint.y - (windowSize.height / 2) - 350;
-        jFrame.setLocation(dx, dy);
+        window.setLocation(dx, dy);
+
+        window.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent componentEvent) {
+                window.repaint();
+            }
+        });
     }
 
     private void setPanels() {
-        JPanel mainPanel = new JPanel(new GridLayout(2, 1));
-        topPanel = new JPanel(new GridLayout(1, 2));
-        botPanel = new JPanel(new GridLayout(1, 4));
-        mainPanel.add(topPanel);
-        mainPanel.add(botPanel);
-        jFrame.add(mainPanel);
+        mainPanel = new JPanel(new GridLayout(2, 1));
+        commandPanel = new JPanel(new GridLayout(2, 1));
+        topPanel = new JPanel(new GridLayout(1, 4));
+        botPanel = new JPanel(new GridLayout(1, 3));
+        mainPanel.add(commandPanel);
+        commandPanel.add(topPanel);
+        commandPanel.add(botPanel);
+        window.add(mainPanel);
+    }
+
+    private void setPanels(JPanel panelBomberman) {
+        if (mainPanel.getComponentCount() == 2) mainPanel.remove(1);
+
+        this.panelBomberman = panelBomberman;
+
+        Integer sizeX = controller.getMap().getSizeX() * 50;
+        Integer sizeY = controller.getMap().getSizeY() * 50;
+        panelBomberman.setSize(new Dimension(sizeX, sizeY));
+        mainPanel.add(panelBomberman);
+
+        window.repaint();
     }
 
     private void initInputs() {
@@ -72,9 +104,11 @@ public class CommandView implements Observer {
         topPanel.add(stepButton);
         topPanel.add(pauseButton);
         botPanel.add(turnSlider);
+        botPanel.add(layoutChooser);
 
         initButton.addActionListener(event -> {
             controller.init();
+            controller.changeLayout();
             runButton.setEnabled(Boolean.TRUE);
             stepButton.setEnabled(Boolean.TRUE);
             pauseButton.setEnabled(Boolean.TRUE);
@@ -93,6 +127,13 @@ public class CommandView implements Observer {
 
     }
 
+    private void initLayoutChooser() {
+        layoutChooser = new JComboBox<>();
+        String[] layouts = new File("ressources/layouts").list();
+        Arrays.sort(layouts);
+        for (String layout : layouts) layoutChooser.addItem(layout);
+    }
+
     private void initOutputs() {
         currentTurnLabel = new JLabel("Waiting");
         currentTurnLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -109,6 +150,14 @@ public class CommandView implements Observer {
     private void displayUpdate() {
         String currentTurnStr = "Turn: " + currentTurn.toString();
         currentTurnLabel.setText(currentTurnStr);
+    }
+
+    public String getLayout() {
+        return (String) layoutChooser.getSelectedItem();
+    }
+
+    public void addPanelBomberman(JPanel panelBomberman) {
+        setPanels(panelBomberman);
     }
 
 }

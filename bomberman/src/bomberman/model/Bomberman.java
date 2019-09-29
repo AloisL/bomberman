@@ -8,16 +8,11 @@ public class Bomberman extends Game {
 
     public Bomberman(Integer maxTurn) {
         super(maxTurn);
-        try {
-            this.map = new Map("ressources/layouts/niveau1.lay");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        setMapFromLayoutPath("ressources/layouts/alone.lay");
     }
 
     @Override
     public void initializeGame() {
-
         System.out.println("Le jeu est initialisé !");
     }
 
@@ -39,4 +34,13 @@ public class Bomberman extends Game {
     public Map getMap() {
         return map;
     }
+
+    public void setMapFromLayoutPath(String layout) {
+        try {
+            this.map = new Map(layout);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

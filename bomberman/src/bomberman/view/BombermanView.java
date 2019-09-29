@@ -5,41 +5,61 @@ import bomberman.model.engine.PanelBomberman;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.util.Observable;
 import java.util.Observer;
 
 public class BombermanView implements Observer {
-    BombermanController controller;
 
-    JFrame jFrame;
+    private BombermanController controller;
+    private PanelBomberman panelBomberman;
+    private JFrame window;
 
     public BombermanView(BombermanController controller) {
         this.controller = controller;
-
         initFrame("Bomberman");
         setPanels();
-        jFrame.setVisible(true);
+        //setVisible(true);
     }
 
     private void initFrame(String title) {
-        jFrame = new JFrame();
-        jFrame.setTitle(title);
-        jFrame.setSize(new Dimension(500, 200));
-        Dimension windowSize = jFrame.getSize();
+        window = new JFrame();
+
+        // Permet de fermer l'application après avoir quitter la vue.
+        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        window.setTitle(title);
+        Integer sizeX = controller.getMap().getSizeX() * 50;
+        Integer sizeY = controller.getMap().getSizeY() * 50;
+        window.setSize(new Dimension(sizeX, sizeY));
+        Dimension windowSize = window.getSize();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Point centerPoint = ge.getCenterPoint();
         int dx = centerPoint.x - windowSize.width / 2;
         int dy = centerPoint.y - (windowSize.height / 2) - 350;
-        jFrame.setLocation(dx, dy);
+        window.setLocation(dx, dy);
     }
 
     private void setPanels() {
-        PanelBomberman panelBomberman = new PanelBomberman(controller.getMap());
-        jFrame.add(panelBomberman);
+        panelBomberman = new PanelBomberman(controller.getMap());
+        window.add(panelBomberman);
     }
 
     @Override
     public void update(Observable observable, Object o) {
 
     }
+
+    public void setVisible(boolean bool) {
+        window.setVisible(bool);
+    }
+
+    public JPanel getPanelBomberman() {
+        return panelBomberman;
+    }
+
+    public void closeWindow() {
+        window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+    }
+
 }

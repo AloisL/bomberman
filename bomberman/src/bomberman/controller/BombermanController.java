@@ -7,14 +7,15 @@ import common.controller.Controller;
 import common.view.CommandView;
 
 public class BombermanController implements Controller {
+
     private Bomberman bomberman;
     private BombermanView bombermanView;
     private CommandView commandView;
 
-    public BombermanController(Bomberman bomberman) {
-        this.bomberman = bomberman;
-        bombermanView = new BombermanView(this);
+    public BombermanController(int maxTurn) {
+        this.bomberman = new Bomberman(maxTurn);
         commandView = new CommandView(this, "Bomberman Command");
+        bombermanView = new BombermanView(this);
         this.bomberman.addObserver(commandView);
         this.bomberman.addObserver(bombermanView);
     }
@@ -44,6 +45,18 @@ public class BombermanController implements Controller {
     public void setTime(Integer turnBySec) {
         Long sleepTime = (long) 1000 / turnBySec;
         bomberman.setSleepTime(sleepTime);
+    }
+
+    public void changeLayout() {
+        // Suppresion de la vue précédente
+        bomberman.deleteObserver(bombermanView);
+        bombermanView.closeWindow();
+
+        String layout = "ressources/layouts/" + commandView.getLayout();
+        bomberman.setMapFromLayoutPath(layout);
+        bombermanView = new BombermanView(this);
+        bomberman.addObserver(bombermanView);
+        commandView.addPanelBomberman(bombermanView.getPanelBomberman());
     }
 
     public Map getMap() {
