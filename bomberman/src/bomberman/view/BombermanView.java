@@ -1,25 +1,31 @@
 package bomberman.view;
 
 import bomberman.controller.BombermanController;
-import bomberman.model.engine.PanelBomberman;
+import common.Game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Observable;
 import java.util.Observer;
 
 public class BombermanView implements Observer {
 
     private BombermanController controller;
-    private PanelBomberman panelBomberman;
+    private Integer currentTurn;
+
     private JFrame window;
 
-    public BombermanView(BombermanController controller) {
+    private JPanel mainPanel;
+    private CommandPanel commandPanel;
+    private PanelBomberman bombermanPanel;
+
+    public BombermanView(BombermanController controller, String title) {
         this.controller = controller;
-        initFrame("Bomberman");
+        initFrame(title);
         setPanels();
-        //setVisible(true);
+        window.setVisible(true);
     }
 
     private void initFrame(String title) {
@@ -29,37 +35,55 @@ public class BombermanView implements Observer {
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         window.setTitle(title);
-        Integer sizeX = controller.getMap().getSizeX() * 50;
-        Integer sizeY = controller.getMap().getSizeY() * 50;
-        window.setSize(new Dimension(sizeX, sizeY));
+        window.setSize(new Dimension(500, 200));
         Dimension windowSize = window.getSize();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Point centerPoint = ge.getCenterPoint();
         int dx = centerPoint.x - windowSize.width / 2;
         int dy = centerPoint.y - (windowSize.height / 2) - 350;
         window.setLocation(dx, dy);
+
+        window.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent componentEvent) {
+                window.repaint();
+            }
+        });
     }
 
     private void setPanels() {
-        panelBomberman = new PanelBomberman(controller.getMap());
-        window.add(panelBomberman);
+        mainPanel = new JPanel(new GridLayout(2, 1));
+        commandPanel = new CommandPanel(controller);
+        mainPanel.add(commandPanel);
+        window.add(mainPanel);
     }
 
     @Override
     public void update(Observable observable, Object o) {
-
+        Game game = (Game) observable;
+        currentTurn = game.getCurrentTurn();
+        displayUpdate();
     }
 
-    public void setVisible(boolean bool) {
-        window.setVisible(bool);
+    private void displayUpdate() {
+        String currentTurnStr = "Turn: " + currentTurn.toString();
+        commandPanel.getCurrentTurnLabel().setText(currentTurnStr);
     }
 
-    public JPanel getPanelBomberman() {
-        return panelBomberman;
+    public String getLayout() {
+        return (String) commandPanel.getLayoutChooser().getSelectedItem();
     }
 
-    public void closeWindow() {
-        window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+    public void addPanelBomberman(PanelBomberman bombermanPanel) {
+        if (mainPanel.getComponentCount() == 2) mainPanel.remove(1);
+
+        this.bombermanPanel = bombermanPanel;
+
+        Integer sizeX = controller.getMap().getSizeX() * 50;
+        Integer sizeY = controller.getMap().getSizeY() * 50;
+        this.bombermanPanel.setSize(new Dimension(sizeX, sizeY));
+        mainPanel.add(this.bombermanPanel);
+
+        window.repaint();
     }
 
 }
