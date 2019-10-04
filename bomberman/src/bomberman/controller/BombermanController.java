@@ -52,7 +52,7 @@ public class BombermanController implements Controller {
         bomberman.deleteObserver(bombermanView);
         bombermanView.closeWindow();
 
-        String layout = "ressources/layouts/" + commandView.getLayout();
+        String layout = "res/layouts/" + commandView.getLayout();
         bomberman.setMapFromLayoutPath(layout);
         bombermanView = new BombermanView(this);
         bomberman.addObserver(bombermanView);

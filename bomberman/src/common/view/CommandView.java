@@ -85,10 +85,10 @@ public class CommandView implements Observer {
     }
 
     private void initInputs() {
-        JButton initButton = new JButton(new ImageIcon("ressources/icones/icon_restart.png"));
-        JButton runButton = new JButton(new ImageIcon("ressources/icones/icon_run.png"));
-        JButton stepButton = new JButton(new ImageIcon("ressources/icones/icon_step.png"));
-        JButton pauseButton = new JButton(new ImageIcon("ressources/icones/icon_pause.png"));
+        JButton initButton = new JButton(new ImageIcon("res/icones/icon_restart.png"));
+        JButton runButton = new JButton(new ImageIcon("res/icones/icon_run.png"));
+        JButton stepButton = new JButton(new ImageIcon("res/icones/icon_step.png"));
+        JButton pauseButton = new JButton(new ImageIcon("res/icones/icon_pause.png"));
 
         JSlider turnSlider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
         turnSlider.setMajorTickSpacing(1);
@@ -129,7 +129,7 @@ public class CommandView implements Observer {
 
     private void initLayoutChooser() {
         layoutChooser = new JComboBox<>();
-        String[] layouts = new File("ressources/layouts").list();
+        String[] layouts = new File("res/layouts").list();
         Arrays.sort(layouts);
         for (String layout : layouts) layoutChooser.addItem(layout);
     }
