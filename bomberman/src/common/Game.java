@@ -1,4 +1,4 @@
-package common.model;
+package common;
 
 import java.util.Observable;
 

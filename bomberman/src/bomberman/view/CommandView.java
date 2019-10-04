@@ -1,7 +1,7 @@
-package common.view;
+package bomberman.view;
 
 import bomberman.controller.BombermanController;
-import common.model.Game;
+import common.Game;
 
 import javax.swing.*;
 import java.awt.*;

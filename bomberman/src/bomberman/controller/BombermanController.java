@@ -3,8 +3,8 @@ package bomberman.controller;
 import bomberman.model.Bomberman;
 import bomberman.model.engine.Map;
 import bomberman.view.BombermanView;
-import common.controller.Controller;
-import common.view.CommandView;
+import bomberman.view.CommandView;
+import common.Controller;
 
 public class BombermanController implements Controller {
 
