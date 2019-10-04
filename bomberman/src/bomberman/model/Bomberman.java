@@ -35,9 +35,9 @@ public class Bomberman extends Game {
         return map;
     }
 
-    public void setMapFromLayoutPath(String layout) {
+    public void setMapFromLayoutPath(String layoutPath) {
         try {
-            this.map = new Map(layout);
+            this.map = new Map(layoutPath);
         } catch (Exception e) {
             e.printStackTrace();
         }
