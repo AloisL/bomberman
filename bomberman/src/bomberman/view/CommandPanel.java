@@ -29,11 +29,11 @@ public class CommandPanel extends JPanel {
     }
 
     private void setPanels() {
-        setLayout(new GridLayout(2, 1));
-        topCommandPanel = new JPanel(new GridLayout(1, 4));
-        botCommandPanel = new JPanel(new GridLayout(1, 3));
-        this.add(topCommandPanel);
-        this.add(botCommandPanel);
+        setLayout(new BorderLayout());
+        topCommandPanel = new JPanel(new GridBagLayout());
+        botCommandPanel = new JPanel(new GridBagLayout());
+        this.add(topCommandPanel, BorderLayout.NORTH);
+        this.add(botCommandPanel, BorderLayout.SOUTH);
     }
 
     private void initInputs() {
