@@ -54,9 +54,9 @@ public class BombermanView implements Observer {
     }
 
     private void setPanels() {
-        mainPanel = new JPanel(new GridLayout(2, 1));
+        mainPanel = new JPanel(new BorderLayout());
         commandPanel = new CommandPanel(controller);
-        mainPanel.add(commandPanel);
+        mainPanel.add(commandPanel, BorderLayout.NORTH);
         window.add(mainPanel);
     }
 
@@ -82,7 +82,8 @@ public class BombermanView implements Observer {
         Integer sizeX = controller.getMap().getSizeX() * 50;
         Integer sizeY = controller.getMap().getSizeY() * 50;
         this.bombermanPanel.setSize(new Dimension(sizeX, sizeY));
-        mainPanel.add(this.bombermanPanel);
+        mainPanel.add(this.bombermanPanel, BorderLayout.CENTER);
+        window.setSize(sizeX, sizeY + commandPanel.getHeight() + 40);
         window.repaint();
     }
 
