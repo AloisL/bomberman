@@ -1,4 +1,6 @@
-package bomberman.model.engine;
+package bomberman.view;
+
+import bomberman.model.engine.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

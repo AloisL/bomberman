@@ -1,7 +1,7 @@
 package bomberman.model;
 
 import bomberman.model.engine.Map;
-import common.model.Game;
+import common.Game;
 
 public class Bomberman extends Game {
     private Map map;

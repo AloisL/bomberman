@@ -3,20 +3,19 @@ package bomberman.controller;
 import bomberman.model.Bomberman;
 import bomberman.model.engine.Map;
 import bomberman.view.BombermanView;
-import common.controller.Controller;
-import common.view.CommandView;
+import bomberman.view.PanelBomberman;
+import common.Controller;
 
 public class BombermanController implements Controller {
 
     private Bomberman bomberman;
+    private PanelBomberman bombermanPanel;
     private BombermanView bombermanView;
-    private CommandView commandView;
 
     public BombermanController(int maxTurn) {
         this.bomberman = new Bomberman(maxTurn);
-        commandView = new CommandView(this, "Bomberman Command");
-        bombermanView = new BombermanView(this);
-        this.bomberman.addObserver(commandView);
+        bombermanView = new BombermanView(this, "Bomberman Command");
+        bombermanPanel = new PanelBomberman(this.getMap());
         this.bomberman.addObserver(bombermanView);
     }
 
@@ -48,15 +47,10 @@ public class BombermanController implements Controller {
     }
 
     public void changeLayout() {
-        // Suppresion de la vue précédente
-        bomberman.deleteObserver(bombermanView);
-        bombermanView.closeWindow();
-
-        String layout = "res/layouts/" + commandView.getLayout();
+        String layout = "res/layouts/" + bombermanView.getLayout();
         bomberman.setMapFromLayoutPath(layout);
-        bombermanView = new BombermanView(this);
-        bomberman.addObserver(bombermanView);
-        commandView.addPanelBomberman(bombermanView.getPanelBomberman());
+        bombermanPanel = new PanelBomberman(this.getMap());
+        bombermanView.addPanelBomberman(bombermanPanel);
     }
 
     public Map getMap() {

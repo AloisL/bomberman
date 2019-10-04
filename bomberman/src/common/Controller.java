@@ -1,4 +1,4 @@
-package common.controller;
+package common;
 
 public interface Controller {
     void init();
