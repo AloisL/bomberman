@@ -8,7 +8,7 @@ public class Bomberman extends Game {
 
     public Bomberman(Integer maxTurn) {
         super(maxTurn);
-        setMapFromLayoutPath("ressources/layouts/alone.lay");
+        setMapFromLayoutPath("res/layouts/alone.lay");
     }
 
     @Override
