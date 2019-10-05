@@ -1,5 +1,7 @@
 package bomberman.model.engine;
 
+import bomberman.model.repo.StateBomb;
+
 public class InfoBomb {
 
     StateBomb stateBomb;

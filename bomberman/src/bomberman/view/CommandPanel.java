@@ -32,8 +32,8 @@ public class CommandPanel extends JPanel {
         setLayout(new BorderLayout());
         topCommandPanel = new JPanel(new GridBagLayout());
         botCommandPanel = new JPanel(new GridBagLayout());
-        this.add(topCommandPanel, BorderLayout.NORTH);
-        this.add(botCommandPanel, BorderLayout.SOUTH);
+        add(topCommandPanel, BorderLayout.NORTH);
+        add(botCommandPanel, BorderLayout.SOUTH);
     }
 
     private void initInputs() {
@@ -66,8 +66,8 @@ public class CommandPanel extends JPanel {
 
     public void setListeners(BombermanController controller) {
         initButton.addActionListener(event -> {
-            controller.init();
             controller.changeLayout();
+            controller.init();
             runButton.setEnabled(Boolean.TRUE);
             stepButton.setEnabled(Boolean.TRUE);
             pauseButton.setEnabled(Boolean.TRUE);
@@ -98,6 +98,5 @@ public class CommandPanel extends JPanel {
     public JComboBox getLayoutChooser() {
         return layoutChooser;
     }
-
 
 }

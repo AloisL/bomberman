@@ -45,9 +45,11 @@ public class BombermanView implements Observer {
 
         window.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent componentEvent) {
-                Integer sizeX = controller.getMap().getSizeX() * 50;
-                Integer sizeY = controller.getMap().getSizeY() * 50;
-                if (bombermanPanel != null) bombermanPanel.setSize(new Dimension(sizeX, sizeY));
+                if (controller.getMap() != null) {
+                    Integer sizeX = controller.getMap().getSizeX() * 50;
+                    Integer sizeY = controller.getMap().getSizeY() * 50;
+                    if (bombermanPanel != null) bombermanPanel.setSize(new Dimension(sizeX, sizeY));
+                }
                 window.repaint();
             }
         });
