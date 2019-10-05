@@ -1,5 +1,7 @@
 package bomberman.model.engine;
 
+import bomberman.model.repo.ItemType;
+
 public class InfoItem {
 
     private int x;

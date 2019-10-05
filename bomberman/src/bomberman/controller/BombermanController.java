@@ -15,7 +15,6 @@ public class BombermanController implements Controller {
     public BombermanController(int maxTurn) {
         this.bomberman = new Bomberman(maxTurn);
         bombermanView = new BombermanView(this, "Bomberman Command");
-        bombermanPanel = new PanelBomberman(this.getMap());
         this.bomberman.addObserver(bombermanView);
     }
 

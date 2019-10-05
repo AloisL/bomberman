@@ -1,5 +1,8 @@
 package bomberman.model.engine;
 
+import bomberman.model.repo.AgentAction;
+import bomberman.model.repo.ColorAgent;
+
 import java.io.*;
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package bomberman.model.engine;
+package bomberman.model.repo;
 
 public enum ItemType {
     FIRE_UP, FIRE_DOWN,

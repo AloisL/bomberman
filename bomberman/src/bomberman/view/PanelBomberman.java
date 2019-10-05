@@ -1,6 +1,12 @@
 package bomberman.view;
 
-import bomberman.model.engine.*;
+import bomberman.model.engine.InfoAgent;
+import bomberman.model.engine.InfoBomb;
+import bomberman.model.engine.InfoItem;
+import bomberman.model.engine.Map;
+import bomberman.model.repo.AgentAction;
+import bomberman.model.repo.ItemType;
+import bomberman.model.repo.StateBomb;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
