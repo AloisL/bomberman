@@ -5,4 +5,5 @@ META-INF/
 .classpath
 .project
 .settings
-.factorypath)
+.factorypath
+target/
