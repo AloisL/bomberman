@@ -23,4 +23,9 @@ public abstract class AbstractAgent {
     public char getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "type:" + type + " poX:" + posX.toString() + " posY:" + posY.toString();
+    }
 }
