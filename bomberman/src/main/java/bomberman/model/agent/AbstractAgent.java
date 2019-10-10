@@ -1,10 +1,13 @@
 package bomberman.model.agent;
 
+import bomberman.model.repo.AgentAction;
+
 public abstract class AbstractAgent {
 
     private char type;
     private Integer posY;
     private Integer posX;
+    private AgentAction agentAction;
 
     protected AbstractAgent(Integer posX, Integer posY, char type) {
         this.posX = posX;
@@ -16,8 +19,16 @@ public abstract class AbstractAgent {
         return posX;
     }
 
+    public void setPosX(Integer posX) {
+        this.posX = posX;
+    }
+
     public Integer getPosY() {
         return posY;
+    }
+
+    public void setPosY(Integer posY) {
+        this.posY = posY;
     }
 
     public char getType() {
@@ -26,6 +37,6 @@ public abstract class AbstractAgent {
 
     @Override
     public String toString() {
-        return "type:" + type + " poX:" + posX.toString() + " posY:" + posY.toString();
+        return "type:" + type + "\tpoX:" + posX.toString() + "\tposY:" + posY.toString();
     }
 }
