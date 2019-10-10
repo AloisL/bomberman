@@ -2,6 +2,8 @@ package bomberman.model;
 
 import bomberman.model.agent.*;
 import bomberman.model.engine.InfoAgent;
+import bomberman.model.engine.InfoBomb;
+import bomberman.model.engine.InfoItem;
 import bomberman.model.engine.Map;
 import bomberman.model.repo.AgentAction;
 import bomberman.view.PanelBomberman;
@@ -12,10 +14,16 @@ import org.apache.logging.log4j.core.Logger;
 import java.util.ArrayList;
 
 public class Bomberman extends Game {
+
     final static Logger log = (Logger) LogManager.getLogger(Bomberman.class);
+
     private PanelBomberman bombermanPanel;
     private Map map;
+
     private ArrayList<AbstractAgent> agents;
+    private boolean[][] breakableWalls;
+    private ArrayList<InfoItem> items;
+    private ArrayList<InfoBomb> bombs;
 
     public Bomberman(Integer maxTurn) {
         super(maxTurn);
@@ -26,7 +34,11 @@ public class Bomberman extends Game {
         log.debug("Le jeu est initialisé !");
 
         ArrayList<InfoAgent> startAgents = map.getStart_agents();
+
         agents = new ArrayList<>();
+        breakableWalls = map.getStart_brokable_walls();
+        items = new ArrayList<InfoItem>();
+        bombs = new ArrayList<InfoBomb>();
 
         for (InfoAgent agent : startAgents) {
             switch (agent.getType()) {

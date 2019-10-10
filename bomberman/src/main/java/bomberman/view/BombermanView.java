@@ -44,6 +44,7 @@ public class BombermanView implements Observer {
         window.setLocation(dx, dy);
 
         window.addComponentListener(new ComponentAdapter() {
+            @Override
             public void componentResized(ComponentEvent componentEvent) {
                 if (controller.getMap() != null) {
                     Integer sizeX = controller.getMap().getSizeX() * 50;
@@ -65,6 +66,8 @@ public class BombermanView implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         Game game = (Game) observable;
+        // TODO update panelbomberman
+        //  bombermanPanel.setInfoGame(// ICI //);
         currentTurn = game.getCurrentTurn();
         displayUpdate();
     }
