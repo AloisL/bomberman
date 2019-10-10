@@ -1,31 +1,32 @@
 package bomberman.model.agent;
 
-public abstract class AbstractAgent {
+import bomberman.model.engine.InfoAgent;
+import bomberman.model.repo.AgentAction;
+import bomberman.model.repo.ColorAgent;
 
-    private char type;
-    private Integer posY;
-    private Integer posX;
+import java.util.concurrent.atomic.AtomicInteger;
 
-    protected AbstractAgent(Integer posX, Integer posY, char type) {
-        this.posX = posX;
-        this.posY = posY;
-        this.type = type;
+public abstract class AbstractAgent extends InfoAgent {
+
+    private static AtomicInteger count = new AtomicInteger(0);
+
+    private int id;
+
+    protected AbstractAgent(int x, int y, AgentAction agentAction, char type, ColorAgent color, boolean isInvincible, boolean isSick) {
+        super(x, y, agentAction, type, color, isInvincible, isSick);
+        id = count.incrementAndGet();
     }
 
-    public Integer getPosX() {
-        return posX;
+    public static void resetId() {
+        count = new AtomicInteger(0);
     }
 
-    public Integer getPosY() {
-        return posY;
-    }
-
-    public char getType() {
-        return type;
+    public int getId() {
+        return id;
     }
 
     @Override
     public String toString() {
-        return "type:" + type + " poX:" + posX.toString() + " posY:" + posY.toString();
+        return "Agent ::: type:" + super.getType() + " poX:" + super.getX() + "\tposY:" + super.getY();
     }
 }

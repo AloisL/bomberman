@@ -1,8 +1,11 @@
 package bomberman.model.agent;
 
+import bomberman.model.repo.AgentAction;
+import bomberman.model.repo.ColorAgent;
+
 public class BombermanAgent extends AbstractAgent {
 
-    public BombermanAgent(Integer posX, Integer posY) {
-        super(posX, posY, 'B');
+    public BombermanAgent(int x, int y, AgentAction agentAction, ColorAgent color, boolean isInvincible, boolean isSick) {
+        super(x, y, agentAction, 'B', color, isInvincible, isSick);
     }
 }

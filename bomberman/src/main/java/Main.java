@@ -1,8 +1,8 @@
 import bomberman.controller.BombermanController;
 
-public class Test {
+public class Main {
 
     public static void main(String... args) {
-        new BombermanController(10);
+        new BombermanController(100);
     }
 }

@@ -1,7 +1,7 @@
 package bomberman.view;
 
 import bomberman.controller.BombermanController;
-import common.Game;
+import bomberman.model.Bomberman;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,6 +44,7 @@ public class BombermanView implements Observer {
         window.setLocation(dx, dy);
 
         window.addComponentListener(new ComponentAdapter() {
+            @Override
             public void componentResized(ComponentEvent componentEvent) {
                 if (controller.getMap() != null) {
                     Integer sizeX = controller.getMap().getSizeX() * 50;
@@ -64,9 +65,11 @@ public class BombermanView implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        Game game = (Game) observable;
-        currentTurn = game.getCurrentTurn();
+        Bomberman bomberman = (Bomberman) observable;
+        bombermanPanel.setInfoGame(bomberman.getBreakableWalls(), bomberman.getInfoAgents(), bomberman.getItems(), bomberman.getBombs());
+        currentTurn = bomberman.getCurrentTurn();
         displayUpdate();
+        window.repaint();
     }
 
     private void displayUpdate() {

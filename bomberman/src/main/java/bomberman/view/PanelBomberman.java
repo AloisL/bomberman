@@ -45,7 +45,7 @@ public class PanelBomberman extends JPanel {
 
         this.map = map;
 
-        this.breakable_walls = map.getStart_brokable_walls();
+        breakable_walls = map.getStart_brokable_walls();
 
         listInfoAgents = map.getStart_agents();
         listInfoItems = new ArrayList<InfoItem>();
@@ -53,6 +53,7 @@ public class PanelBomberman extends JPanel {
 
     }
 
+    @Override
     public void paint(Graphics g) {
 
 
@@ -86,7 +87,7 @@ public class PanelBomberman extends JPanel {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else if (this.breakable_walls[x][y]) {
+                } else if (breakable_walls[x][y]) {
 
                     try {
                         Image img = ImageIO.read(new File("./image/brique_2.png"));
@@ -125,7 +126,7 @@ public class PanelBomberman extends JPanel {
     }
 
 
-    void dessine_Agent(Graphics g, InfoAgent infoAgent) {
+    public void dessine_Agent(Graphics g, InfoAgent infoAgent) {
 
         int fen_x = getSize().width;
         int fen_y = getSize().height;
@@ -159,9 +160,9 @@ public class PanelBomberman extends JPanel {
 
         try {
             if (infoAgent.getType() == 'R') {
-                img = ImageIO.read(new File("./image/" + infoAgent.getType() + direction + this.cpt % 2 + ".png"));
+                img = ImageIO.read(new File("./image/" + infoAgent.getType() + direction + cpt % 2 + ".png"));
             } else {
-                img = ImageIO.read(new File("./image/" + infoAgent.getType() + direction + this.cpt % 3 + ".png"));
+                img = ImageIO.read(new File("./image/" + infoAgent.getType() + direction + cpt % 3 + ".png"));
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -13,9 +13,9 @@ public class BombermanController implements Controller {
     private BombermanView bombermanView;
 
     public BombermanController(int maxTurn) {
-        this.bomberman = new Bomberman(maxTurn);
+        bomberman = new Bomberman(maxTurn);
         bombermanView = new BombermanView(this, "Bomberman Command");
-        this.bomberman.addObserver(bombermanView);
+        bomberman.addObserver(bombermanView);
     }
 
     @Override
@@ -48,12 +48,16 @@ public class BombermanController implements Controller {
     public void changeLayout() {
         String layout = "res/layouts/" + bombermanView.getLayout();
         bomberman.setMapFromLayoutPath(layout);
-        bombermanPanel = new PanelBomberman(this.getMap());
+        bombermanPanel = new PanelBomberman(getMap());
         bombermanView.addPanelBomberman(bombermanPanel);
     }
 
     public Map getMap() {
         return bomberman.getMap();
+    }
+
+    public Bomberman getBomberman() {
+        return bomberman;
     }
 
 }
