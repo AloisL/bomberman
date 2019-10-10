@@ -6,7 +6,6 @@ import bomberman.model.engine.InfoBomb;
 import bomberman.model.engine.InfoItem;
 import bomberman.model.engine.Map;
 import bomberman.model.repo.AgentAction;
-import bomberman.view.PanelBomberman;
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -17,10 +16,10 @@ public class Bomberman extends Game {
 
     final static Logger log = (Logger) LogManager.getLogger(Bomberman.class);
 
-    private PanelBomberman bombermanPanel;
     private Map map;
 
     private ArrayList<AbstractAgent> agents;
+
     private boolean[][] breakableWalls;
     private ArrayList<InfoItem> items;
     private ArrayList<InfoBomb> bombs;
@@ -33,12 +32,18 @@ public class Bomberman extends Game {
     public void initializeGame() {
         log.debug("Le jeu est initialisé !");
 
+        AbstractAgent.resetId();
+
         ArrayList<InfoAgent> startAgents = map.getStart_agents();
 
-        agents = new ArrayList<>();
+        log.debug("Initialisation des broken_walls");
         breakableWalls = map.getStart_brokable_walls();
-        items = new ArrayList<InfoItem>();
-        bombs = new ArrayList<InfoBomb>();
+        log.debug("Initialisation des items");
+        items = new ArrayList<>();
+        log.debug("Initialisation des bombes");
+        bombs = new ArrayList<>();
+        log.debug("Initialisation des agents");
+        agents = new ArrayList<>();
 
         for (InfoAgent agent : startAgents) {
             switch (agent.getType()) {
@@ -68,7 +73,17 @@ public class Bomberman extends Game {
 
     @Override
     public void takeTurn() {
-        canMove(agents.get(agents.size() - 1), AgentAction.MOVE_RIGHT);
+        AbstractAgent agent_tmp = null;
+        for (AbstractAgent agent : agents) {
+            log.debug("id ==>" + agent.getId());
+            if (agent.getId() == 1) {
+                agent_tmp = agent;
+                break;
+            }
+        }
+        if (agent_tmp != null && isLegalMove(agents.get(agents.indexOf(agent_tmp)), AgentAction.MOVE_RIGHT)) {
+            doAction(agents.get(agents.indexOf(agent_tmp)), AgentAction.MOVE_RIGHT);
+        }
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
     }
 
@@ -97,25 +112,21 @@ public class Bomberman extends Game {
     public boolean isLegalMove(AbstractAgent agent, AgentAction action) {
         switch (action) {
             case MOVE_UP:
-                if (canMove(agent, AgentAction.MOVE_UP)) return true;
-                else return false;
+                return canMove(agent, AgentAction.MOVE_UP);
             case MOVE_DOWN:
-                if (canMove(agent, AgentAction.MOVE_DOWN)) return true;
-                else return false;
+                return canMove(agent, AgentAction.MOVE_DOWN);
             case MOVE_LEFT:
-                if (canMove(agent, AgentAction.MOVE_LEFT)) return true;
-                else return false;
+                return canMove(agent, AgentAction.MOVE_LEFT);
             case MOVE_RIGHT:
-                if (canMove(agent, AgentAction.MOVE_RIGHT)) return true;
-                else return false;
+                return canMove(agent, AgentAction.MOVE_RIGHT);
             case STOP:
-                // TODO
+                // TODO case STOP
                 return true;
             case PUT_BOMB:
-                // TODO
+                // TODO case PUT_BOMB
                 return true;
             default:
-                log.error(agent.toString() + " ==> " + action.toString() + " non reconnue");
+                log.error(agent.toString() + " ==> Action: " + action.toString() + " non reconnue");
                 return false;
         }
     }
@@ -127,7 +138,7 @@ public class Bomberman extends Game {
         final String canMoveMessage = agent.toString() + " ==> CAN ";
         switch (action) {
             case MOVE_UP:
-                if ((posY - 1 < 0 || map.get_walls()[posX][posY - 1])) {
+                if ((posY - 1 < 0) || map.get_walls()[posX][posY - 1] || breakableWalls[posX][posY - 1]) {
                     log.debug(cannotMoveMessage + AgentAction.MOVE_UP.toString());
                     return false;
                 } else {
@@ -135,7 +146,7 @@ public class Bomberman extends Game {
                     return true;
                 }
             case MOVE_DOWN:
-                if ((posY + 1 > map.getSizeY() + 1) || map.get_walls()[posX][posY + 1]) {
+                if ((posY + 1 > map.getSizeY() + 1) || map.get_walls()[posX][posY + 1] || breakableWalls[posX][posY + 1]) {
                     log.debug(cannotMoveMessage + AgentAction.MOVE_DOWN.toString());
                     return false;
                 } else {
@@ -143,7 +154,7 @@ public class Bomberman extends Game {
                     return true;
                 }
             case MOVE_LEFT:
-                if ((posX - 1 < 0) || map.get_walls()[posX - 1][posY]) {
+                if ((posX - 1 < 0) || map.get_walls()[posX - 1][posY] || breakableWalls[posX - 1][posY]) {
                     log.debug(cannotMoveMessage + AgentAction.MOVE_LEFT.toString());
                     return false;
                 } else {
@@ -151,7 +162,7 @@ public class Bomberman extends Game {
                     return true;
                 }
             case MOVE_RIGHT:
-                if ((posX + 1 > map.getSizeX() + 1) || map.get_walls()[posX + 1][posY]) {
+                if ((posX + 1 > map.getSizeX() + 1) || map.get_walls()[posX + 1][posY] || breakableWalls[posX + 1][posY]) {
                     log.debug(cannotMoveMessage + AgentAction.MOVE_RIGHT.toString());
                     return false;
                 } else {
@@ -159,12 +170,12 @@ public class Bomberman extends Game {
                     return true;
                 }
             default:
-                log.error(agent.toString() + " ==> Wrong action given");
+                log.error(agent.toString() + " ==> Action: " + action.toString() + " non compatible");
                 return false;
         }
     }
 
-    public void moveAgent(AbstractAgent agent, AgentAction action) {
+    public void doAction(AbstractAgent agent, AgentAction action) {
         agents.remove(agent);
         Integer posX = agent.getX();
         Integer posY = agent.getY();
@@ -172,19 +183,47 @@ public class Bomberman extends Game {
             case MOVE_UP:
                 agent.setY(posY - 1);
                 agents.add(agent);
+                break;
             case MOVE_DOWN:
                 agent.setY(posY + 1);
                 agents.add(agent);
+                break;
             case MOVE_LEFT:
                 agent.setX(posX - 1);
                 agents.add(agent);
+                break;
             case MOVE_RIGHT:
                 agent.setX(posX + 1);
                 agents.add(agent);
+                break;
+            case STOP:
+                //TODO case STOP
+                break;
+            case PUT_BOMB:
+                //TODO case PUT_BOMB
+                break;
             default:
                 log.debug("Action inconnue ==> " + action.toString());
+                break;
         }
 
     }
 
+    public boolean[][] getBreakableWalls() {
+        return breakableWalls;
+    }
+
+    public ArrayList<InfoItem> getItems() {
+        return items;
+    }
+
+    public ArrayList<InfoBomb> getBombs() {
+        return bombs;
+    }
+
+    public ArrayList<InfoAgent> getInfoAgents() {
+        ArrayList<InfoAgent> infoAgents = new ArrayList<>();
+        infoAgents.addAll(agents);
+        return infoAgents;
+    }
 }
