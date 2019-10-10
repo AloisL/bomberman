@@ -5,7 +5,6 @@ import bomberman.model.engine.Map;
 import bomberman.view.BombermanView;
 import bomberman.view.PanelBomberman;
 import common.Controller;
-import sun.management.Agent;
 
 public class BombermanController implements Controller {
 
@@ -59,10 +58,6 @@ public class BombermanController implements Controller {
 
     public Bomberman getBomberman() {
         return bomberman;
-    }
-
-    public void changeAgentPosition(Agent agent, Integer posX, Integer posY) {
-
     }
 
 }
