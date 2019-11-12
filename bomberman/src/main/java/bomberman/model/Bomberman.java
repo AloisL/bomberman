@@ -83,7 +83,28 @@ public class Bomberman extends Game {
         }
         if (agent_tmp != null && isLegalMove(agents.get(agents.indexOf(agent_tmp)), AgentAction.MOVE_RIGHT)) {
             doAction(agents.get(agents.indexOf(agent_tmp)), AgentAction.MOVE_RIGHT);
+        } else if (agent_tmp != null && isLegalMove(agents.get(agents.indexOf(agent_tmp)), AgentAction.MOVE_LEFT)) {
+            doAction(agents.get(agents.indexOf(agent_tmp)), AgentAction.MOVE_LEFT);
         }
+        for (AbstractAgent agent : agents) {
+            if (agent.getId() == 1) {
+                agent_tmp = agent;
+                break;
+            }
+        }
+
+        log.debug(agent_tmp.toString());
+
+        //if (i)
+
+        if (isLegalMove(agent_tmp, agent_tmp.getAgentAction())) {
+            doAction(agent_tmp, agent_tmp.getAgentAction());
+        } else {
+            agent_tmp.setAgentAction(AgentAction.MOVE_RIGHT);
+            log.debug(agent_tmp.toString());
+            log.debug(agent_tmp.getAgentAction().toString());
+        }
+
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
     }
 
@@ -198,9 +219,11 @@ public class Bomberman extends Game {
                 break;
             case STOP:
                 //TODO case STOP
+                agents.add(agent);
                 break;
             case PUT_BOMB:
                 //TODO case PUT_BOMB
+                agents.add(agent);
                 break;
             default:
                 log.debug("Action inconnue ==> " + action.toString());
