@@ -1,7 +1,7 @@
 package bomberman.view;
 
 import bomberman.controller.BombermanController;
-import bomberman.model.Bomberman;
+import bomberman.model.BombermanGame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,9 +65,9 @@ public class BombermanView implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        Bomberman bomberman = (Bomberman) observable;
-        bombermanPanel.setInfoGame(bomberman.getBreakableWalls(), bomberman.getInfoAgents(), bomberman.getItems(), bomberman.getBombs());
-        currentTurn = bomberman.getCurrentTurn();
+        BombermanGame bombermanGame = (BombermanGame) observable;
+        bombermanPanel.setInfoGame(bombermanGame.getBreakableWalls(), bombermanGame.getInfoAgents(), bombermanGame.getItems(), bombermanGame.getBombs());
+        currentTurn = bombermanGame.getCurrentTurn();
         displayUpdate();
         window.repaint();
     }

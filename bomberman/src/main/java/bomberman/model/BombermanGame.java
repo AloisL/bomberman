@@ -12,9 +12,9 @@ import org.apache.logging.log4j.core.Logger;
 
 import java.util.ArrayList;
 
-public class Bomberman extends Game {
+public class BombermanGame extends Game {
 
-    final static Logger log = (Logger) LogManager.getLogger(Bomberman.class);
+    final static Logger log = (Logger) LogManager.getLogger(BombermanGame.class);
 
     private Map map;
 
@@ -24,12 +24,15 @@ public class Bomberman extends Game {
     private ArrayList<InfoItem> items;
     private ArrayList<InfoBomb> bombs;
 
-    public Bomberman(Integer maxTurn) {
+    public BombermanGame(Integer maxTurn) {
         super(maxTurn);
     }
 
     @Override
     public void initializeGame() {
+
+        // TODO : design pattern fabrique
+
         log.debug("Le jeu est initialisé !");
 
         AbstractAgent.resetId();
