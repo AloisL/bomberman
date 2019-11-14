@@ -7,6 +7,9 @@ import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
 
+/**
+ * Classe gérant le JPanel de commande
+ */
 public class CommandPanel extends JPanel {
 
     private JPanel topCommandPanel;
@@ -20,14 +23,30 @@ public class CommandPanel extends JPanel {
     private JComboBox layoutChooser;
     private JSlider turnSlider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
 
-
+    /**
+     * Constructeur du JPanel de commande
+     *
+     * @param controller Le controleur du jeu
+     */
     public CommandPanel(BombermanController controller) {
+        init(controller);
+    }
+
+    /**
+     * Méthode d'initialisation du JPanel
+     *
+     * @param controller Le controleur du jeu
+     */
+    private void init(BombermanController controller) {
         setPanels();
         initInputs();
         setListeners(controller);
         initOutputs();
     }
 
+    /**
+     * Méthode d'initialisation des Panels
+     */
     private void setPanels() {
         setLayout(new BorderLayout());
         topCommandPanel = new JPanel(new GridBagLayout());
@@ -36,6 +55,9 @@ public class CommandPanel extends JPanel {
         add(botCommandPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Méthode d'initialisation des entrées utilisateur
+     */
     private void initInputs() {
         initButton = new JButton(new ImageIcon("res/icones/icon_restart.png"));
         runButton = new JButton(new ImageIcon("res/icones/icon_run.png"));
@@ -64,6 +86,11 @@ public class CommandPanel extends JPanel {
         botCommandPanel.add(layoutChooser);
     }
 
+    /**
+     * Méthode d'initialisation des listeners
+     *
+     * @param controller Le controleur du jeu
+     */
     public void setListeners(BombermanController controller) {
         initButton.addActionListener(event -> {
             controller.changeLayout();
@@ -85,6 +112,9 @@ public class CommandPanel extends JPanel {
         });
     }
 
+    /**
+     * Méthode d'initialisation des sorties
+     */
     private void initOutputs() {
         currentTurnLabel = new JLabel("Waiting");
         currentTurnLabel.setHorizontalAlignment(JLabel.CENTER);
