@@ -87,10 +87,10 @@ public class BombermanGame extends Game {
                 break;
             }
         }
-        if (agent_tmp != null && actionSystem.isLegalMove(agents.get(agents.indexOf(agent_tmp)),
+        if (agent_tmp != null && actionSystem.isLegalAction(agents.get(agents.indexOf(agent_tmp)),
                 AgentAction.MOVE_RIGHT)) {
             actionSystem.doAction(agents.get(agents.indexOf(agent_tmp)), AgentAction.MOVE_RIGHT);
-        } else if (agent_tmp != null && actionSystem.isLegalMove(agents.get(agents.indexOf(agent_tmp)),
+        } else if (agent_tmp != null && actionSystem.isLegalAction(agents.get(agents.indexOf(agent_tmp)),
                 AgentAction.MOVE_LEFT)) {
             actionSystem.doAction(agents.get(agents.indexOf(agent_tmp)), AgentAction.MOVE_LEFT);
         }
@@ -103,7 +103,7 @@ public class BombermanGame extends Game {
 
         log.debug(agent_tmp.toString());
 
-        if (actionSystem.isLegalMove(agent_tmp, agent_tmp.getAgentAction())) {
+        if (actionSystem.isLegalAction(agent_tmp, agent_tmp.getAgentAction())) {
             actionSystem.doAction(agent_tmp, agent_tmp.getAgentAction());
         } else {
             agent_tmp.setAgentAction(AgentAction.MOVE_RIGHT);

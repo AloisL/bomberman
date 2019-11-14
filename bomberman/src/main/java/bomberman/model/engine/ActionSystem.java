@@ -16,7 +16,7 @@ public class ActionSystem {
         this.bombermanGame = bombermanGame;
     }
 
-    public boolean isLegalMove(AbstractAgent agent, AgentAction action) {
+    public boolean isLegalAction(AbstractAgent agent, AgentAction action) {
         switch (action) {
             case MOVE_UP:
                 return canMove(agent, AgentAction.MOVE_UP);
