@@ -6,16 +6,32 @@ import bomberman.model.repo.AgentAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 
+/**
+ * Classe de gestion des actions du jeu
+ */
 public class ActionSystem {
 
     final static Logger log = (Logger) LogManager.getLogger(ActionSystem.class);
 
     BombermanGame bombermanGame;
 
+    /**
+     * Constructeur
+     *
+     * @param bombermanGame Le jeu
+     */
     public ActionSystem(BombermanGame bombermanGame) {
         this.bombermanGame = bombermanGame;
     }
 
+    /**
+     * Méthode de vérification da possibilité d'effectuer une action
+     * TODO : exception
+     *
+     * @param agent  Un ajent du jeu
+     * @param action Une action
+     * @return True si l'action est possible, False sinon
+     */
     public boolean isLegalAction(AbstractAgent agent, AgentAction action) {
         switch (action) {
             case MOVE_UP:
@@ -33,11 +49,18 @@ public class ActionSystem {
                 // TODO case PUT_BOMB
                 return true;
             default:
+                // TODO : Exception
                 log.error(agent.toString() + " ==> Action: " + action.toString() + " non reconnue");
                 return false;
         }
     }
 
+    /**
+     * Méthode d'éxecution d'une action (à appeler après isLegalAction()
+     *
+     * @param agent  Un agent du jeu
+     * @param action Une action
+     */
     public void doAction(AbstractAgent agent, AgentAction action) {
         bombermanGame.getAgents().remove(agent);
         Integer posX = agent.getX();
@@ -68,12 +91,20 @@ public class ActionSystem {
                 bombermanGame.getAgents().add(agent);
                 break;
             default:
+                // TODO : Exception
                 log.debug("Action inconnue ==> " + action.toString());
                 bombermanGame.getAgents().add(agent);
                 break;
         }
     }
 
+    /**
+     * Méthode de vérification da possibilité d'effectuer une mouvement
+     *
+     * @param agent  Un ajent du jeu
+     * @param action Une action (mouvement)
+     * @return True si le mouvement est possible, False sinon
+     */
     private boolean canMove(AbstractAgent agent, AgentAction action) {
         Integer posX = agent.getX();
         Integer posY = agent.getY();
@@ -121,6 +152,7 @@ public class ActionSystem {
                     return true;
                 }
             default:
+                // TODO : Exception
                 log.error(agent.toString() + " ==> Action: " + action.toString() + " non compatible");
                 return false;
         }
