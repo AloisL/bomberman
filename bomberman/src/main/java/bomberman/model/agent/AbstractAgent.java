@@ -27,6 +27,6 @@ public abstract class AbstractAgent extends InfoAgent {
 
     @Override
     public String toString() {
-        return "Agent ::: type:" + super.getType() + " poX:" + super.getX() + "\tposY:" + super.getY();
+        return "Agent ::: ID=" + id + " Type=" + super.getType() + " x=" + super.getX() + " y=" + super.getY();
     }
 }
