@@ -1,6 +1,7 @@
 package bomberman.model;
 
-import bomberman.model.agent.*;
+import bomberman.model.agent.AbstractAgent;
+import bomberman.model.agent.AgentFactory;
 import bomberman.model.engine.*;
 import bomberman.model.repo.AgentAction;
 import common.Game;
@@ -28,58 +29,39 @@ public class BombermanGame extends Game {
 
     @Override
     public void initializeGame() {
-
-        // TODO : design pattern fabrique
-
-        log.debug("Le jeu est initialisé !");
+        log.debug("Initialisation du jeu");
 
         AbstractAgent.resetId();
-
-        ArrayList<InfoAgent> startAgents = map.getStart_agents();
+        items = new ArrayList<>();
+        bombs = new ArrayList<>();
+        agents = new ArrayList<>();
 
         log.debug("Initialisation des broken_walls");
         breakableWalls = map.getStart_brokable_walls();
-        log.debug("Initialisation des items");
-        items = new ArrayList<>();
-        log.debug("Initialisation des bombes");
-        bombs = new ArrayList<>();
-        log.debug("Initialisation des agents");
-        agents = new ArrayList<>();
 
-        for (InfoAgent agent : startAgents) {
-            switch (agent.getType()) {
-                case 'B':
-                    agents.add(new BombermanAgent(agent.getX(), agent.getY(), agent.getAgentAction(),
-                            agent.getColor(), false, false));
-                    log.debug("Agent initialisé ==> " + agents.get(agents.size() - 1).toString());
-                    break;
-                case 'R':
-                    agents.add(new RajionAgent(agent.getX(), agent.getY(), agent.getAgentAction(), agent.getColor(),
-                            false, false));
-                    log.debug("Agent initialisé ==> " + agents.get(agents.size() - 1).toString());
-                    break;
-                case 'E':
-                    agents.add(new BasicEnemyAgent(agent.getX(), agent.getY(), agent.getAgentAction(),
-                            agent.getColor(), false, false));
-                    log.debug("Agent initialisé ==> " + agents.get(agents.size() - 1).toString());
-                    break;
-                case 'V':
-                    agents.add(new BirdAgent(agent.getX(), agent.getY(), agent.getAgentAction(), agent.getColor(),
-                            false, false));
-                    log.debug("Agent initialisé ==> " + agents.get(agents.size() - 1).toString());
-                    break;
-                default:
-                    log.error("Wrong agent type given: " + agent.getType());
-                    break;
+        log.debug("Initialisation des agents");
+        for (InfoAgent agent : map.getStart_agents()) {
+            try {
+                AbstractAgent abstractAgent = AgentFactory.newAgent(agent.getType(), agent.getX(), agent.getY(),
+                        agent.getAgentAction(), agent.getColor(), false, false);
+                agents.add(abstractAgent);
+                log.debug("Agent initialisé ==> " + agents.get(agents.size() - 1).toString());
+            } catch (Exception e) {
+                log.error(e.getMessage());
             }
         }
 
         actionSystem = new ActionSystem(this);
+
+        log.debug("Jeu initialisé");
     }
 
     @Override
     public void takeTurn() {
+        // TODO : takeTurn
+
         AbstractAgent agent_tmp = null;
+
         for (AbstractAgent agent : agents) {
             log.debug("id ==>" + agent.getId());
             if (agent.getId() == 1) {
@@ -87,6 +69,7 @@ public class BombermanGame extends Game {
                 break;
             }
         }
+
         if (agent_tmp != null && actionSystem.isLegalAction(agents.get(agents.indexOf(agent_tmp)),
                 AgentAction.MOVE_RIGHT)) {
             actionSystem.doAction(agents.get(agents.indexOf(agent_tmp)), AgentAction.MOVE_RIGHT);
@@ -94,6 +77,7 @@ public class BombermanGame extends Game {
                 AgentAction.MOVE_LEFT)) {
             actionSystem.doAction(agents.get(agents.indexOf(agent_tmp)), AgentAction.MOVE_LEFT);
         }
+
         for (AbstractAgent agent : agents) {
             if (agent.getId() == 1) {
                 agent_tmp = agent;
