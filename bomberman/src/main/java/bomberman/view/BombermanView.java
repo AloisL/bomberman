@@ -45,7 +45,7 @@ public class BombermanView implements Observer {
     private void initFrame(String title) {
         window = new JFrame();
 
-        // Permet de fermer l'application après avoir quitter la vue.
+        /* Permet de fermer l'application après avoir quitter la vue */
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         window.setTitle(title);
@@ -57,6 +57,7 @@ public class BombermanView implements Observer {
         int dy = centerPoint.y - (windowSize.height / 2) - 350;
         window.setLocation(dx, dy);
 
+        /* Permet la gestion du comportement lorsque l'on modifie la taille de la fenêtre */
         window.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent componentEvent) {
@@ -70,6 +71,9 @@ public class BombermanView implements Observer {
         });
     }
 
+    /**
+     * Méthode d'initialisation des Panel de la fenêtre
+     */
     private void setPanels() {
         mainPanel = new JPanel(new BorderLayout());
         commandPanel = new CommandPanel(controller);
@@ -77,6 +81,12 @@ public class BombermanView implements Observer {
         window.add(mainPanel);
     }
 
+    /**
+     * Méthode appelée lorsque le jeu est mis à jour (uniquement appelée par le jeu)
+     *
+     * @param observable Le jeu
+     * @param o
+     */
     @Override
     public void update(Observable observable, Object o) {
         BombermanGame bombermanGame = (BombermanGame) observable;
@@ -87,15 +97,19 @@ public class BombermanView implements Observer {
         window.repaint();
     }
 
+    /**
+     * Méthode de mise à jour de l'affichage
+     */
     private void displayUpdate() {
         String currentTurnStr = "Turn: " + currentTurn.toString();
         commandPanel.getCurrentTurnLabel().setText(currentTurnStr);
     }
 
-    public String getLayout() {
-        return (String) commandPanel.getLayoutChooser().getSelectedItem();
-    }
-
+    /**
+     * Méthode d'ajout du panel du jeu bomberman à la fenêtre
+     *
+     * @param bombermanPanel Le panel du jeu bomberman
+     */
     public void addPanelBomberman(PanelBomberman bombermanPanel) {
         if (mainPanel.getComponentCount() == 2) mainPanel.remove(1);
         this.bombermanPanel = bombermanPanel;
@@ -105,6 +119,10 @@ public class BombermanView implements Observer {
         mainPanel.add(this.bombermanPanel, BorderLayout.CENTER);
         window.setSize(sizeX, sizeY + commandPanel.getHeight() + 40);
         window.repaint();
+    }
+
+    public String getLayout() {
+        return (String) commandPanel.getLayoutChooser().getSelectedItem();
     }
 
 }
