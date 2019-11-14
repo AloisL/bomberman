@@ -10,6 +10,9 @@ import java.awt.event.ComponentEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Classe de gestion de la vue du jeu
+ */
 public class BombermanView implements Observer {
 
     private BombermanController controller;
@@ -21,6 +24,12 @@ public class BombermanView implements Observer {
     private CommandPanel commandPanel;
     private PanelBomberman bombermanPanel;
 
+    /**
+     * Constructeur de la vue
+     *
+     * @param controller Le controleur du jeu
+     * @param title      Le titre du jeu
+     */
     public BombermanView(BombermanController controller, String title) {
         this.controller = controller;
         initFrame(title);
@@ -28,6 +37,11 @@ public class BombermanView implements Observer {
         window.setVisible(true);
     }
 
+    /**
+     * Méthode d'initialisation de la fenêtre
+     *
+     * @param title Le titre du jeu
+     */
     private void initFrame(String title) {
         window = new JFrame();
 
@@ -66,7 +80,8 @@ public class BombermanView implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         BombermanGame bombermanGame = (BombermanGame) observable;
-        bombermanPanel.setInfoGame(bombermanGame.getBreakableWalls(), bombermanGame.getInfoAgents(), bombermanGame.getItems(), bombermanGame.getBombs());
+        bombermanPanel.setInfoGame(bombermanGame.getBreakableWalls(), bombermanGame.getInfoAgents(),
+                bombermanGame.getItems(), bombermanGame.getBombs());
         currentTurn = bombermanGame.getCurrentTurn();
         displayUpdate();
         window.repaint();

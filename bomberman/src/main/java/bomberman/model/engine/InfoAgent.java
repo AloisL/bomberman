@@ -3,6 +3,9 @@ package bomberman.model.engine;
 import bomberman.model.repo.AgentAction;
 import bomberman.model.repo.ColorAgent;
 
+/**
+ * La classe représentant un InfoAgent (Caractéristiques communes à tous les agents du jeu)
+ */
 public class InfoAgent {
 
     private int x;
@@ -14,7 +17,8 @@ public class InfoAgent {
     private boolean isInvincible;
     private boolean isSick;
 
-    public InfoAgent(int x, int y, AgentAction agentAction, char type, ColorAgent color, boolean isInvincible, boolean isSick) {
+    public InfoAgent(int x, int y, AgentAction agentAction, char type, ColorAgent color, boolean isInvincible,
+                     boolean isSick) {
         this.x = x;
         this.y = y;
         this.agentAction = agentAction;

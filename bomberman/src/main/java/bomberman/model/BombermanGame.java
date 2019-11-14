@@ -10,6 +10,9 @@ import org.apache.logging.log4j.core.Logger;
 
 import java.util.ArrayList;
 
+/**
+ * La classe principale du jeu bomberman, hérite de la classe Game
+ */
 public class BombermanGame extends Game {
 
     final static Logger log = (Logger) LogManager.getLogger(BombermanGame.class);
@@ -27,6 +30,9 @@ public class BombermanGame extends Game {
         super(maxTurn);
     }
 
+    /**
+     * Médode d'initialisation des éléments du jeu
+     */
     @Override
     public void initializeGame() {
         log.debug("Initialisation du jeu");
@@ -47,6 +53,9 @@ public class BombermanGame extends Game {
         log.debug("Jeu initialisé");
     }
 
+    /**
+     * Méthode d'appel d'un rour de jeu complet
+     */
     @Override
     public void takeTurn() {
         // TODO : takeTurn
@@ -89,26 +98,66 @@ public class BombermanGame extends Game {
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
     }
 
+    /**
+     * Méthode appelée en fin de jeu
+     */
     @Override
     public void gameOver() {
         log.debug("Le jeu est fini");
     }
 
+    /**
+     * TODO : ??
+     *
+     * @return booléen
+     */
     @Override
     public boolean gameContinue() {
         return true;
     }
 
-    public Map getMap() {
-        return map;
-    }
-
+    /**
+     * Méthode permettant de changer la carte du jeu
+     *
+     * @param layoutPath le chemin du fichier comportant le layout de la carte
+     */
     public void setMapFromLayoutPath(String layoutPath) {
         try {
             map = new Map(layoutPath);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+    }
+
+    /**
+     * Méthode d'initialisation des agents du jeu
+     */
+    public void initAgents() {
+        for (InfoAgent agent : map.getStart_agents()) {
+            try {
+                AbstractAgent abstractAgent = AgentFactory.newAgent(agent.getType(), agent.getX(), agent.getY(),
+                        agent.getAgentAction(), agent.getColor(), false, false);
+                agents.add(abstractAgent);
+                log.debug("Agent initialisé ==> " + agents.get(agents.size() - 1).toString());
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Méthode permettant de générer les InfoAgents des Agents du jeu courant
+     *
+     * @return La liste des infosAgents
+     */
+    public ArrayList<InfoAgent> getInfoAgents() {
+        ArrayList<InfoAgent> infoAgents = new ArrayList<>();
+        infoAgents.addAll(agents);
+        return infoAgents;
+    }
+
+    public Map getMap() {
+        return map;
     }
 
     public boolean[][] getBreakableWalls() {
@@ -125,24 +174,5 @@ public class BombermanGame extends Game {
 
     public ArrayList<AbstractAgent> getAgents() {
         return agents;
-    }
-
-    public ArrayList<InfoAgent> getInfoAgents() {
-        ArrayList<InfoAgent> infoAgents = new ArrayList<>();
-        infoAgents.addAll(agents);
-        return infoAgents;
-    }
-
-    public void initAgents() {
-        for (InfoAgent agent : map.getStart_agents()) {
-            try {
-                AbstractAgent abstractAgent = AgentFactory.newAgent(agent.getType(), agent.getX(), agent.getY(),
-                        agent.getAgentAction(), agent.getColor(), false, false);
-                agents.add(abstractAgent);
-                log.debug("Agent initialisé ==> " + agents.get(agents.size() - 1).toString());
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-        }
     }
 }
