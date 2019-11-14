@@ -40,16 +40,7 @@ public class BombermanGame extends Game {
         breakableWalls = map.getStart_brokable_walls();
 
         log.debug("Initialisation des agents");
-        for (InfoAgent agent : map.getStart_agents()) {
-            try {
-                AbstractAgent abstractAgent = AgentFactory.newAgent(agent.getType(), agent.getX(), agent.getY(),
-                        agent.getAgentAction(), agent.getColor(), false, false);
-                agents.add(abstractAgent);
-                log.debug("Agent initialisé ==> " + agents.get(agents.size() - 1).toString());
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-        }
+        initAgents();
 
         actionSystem = new ActionSystem(this);
 
@@ -140,5 +131,18 @@ public class BombermanGame extends Game {
         ArrayList<InfoAgent> infoAgents = new ArrayList<>();
         infoAgents.addAll(agents);
         return infoAgents;
+    }
+
+    public void initAgents() {
+        for (InfoAgent agent : map.getStart_agents()) {
+            try {
+                AbstractAgent abstractAgent = AgentFactory.newAgent(agent.getType(), agent.getX(), agent.getY(),
+                        agent.getAgentAction(), agent.getColor(), false, false);
+                agents.add(abstractAgent);
+                log.debug("Agent initialisé ==> " + agents.get(agents.size() - 1).toString());
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+        }
     }
 }
