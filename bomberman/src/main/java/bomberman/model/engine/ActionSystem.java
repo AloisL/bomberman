@@ -2,6 +2,7 @@ package bomberman.model.engine;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
+import bomberman.model.agent.BombermanAgent;
 import bomberman.model.repo.AgentAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -43,58 +44,17 @@ public class ActionSystem {
             case MOVE_RIGHT:
                 return canMove(agent, AgentAction.MOVE_RIGHT);
             case STOP:
-                // TODO case STOP
                 return true;
-            case PUT_BOMB:
-                // TODO case PUT_BOMB
-                return true;
+            case PUT_BOMB: {
+                if (agent.getClass() == BombermanAgent.class) {
+                    BombermanAgent agentBomberman = (BombermanAgent) agent;
+                    if (agentBomberman.canPlaceBomb()) return true;
+                } else return false;
+            }
             default:
                 // TODO : Exception
                 log.error(agent.toString() + " ==> Action: " + action.toString() + " non reconnue");
                 return false;
-        }
-    }
-
-    /**
-     * Méthode d'éxecution d'une action (à appeler après isLegalAction()
-     *
-     * @param agent  Un agent du jeu
-     * @param action Une action
-     */
-    public void doAction(AbstractAgent agent, AgentAction action) {
-        bombermanGame.getAgents().remove(agent);
-        Integer posX = agent.getX();
-        Integer posY = agent.getY();
-        switch (action) {
-            case MOVE_UP:
-                agent.setY(posY - 1);
-                bombermanGame.getAgents().add(agent);
-                break;
-            case MOVE_DOWN:
-                agent.setY(posY + 1);
-                bombermanGame.getAgents().add(agent);
-                break;
-            case MOVE_LEFT:
-                agent.setX(posX - 1);
-                bombermanGame.getAgents().add(agent);
-                break;
-            case MOVE_RIGHT:
-                agent.setX(posX + 1);
-                bombermanGame.getAgents().add(agent);
-                break;
-            case STOP:
-                //TODO case STOP
-                bombermanGame.getAgents().add(agent);
-                break;
-            case PUT_BOMB:
-                //TODO case PUT_BOMB
-                bombermanGame.getAgents().add(agent);
-                break;
-            default:
-                // TODO : Exception
-                log.debug("Action inconnue ==> " + action.toString());
-                bombermanGame.getAgents().add(agent);
-                break;
         }
     }
 
@@ -157,5 +117,50 @@ public class ActionSystem {
                 return false;
         }
     }
+
+    /**
+     * Méthode d'éxecution d'une action (à appeler après isLegalAction()
+     *
+     * @param agent  Un agent du jeu
+     * @param action Une action
+     */
+    public void doAction(AbstractAgent agent, AgentAction action) {
+        bombermanGame.getAgents().remove(agent);
+        Integer posX = agent.getX();
+        Integer posY = agent.getY();
+        switch (action) {
+            case MOVE_UP:
+                agent.setY(posY - 1);
+                bombermanGame.getAgents().add(agent);
+                break;
+            case MOVE_DOWN:
+                agent.setY(posY + 1);
+                bombermanGame.getAgents().add(agent);
+                break;
+            case MOVE_LEFT:
+                agent.setX(posX - 1);
+                bombermanGame.getAgents().add(agent);
+                break;
+            case MOVE_RIGHT:
+                agent.setX(posX + 1);
+                bombermanGame.getAgents().add(agent);
+                break;
+            case STOP:
+                bombermanGame.getAgents().add(agent);
+                break;
+            case PUT_BOMB:
+                BombermanAgent agentBomberman = (BombermanAgent) agent;
+                InfoBomb bomb = agentBomberman.addBomb();
+                bombermanGame.getBombs().add(bomb);
+                bombermanGame.getAgents().add(agent);
+                break;
+            default:
+                // TODO : Exception
+                log.debug("Action inconnue ==> " + action.toString());
+                bombermanGame.getAgents().add(agent);
+                break;
+        }
+    }
+
 
 }
