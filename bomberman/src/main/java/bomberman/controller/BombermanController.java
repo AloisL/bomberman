@@ -1,15 +1,22 @@
 package bomberman.controller;
 
 import bomberman.model.BombermanGame;
+import bomberman.model.agent.AbstractAgent;
+import bomberman.model.agent.BombermanAgent;
 import bomberman.model.engine.Map;
+import bomberman.model.repo.AgentAction;
 import bomberman.view.BombermanView;
 import bomberman.view.PanelBomberman;
 import common.Controller;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 
 /**
  * Classe du controleur du jeu
  */
 public class BombermanController implements Controller {
+
+    final static org.apache.logging.log4j.core.Logger log = (Logger) LogManager.getLogger(BombermanController.class);
 
     private BombermanGame bombermanGame;
     private PanelBomberman bombermanPanel;
@@ -51,6 +58,17 @@ public class BombermanController implements Controller {
         bombermanGame.step();
     }
 
+    public void stepBombermanAgent(AgentAction action) {
+        log.debug("TEST MOUVEMENT");
+        for (AbstractAgent agent : bombermanGame.getAgents()) {
+            if (agent.getClass() == BombermanAgent.class) {
+                log.debug("TEST BOMBERMAN");
+                BombermanAgent bombermanAgent = (BombermanAgent) agent;
+                bombermanGame.takeTurn(bombermanAgent, action);
+            }
+        }
+    }
+
     /**
      * Méthode mettant le jeu en pause
      */
@@ -62,11 +80,11 @@ public class BombermanController implements Controller {
     /**
      * Setter du nombre de tours par secondes et conversion en temps de pause du thread
      *
-     * @param turnBySec Le nombre de tours par secondes
+     * @param turnPerSec Le nombre de tours par secondes
      */
     @Override
-    public void setTime(Integer turnBySec) {
-        Long sleepTime = (long) 1000 / turnBySec;
+    public void setTime(Integer turnPerSec) {
+        Long sleepTime = (long) 1000 / turnPerSec;
         bombermanGame.setSleepTime(sleepTime);
     }
 

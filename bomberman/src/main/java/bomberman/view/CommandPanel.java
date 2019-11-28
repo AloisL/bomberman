@@ -12,6 +12,8 @@ import java.util.Arrays;
  */
 public class CommandPanel extends JPanel {
 
+    private BombermanView bombermanView;
+
     private JPanel topCommandPanel;
     private JPanel botCommandPanel;
 
@@ -26,10 +28,11 @@ public class CommandPanel extends JPanel {
     /**
      * Constructeur du JPanel de commande
      *
-     * @param controller Le controleur du jeu
+     * @param bombermanView La vue du jeu
      */
-    public CommandPanel(BombermanController controller) {
-        init(controller);
+    public CommandPanel(BombermanView bombermanView) {
+        this.bombermanView = bombermanView;
+        init(bombermanView.getController());
     }
 
     /**
@@ -97,18 +100,31 @@ public class CommandPanel extends JPanel {
             controller.init();
             runButton.setEnabled(Boolean.TRUE);
             stepButton.setEnabled(Boolean.TRUE);
-            pauseButton.setEnabled(Boolean.TRUE);
+            bombermanView.getBombermanPanel().grabFocus();
         });
 
-        runButton.addActionListener(event -> controller.run());
+        runButton.addActionListener(event -> {
+            controller.run();
+            pauseButton.setEnabled(Boolean.TRUE);
+            initButton.setEnabled(Boolean.FALSE);
+            runButton.setEnabled(Boolean.FALSE);
+            bombermanView.getBombermanPanel().grabFocus();
+        });
 
         stepButton.addActionListener(event -> controller.step());
 
-        pauseButton.addActionListener(event -> controller.pause());
+        pauseButton.addActionListener(event -> {
+            controller.pause();
+            initButton.setEnabled(Boolean.TRUE);
+            pauseButton.setEnabled(Boolean.FALSE);
+            runButton.setEnabled(Boolean.TRUE);
+            bombermanView.getBombermanPanel().grabFocus();
+        });
 
         turnSlider.addChangeListener(event -> {
             JSlider turnSlider1 = (JSlider) event.getSource();
             controller.setTime(turnSlider1.getValue());
+            bombermanView.getBombermanPanel().grabFocus();
         });
     }
 

@@ -2,8 +2,10 @@ package bomberman.model;
 
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.AgentFactory;
+import bomberman.model.agent.BombermanAgent;
 import bomberman.model.engine.*;
 import bomberman.model.repo.AgentAction;
+import bomberman.model.repo.StateBomb;
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -54,49 +56,57 @@ public class BombermanGame extends Game {
     }
 
     /**
-     * Méthode d'appel d'un rour de jeu complet
+     * Méthode d'appel d'un tour de jeu complet.
+     * Cette méthode est appelée à chaque tour de jeu afin d'effectuer les actions globale d'un tour de jeu (état des
+     * bombes, déplacement des IA, apparition des items etc).
      */
     @Override
     public void takeTurn() {
         // TODO : takeTurn
 
-        AbstractAgent agent_tmp = null;
+        ArrayList<InfoBomb> bombToBeRemoved = new ArrayList<>();
 
-        for (AbstractAgent agent : agents) {
-            log.debug("id ==>" + agent.getId());
-            if (agent.getId() == 1) {
-                agent_tmp = agent;
-                break;
+        for (InfoBomb bomb : bombs) {
+            switch (bomb.getStateBomb()) {
+                case Step1:
+                    bomb.setStateBomb(StateBomb.Step2);
+                    break;
+                case Step2:
+                    bomb.setStateBomb(StateBomb.Step3);
+                    break;
+                case Step3:
+                    bomb.setStateBomb(StateBomb.Boom);
+                    break;
+                case Boom:
+                    bombToBeRemoved.add(bomb);
+                default:
+                    log.error("Etat de bombe inconnu");
             }
         }
 
-        if (agent_tmp != null && actionSystem.isLegalAction(agents.get(agents.indexOf(agent_tmp)),
-                AgentAction.MOVE_RIGHT)) {
-            actionSystem.doAction(agents.get(agents.indexOf(agent_tmp)), AgentAction.MOVE_RIGHT);
-        } else if (agent_tmp != null && actionSystem.isLegalAction(agents.get(agents.indexOf(agent_tmp)),
-                AgentAction.MOVE_LEFT)) {
-            actionSystem.doAction(agents.get(agents.indexOf(agent_tmp)), AgentAction.MOVE_LEFT);
-        }
-
-        for (AbstractAgent agent : agents) {
-            if (agent.getId() == 1) {
-                agent_tmp = agent;
-                break;
-            }
-        }
-
-        log.debug(agent_tmp.toString());
-
-        if (actionSystem.isLegalAction(agent_tmp, agent_tmp.getAgentAction())) {
-            actionSystem.doAction(agent_tmp, agent_tmp.getAgentAction());
-        } else {
-            agent_tmp.setAgentAction(AgentAction.MOVE_RIGHT);
-            log.debug(agent_tmp.toString());
-            log.debug(agent_tmp.getAgentAction().toString());
+        for (InfoBomb bomb : bombToBeRemoved) {
+            bomb.getOwner().freeBombSlot();
+            bombs.remove(bomb);
         }
 
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
     }
+
+    /**
+     * Méthode d'appel d'un tour de jeu d'un agent Bomberman
+     * Cette méthode est indépendante de la méthode takeTurn().
+     * Cette méthode est appelée dès qu'un agent bomberman effectue une action clavier.*
+     * Cette méthode met à jour le jeu indépendemment des tours classiques.
+     *
+     * @param bombermanAgent
+     * @param agentAction
+     */
+    public void takeTurn(BombermanAgent bombermanAgent, AgentAction agentAction) {
+        if (actionSystem.isLegalAction(bombermanAgent, agentAction)) actionSystem.doAction(bombermanAgent, agentAction);
+        setChanged();
+        notifyObservers();
+    }
+
 
     /**
      * Méthode appelée en fin de jeu

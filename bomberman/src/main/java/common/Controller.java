@@ -9,5 +9,5 @@ public interface Controller {
 
     void pause();
 
-    void setTime(Integer turnBySec);
+    void setTime(Integer turnPerSec);
 }
