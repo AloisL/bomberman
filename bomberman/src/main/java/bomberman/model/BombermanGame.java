@@ -60,7 +60,8 @@ public class BombermanGame extends Game {
      * Méthode d'appel d'un tour de jeu complet.
      * Cette méthode est appelée à chaque tour de jeu afin d'effectuer les actions globale d'un tour de jeu (état des
      * bombes, déplacement des IA, apparition des items etc).
-     */  @Override
+     */
+    @Override
     public void takeTurn() {
         // TODO : takeTurn
 
