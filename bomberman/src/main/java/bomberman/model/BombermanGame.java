@@ -2,11 +2,15 @@ package bomberman.model;
 
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.AgentFactory;
+import bomberman.model.agent.BombermanAgent;
 import bomberman.model.engine.*;
 import bomberman.model.repo.AgentAction;
+
+import bomberman.model.repo.StateBomb;
 import bomberman.model.strategie.Coordonne;
 import bomberman.model.strategie.StrategieAgents;
 import bomberman.model.strategie.StrategieBirdAgent;
+
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -57,20 +61,41 @@ public class BombermanGame extends Game {
     }
 
     /**
-     * Méthode d'appel d'un rour de jeu complet
+     * Méthode d'appel d'un tour de jeu complet.
+     * Cette méthode est appelée à chaque tour de jeu afin d'effectuer les actions globale d'un tour de jeu (état des
+     * bombes, déplacement des IA, apparition des items etc).
      */
     @Override
     public void takeTurn() {
         // TODO : takeTurn
 
-        AbstractAgent agent_tmp = null;
+        ArrayList<InfoBomb> bombToBeRemoved = new ArrayList<>();
 
-        for (AbstractAgent agent : agents) {
-            log.debug("id ==>" + agent.getId());
-            if (agent.getId() == 1) {
-                agent_tmp = agent;
-                break;
+        for (InfoBomb bomb : bombs) {
+            switch (bomb.getStateBomb()) {
+                case Step1:
+                    bomb.setStateBomb(StateBomb.Step2);
+                    break;
+                case Step2:
+                    bomb.setStateBomb(StateBomb.Step3);
+                    break;
+                case Step3:
+                    bomb.setStateBomb(StateBomb.Boom);
+                    break;
+                case Boom:
+                    bombToBeRemoved.add(bomb);
+                default:
+                    log.error("Etat de bombe inconnu");
             }
+        }
+
+        for (InfoBomb bomb : bombs) {
+            if (bomb.getStateBomb() == StateBomb.Boom) bombHit(bomb);
+        }
+
+        for (InfoBomb bomb : bombToBeRemoved) {
+            bomb.getOwner().freeBombSlot();
+            bombs.remove(bomb);
         }
 
 
@@ -87,11 +112,29 @@ public class BombermanGame extends Game {
 
 
 
+
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
     }
 
     /**
-     * Méthode appelée pour effectuer la strategie jusqu'a un move legale
+
+     * Méthode d'appel d'un tour de jeu d'un agent Bomberman
+     * Cette méthode est indépendante de la méthode takeTurn().
+     * Cette méthode est appelée dès qu'un agent bomberman effectue une action clavier.*
+     * Cette méthode met à jour le jeu indépendemment des tours classiques.
+     *
+     * @param bombermanAgent
+     * @param agentAction
+     */
+    public void takeTurn(BombermanAgent bombermanAgent, AgentAction agentAction) {
+        if (actionSystem.isLegalAction(bombermanAgent, agentAction)) actionSystem.doAction(bombermanAgent, agentAction);
+        setChanged();
+        notifyObservers();
+    }
+
+
+
+     /* Méthode appelée pour effectuer la strategie jusqu'a un move legale
      */
     public void useStrat(AbstractAgent agent){
         StrategieAgents strat =new StrategieBirdAgent(this,agent);
@@ -104,6 +147,7 @@ public class BombermanGame extends Game {
             actionSystem.doAction(agents.get(agents.indexOf(agent)), AgentAction.STOP);
         }
     }
+
 
 
 
@@ -184,4 +228,49 @@ public class BombermanGame extends Game {
     public ArrayList<AbstractAgent> getAgents() {
         return agents;
     }
+
+    public void bombHit(InfoBomb bomb) {
+        int range = bomb.getRange();
+        int posXbomb = bomb.getX();
+        int posYbomb = bomb.getY();
+
+        // Tue les agents dans la range de la bombe
+        ArrayList<AbstractAgent> agentsToBeRemoved = new ArrayList<>();
+        for (AbstractAgent agent : agents) {
+            int posXagent = agent.getX();
+            int posYagent = agent.getY();
+
+            if (posXagent == posXbomb) {
+                for (int i = 0; i <= range; i++) {
+                    if ((posYagent == posYbomb + i) || (posYagent == posYbomb - i)) agentsToBeRemoved.add(agent);
+                }
+            }
+            if (posYagent == posYbomb) {
+                for (int i = 0; i <= range; i++) {
+                    if ((posXagent == posXbomb + i) || (posXagent == posXbomb - i)) agentsToBeRemoved.add(agent);
+                }
+            }
+        }
+        for (AbstractAgent agent : agentsToBeRemoved) agents.remove(agent);
+
+        // Détruit les murs dans la range de la bombe
+        int x = posXbomb;
+        int y = posYbomb;
+
+        if (x == posXbomb) {
+            for (int i = 0; i <= range; i++) {
+                breakableWalls[x][y + i] = false;
+                breakableWalls[x][y - i] = false;
+            }
+        }
+        if (y == posYbomb) {
+            for (int i = 0; i <= range; i++) {
+                breakableWalls[x + i][y] = false;
+                breakableWalls[x - i][y] = false;
+            }
+        }
+
+
+    }
+
 }
