@@ -235,7 +235,6 @@ public class BombermanGame extends Game {
 
     }
 
-
     public boolean isFree(Coordonne c){
         if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]){
             return false;
