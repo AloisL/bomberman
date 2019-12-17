@@ -224,49 +224,6 @@ public class ActionSystem {
         }
     }
 
-    /**
-     * Méthode d'éxecution d'une action (à appeler après isLegalAction()
-     *
-     * @param agent  Un agent du jeu
-     * @param action Une action
-     */
-    public void doAction(AbstractAgent agent, AgentAction action) {
-        bombermanGame.getAgents().remove(agent);
-        Integer posX = agent.getX();
-        Integer posY = agent.getY();
-        switch (action) {
-            case MOVE_UP:
-                agent.setY(posY - 1);
-                bombermanGame.getAgents().add(agent);
-                break;
-            case MOVE_DOWN:
-                agent.setY(posY + 1);
-                bombermanGame.getAgents().add(agent);
-                break;
-            case MOVE_LEFT:
-                agent.setX(posX - 1);
-                bombermanGame.getAgents().add(agent);
-                break;
-            case MOVE_RIGHT:
-                agent.setX(posX + 1);
-                bombermanGame.getAgents().add(agent);
-                break;
-            case STOP:
-                bombermanGame.getAgents().add(agent);
-                break;
-            case PUT_BOMB:
-                BombermanAgent agentBomberman = (BombermanAgent) agent;
-                InfoBomb bomb = agentBomberman.addBomb();
-                bombermanGame.getBombs().add(bomb);
-                bombermanGame.getAgents().add(agent);
-                break;
-            default:
-                // TODO : Exception
-                log.debug("Action inconnue ==> " + action.toString());
-                bombermanGame.getAgents().add(agent);
-                break;
-        }
-    }
 
 
 }

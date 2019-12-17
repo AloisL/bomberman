@@ -5,12 +5,8 @@ import bomberman.model.agent.AgentFactory;
 import bomberman.model.agent.BombermanAgent;
 import bomberman.model.engine.*;
 import bomberman.model.repo.AgentAction;
-
 import bomberman.model.repo.StateBomb;
 import bomberman.model.strategie.Coordonne;
-import bomberman.model.strategie.StrategieAgents;
-import bomberman.model.strategie.StrategieBirdAgent;
-
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -98,26 +94,10 @@ public class BombermanGame extends Game {
             bombs.remove(bomb);
         }
 
-
-        useStrat(agent_tmp);
-
-        for (AbstractAgent agent : agents) {
-            if (agent.getId() == 1) {
-                agent_tmp = agent;
-                break;
-            }
-        }
-
-        log.debug(agent_tmp.toString());
-
-
-
-
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
     }
 
     /**
-
      * Méthode d'appel d'un tour de jeu d'un agent Bomberman
      * Cette méthode est indépendante de la méthode takeTurn().
      * Cette méthode est appelée dès qu'un agent bomberman effectue une action clavier.*
@@ -131,24 +111,6 @@ public class BombermanGame extends Game {
         setChanged();
         notifyObservers();
     }
-
-
-
-     /* Méthode appelée pour effectuer la strategie jusqu'a un move legale
-     */
-    public void useStrat(AbstractAgent agent){
-        StrategieAgents strat =new StrategieBirdAgent(this,agent);
-        Coordonne c=new Coordonne(0,0);
-        AgentAction action = strat.strategieAleatoire(c);
-        if (agent != null && actionSystem.isLegalAction(agents.get(agents.indexOf(agent)),
-                action )) {
-            actionSystem.doAction(agents.get(agents.indexOf(agent)), action);
-        } else  {
-            actionSystem.doAction(agents.get(agents.indexOf(agent)), AgentAction.STOP);
-        }
-    }
-
-
 
 
     /**
@@ -207,16 +169,6 @@ public class BombermanGame extends Game {
         ArrayList<InfoAgent> infoAgents = new ArrayList<>();
         infoAgents.addAll(agents);
         return infoAgents;
-    }
-
-    public boolean isFree(Coordonne c){
-        if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]){
-            return false;
-        }
-        for (InfoBomb b: bombs){
-            if(b.getX()==c.x && b.getY()==c.y) return false;
-        }
-        return true;
     }
 
     public Map getMap() {
@@ -282,5 +234,17 @@ public class BombermanGame extends Game {
 
 
     }
+
+
+    public boolean isFree(Coordonne c){
+        if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]){
+            return false;
+        }
+        for (InfoBomb b: bombs){
+            if(b.getX()==c.x && b.getY()==c.y) return false;
+        }
+        return true;
+    }
+
 
 }
