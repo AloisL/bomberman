@@ -84,6 +84,10 @@ public class BombermanGame extends Game {
             }
         }
 
+        for (InfoBomb bomb : bombs) {
+            if (bomb.getStateBomb() == StateBomb.Boom) bombHit(bomb);
+        }
+
         for (InfoBomb bomb : bombToBeRemoved) {
             bomb.getOwner().freeBombSlot();
             bombs.remove(bomb);
@@ -185,4 +189,49 @@ public class BombermanGame extends Game {
     public ArrayList<AbstractAgent> getAgents() {
         return agents;
     }
+
+    public void bombHit(InfoBomb bomb) {
+        int range = bomb.getRange();
+        int posXbomb = bomb.getX();
+        int posYbomb = bomb.getY();
+
+        // Tue les agents dans la range de la bombe
+        ArrayList<AbstractAgent> agentsToBeRemoved = new ArrayList<>();
+        for (AbstractAgent agent : agents) {
+            int posXagent = agent.getX();
+            int posYagent = agent.getY();
+
+            if (posXagent == posXbomb) {
+                for (int i = 0; i <= range; i++) {
+                    if ((posYagent == posYbomb + i) || (posYagent == posYbomb - i)) agentsToBeRemoved.add(agent);
+                }
+            }
+            if (posYagent == posYbomb) {
+                for (int i = 0; i <= range; i++) {
+                    if ((posXagent == posXbomb + i) || (posXagent == posXbomb - i)) agentsToBeRemoved.add(agent);
+                }
+            }
+        }
+        for (AbstractAgent agent : agentsToBeRemoved) agents.remove(agent);
+
+        // Détruit les murs dans la range de la bombe
+        int x = posXbomb;
+        int y = posYbomb;
+
+        if (x == posXbomb) {
+            for (int i = 0; i <= range; i++) {
+                breakableWalls[x][y + i] = false;
+                breakableWalls[x][y - i] = false;
+            }
+        }
+        if (y == posYbomb) {
+            for (int i = 0; i <= range; i++) {
+                breakableWalls[x + i][y] = false;
+                breakableWalls[x - i][y] = false;
+            }
+        }
+
+
+    }
+
 }
