@@ -29,9 +29,9 @@ public abstract class StrategieAgents {
 
     public AgentAction strategieAleatoire(Coordonne destination){
         AgentAction resultat = AgentAction.MOVE_UP;
-        System.out.println(bombermanGame.getMap().getSizeX()+" "+bombermanGame.getMap().getSizeX());
+
         //int aleatoire = (int)(Math.random()*7);
-       destination= afficherMur();
+       destination= chercherDirection(destination);
         switch (donneDirection(destination)){
             case 0:
                 resultat= AgentAction.MOVE_UP;
@@ -70,6 +70,44 @@ public abstract class StrategieAgents {
         return resultat;
     }
 
+    public AgentAction doMouvement(Coordonne objectif){
+        AgentAction resultat = AgentAction.PUT_BOMB;
+        objectif= chercherDirection(objectif);
+        switch (donneDirection(objectif)){
+            case 0:
+                resultat= AgentAction.MOVE_UP;
+                break;
+            case 1:
+                resultat= AgentAction.MOVE_DOWN;
+                break;
+            case 2:
+                resultat= AgentAction.MOVE_RIGHT;
+                break;
+            case 3:
+                resultat= AgentAction.MOVE_LEFT;
+                break;
+            case 4:
+                resultat= AgentAction.JUMP_DOWN;
+                break;
+            case 5:
+                resultat= AgentAction.JUMP_LEFT;
+                break;
+            case 6:
+                resultat= AgentAction.JUMP_RIGHT;
+                break;
+            case 7:
+                resultat= AgentAction.JUMP_UP;
+                break;
+            case 8:
+                resultat= AgentAction.STOP;
+            default:
+                log("mouvement non reconnue");
+                break;
+
+        }
+        return resultat;
+    }
+
     public int donneDirection(Coordonne direction){
         int diffX = direction.x - agentCalling.getX();
         int diffY = direction.y - agentCalling.getY();
@@ -84,23 +122,19 @@ public abstract class StrategieAgents {
 
 
 
-    public Coordonne afficherMur(){
-        /*
-        for (int y=0 ; y<bombermanGame.getMap().getSizeY();y++){
-            System.out.println("");
-            for (int x=0;x<bombermanGame.getMap().getSizeX();x++){
-                System.out.print("| "+bombermanGame.getMap().get_walls()[x][y]);
-
-            }
-        }*/
+    public Coordonne chercherDirection(Coordonne objectf){
         Coordonne objectif = new Coordonne(17,6);
         Astart astart = new Astart(bombermanGame,agentCalling,objectif);
         Coordonne coordonne = new Coordonne();
         Noeud noeud=astart.chemin(objectif,astart.creerOrigine());
                coordonne=noeud.getCoordonne();
+               /*
         System.out.print(coordonne.x+" : "+coordonne.y);
+                */
         return coordonne;
     }
+
+
 
 
     public boolean checkEnnemie(){

@@ -209,6 +209,16 @@ public class BombermanGame extends Game {
         return infoAgents;
     }
 
+    public boolean isFree(Coordonne c){
+        if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]){
+            return false;
+        }
+        for (InfoBomb b: bombs){
+            if(b.getX()==c.x && b.getY()==c.y) return false;
+        }
+        return true;
+    }
+
     public Map getMap() {
         return map;
     }
