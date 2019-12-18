@@ -288,7 +288,7 @@ public class BombermanGame extends Game {
             case 5:
                 return ItemType.SKULL;
             default:
-                // TODO Exception
+                log.error("Item inconnu ==> " + i);
                 return null;
         }
     }
