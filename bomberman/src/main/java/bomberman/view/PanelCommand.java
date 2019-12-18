@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * Classe gérant le JPanel de commande
  */
-public class CommandPanel extends JPanel {
+public class PanelCommand extends JPanel {
 
     private BombermanView bombermanView;
 
@@ -30,7 +30,7 @@ public class CommandPanel extends JPanel {
      *
      * @param bombermanView La vue du jeu
      */
-    public CommandPanel(BombermanView bombermanView) {
+    public PanelCommand(BombermanView bombermanView) {
         this.bombermanView = bombermanView;
         init(bombermanView.getController());
     }

@@ -27,7 +27,6 @@ public class ActionSystem {
 
     /**
      * Méthode de vérification da possibilité d'effectuer une action
-     * TODO : exception
      *
      * @param agent  Un ajent du jeu
      * @param action Une action
@@ -52,7 +51,6 @@ public class ActionSystem {
                 } else return false;
             }
             default:
-                // TODO : Exception
                 log.error(agent.toString() + " ==> Action: " + action.toString() + " non reconnue");
                 return false;
         }
@@ -112,7 +110,6 @@ public class ActionSystem {
                     return true;
                 }
             default:
-                // TODO : Exception
                 log.error(agent.toString() + " ==> Action: " + action.toString() + " non compatible");
                 return false;
         }
@@ -155,7 +152,6 @@ public class ActionSystem {
                 bombermanGame.getAgents().add(agent);
                 break;
             default:
-                // TODO : Exception
                 log.debug("Action inconnue ==> " + action.toString());
                 bombermanGame.getAgents().add(agent);
                 break;

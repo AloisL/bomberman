@@ -28,7 +28,7 @@ public class BombermanView implements Observer {
     private JFrame window;
 
     private JPanel mainPanel;
-    private CommandPanel commandPanel;
+    private PanelCommand panelCommand;
     private PanelBomberman bombermanPanel;
 
     /**
@@ -85,8 +85,8 @@ public class BombermanView implements Observer {
      */
     private void setPanels() {
         mainPanel = new JPanel(new BorderLayout());
-        commandPanel = new CommandPanel(this);
-        mainPanel.add(commandPanel, BorderLayout.NORTH);
+        panelCommand = new PanelCommand(this);
+        mainPanel.add(panelCommand, BorderLayout.NORTH);
         window.add(mainPanel);
     }
 
@@ -111,7 +111,7 @@ public class BombermanView implements Observer {
      */
     private void displayUpdate() {
         String currentTurnStr = "Turn: " + currentTurn.toString();
-        commandPanel.getCurrentTurnLabel().setText(currentTurnStr);
+        panelCommand.getCurrentTurnLabel().setText(currentTurnStr);
     }
 
     /**
@@ -130,14 +130,14 @@ public class BombermanView implements Observer {
         Integer sizeY = controller.getMap().getSizeY() * 50;
         this.bombermanPanel.setSize(new Dimension(sizeX, sizeY));
         mainPanel.add(this.bombermanPanel, BorderLayout.CENTER);
-        window.setSize(sizeX, sizeY + commandPanel.getHeight() + 40);
+        window.setSize(sizeX, sizeY + panelCommand.getHeight() + 40);
         window.repaint();
         initKeyListener();
         this.bombermanPanel.grabFocus();
     }
 
     public String getLayout() {
-        return (String) commandPanel.getLayoutChooser().getSelectedItem();
+        return (String) panelCommand.getLayoutChooser().getSelectedItem();
     }
 
     public void initKeyListener() {
