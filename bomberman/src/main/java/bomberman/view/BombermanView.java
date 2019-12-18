@@ -152,25 +152,25 @@ public class BombermanView implements Observer {
 
                 switch (key) {
                     case KeyEvent.VK_LEFT: {
-                        controller.stepBombermanAgent(AgentAction.MOVE_LEFT);
+                        controller.updatePlayerAction(AgentAction.MOVE_LEFT);
                     }
                     break;
                     case KeyEvent.VK_RIGHT: {
-                        controller.stepBombermanAgent(AgentAction.MOVE_RIGHT);
+                        controller.updatePlayerAction(AgentAction.MOVE_RIGHT);
                     }
                     break;
                     case KeyEvent.VK_UP: {
-                        controller.stepBombermanAgent(AgentAction.MOVE_UP);
+                        controller.updatePlayerAction(AgentAction.MOVE_UP);
 
                     }
                     break;
                     case KeyEvent.VK_DOWN: {
-                        controller.stepBombermanAgent(AgentAction.MOVE_DOWN);
+                        controller.updatePlayerAction(AgentAction.MOVE_DOWN);
 
                     }
                     break;
                     case KeyEvent.VK_SPACE: {
-                        controller.stepBombermanAgent(AgentAction.PUT_BOMB);
+                        controller.updatePlayerAction(AgentAction.PUT_BOMB);
                     }
                     break;
                 }
