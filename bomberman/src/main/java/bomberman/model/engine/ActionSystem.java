@@ -61,7 +61,7 @@ public class ActionSystem {
     /**
      * Méthode de vérification da possibilité d'effectuer une mouvement
      *
-     * @param agent  Un ajent du jeu
+     * @param agent  Un agent du jeu
      * @param action Une action (mouvement)
      * @return True si le mouvement est possible, False sinon
      */

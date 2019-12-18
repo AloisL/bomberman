@@ -7,6 +7,7 @@ import bomberman.model.engine.*;
 import bomberman.model.repo.AgentAction;
 import bomberman.model.repo.StateBomb;
 import bomberman.model.strategie.Coordonne;
+import bomberman.model.strategie.StrategieSafe;
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -54,6 +55,7 @@ public class BombermanGame extends Game {
         actionSystem = new ActionSystem(this);
 
         log.debug("Jeu initialisé");
+
     }
 
     /**
@@ -64,6 +66,8 @@ public class BombermanGame extends Game {
     @Override
     public void takeTurn() {
         // TODO : takeTurn
+
+
 
         ArrayList<InfoBomb> bombToBeRemoved = new ArrayList<>();
 
@@ -93,6 +97,15 @@ public class BombermanGame extends Game {
             bomb.getOwner().freeBombSlot();
             bombs.remove(bomb);
         }
+/*
+        for (AbstractAgent agent: agents) {
+            if (agent.getId()!=1){
+                StrategieSafe strat=new StrategieSafe(this,agent);
+                takeTurnIa(agent,strat.doStrategie());
+            }
+        }
+*/
+
 
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
     }
@@ -108,6 +121,12 @@ public class BombermanGame extends Game {
      */
     public void takeTurn(BombermanAgent bombermanAgent, AgentAction agentAction) {
         if (actionSystem.isLegalAction(bombermanAgent, agentAction)) actionSystem.doAction(bombermanAgent, agentAction);
+        setChanged();
+        notifyObservers();
+    }
+
+    public void takeTurnIa(AbstractAgent agent, AgentAction agentAction) {
+        if (actionSystem.isLegalAction(agent, agentAction)) actionSystem.doAction(agent, agentAction);
         setChanged();
         notifyObservers();
     }

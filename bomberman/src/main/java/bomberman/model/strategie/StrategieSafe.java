@@ -1,14 +1,22 @@
 package bomberman.model.strategie;
 
+import bomberman.model.BombermanGame;
+import bomberman.model.agent.AbstractAgent;
 import bomberman.model.engine.InfoBomb;
 import bomberman.model.repo.AgentAction;
 
 public class StrategieSafe extends StrategieAgents {
 
+    public StrategieSafe(){};
+    public StrategieSafe(BombermanGame bombermanGame, AbstractAgent agent){
+        super(bombermanGame,agent);
+        doStrategie();
+    }
     @Override
     public AgentAction doStrategie() {
         Coordonne c=checkSiBesoinSafe();
         if(c.x!=0){
+            System.out.println("Pourquoi tu bouge pas!");
            return doMouvement(c);
         }
         return AgentAction.STOP;
