@@ -7,8 +7,7 @@ import bomberman.model.engine.*;
 import bomberman.model.repo.AgentAction;
 import bomberman.model.repo.ItemType;
 import bomberman.model.repo.StateBomb;
-import bomberman.model.strategie.Coordonne;
-import bomberman.model.strategie.StrategieSafe;
+import bomberman.model.strategie.Coordonnee;
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -66,9 +65,12 @@ public class BombermanGame extends Game {
      */
     @Override
     public void takeTurn() {
-        // TODO : takeTurn
 
-
+        for (InfoAgent infoAgent : getInfoAgents()) {
+            AgentAction agentAction = infoAgent.getAgentAction();
+            if (actionSystem.isLegalAction((AbstractAgent) infoAgent, agentAction))
+                actionSystem.doAction((AbstractAgent) infoAgent, agentAction);
+        }
 
         ArrayList<InfoBomb> bombToBeRemoved = new ArrayList<>();
 
@@ -90,9 +92,7 @@ public class BombermanGame extends Game {
             }
         }
 
-        for (InfoBomb bomb : bombs) {
-            if (bomb.getStateBomb() == StateBomb.Boom) bombHit(bomb);
-        }
+        for (InfoBomb bomb : bombs) if (bomb.getStateBomb() == StateBomb.Boom) bombHit(bomb);
 
         for (InfoBomb bomb : bombToBeRemoved) {
             bomb.getOwner().freeBombSlot();
@@ -106,8 +106,6 @@ public class BombermanGame extends Game {
             }
         }
 */
-
-
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
     }
 
@@ -300,13 +298,12 @@ public class BombermanGame extends Game {
         notifyObservers();
     }
 
-
-    public boolean isFree(Coordonne c){
-        if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]){
+    public boolean isFree(Coordonnee c) {
+        if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
             return false;
         }
-        for (InfoBomb b: bombs){
-            if(b.getX()==c.x && b.getY()==c.y) return false;
+        for (InfoBomb b : bombs) {
+            if (b.getX() == c.x && b.getY() == c.y) return false;
         }
         return true;
     }

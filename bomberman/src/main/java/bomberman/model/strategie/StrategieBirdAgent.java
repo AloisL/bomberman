@@ -1,27 +1,27 @@
 package bomberman.model.strategie;
 
-
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.enumDirection;
-
-import static com.sun.activation.registries.LogSupport.log;
+import bomberman.model.repo.EnumDirection;
 
 public class StrategieBirdAgent extends StrategieAgents {
 
-    public  StrategieBirdAgent(){}
-    public StrategieBirdAgent(BombermanGame bombermanGame, AbstractAgent agent){
+    public StrategieBirdAgent() {
+    }
+
+    public StrategieBirdAgent(BombermanGame bombermanGame, AbstractAgent agent) {
         super(bombermanGame, agent);
-        this.viewNbBlocks = 4;
-    };
+        viewNbBlocks = 4;
+    }
 
     @Override
-    public AgentAction doStrategie(){
-        return  AgentAction.MOVE_UP;
+    public AgentAction doStrategie() {
+        return AgentAction.MOVE_UP;
     }
-    private void strategieBird(enumDirection direction) {
-        switch (direction){
+
+    private void strategieBird(EnumDirection direction) {
+        switch (direction) {
             case D:
 
                 break;
@@ -55,8 +55,6 @@ public class StrategieBirdAgent extends StrategieAgents {
 
         }
     }
-
-
 
 
 }
