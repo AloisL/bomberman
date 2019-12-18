@@ -42,8 +42,8 @@ public abstract class Game extends Observable implements Runnable {
             isRunning = Boolean.FALSE;
             gameOver();
         }
-        setChanged();
-        notifyObservers();
+        this.setChanged();
+        this.notifyObservers();
     }
 
     public void stop() {
