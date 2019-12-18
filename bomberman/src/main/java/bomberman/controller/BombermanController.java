@@ -59,12 +59,12 @@ public class BombermanController implements Controller {
     }
 
     public void stepBombermanAgent(AgentAction action) {
-        log.debug("TEST MOUVEMENT");
+        // Sélection du premier agent
         for (AbstractAgent agent : bombermanGame.getAgents()) {
             if (agent.getClass() == BombermanAgent.class) {
-                log.debug("TEST BOMBERMAN");
                 BombermanAgent bombermanAgent = (BombermanAgent) agent;
                 bombermanGame.takeTurn(bombermanAgent, action);
+                break;
             }
         }
     }

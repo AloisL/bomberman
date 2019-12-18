@@ -5,6 +5,7 @@ import bomberman.model.agent.AgentFactory;
 import bomberman.model.agent.BombermanAgent;
 import bomberman.model.engine.*;
 import bomberman.model.repo.AgentAction;
+import bomberman.model.repo.ItemType;
 import bomberman.model.repo.StateBomb;
 import common.Game;
 import org.apache.logging.log4j.LogManager;
@@ -215,23 +216,68 @@ public class BombermanGame extends Game {
         for (AbstractAgent agent : agentsToBeRemoved) agents.remove(agent);
 
         // Détruit les murs dans la range de la bombe
-        int x = posXbomb;
-        int y = posYbomb;
-
-        if (x == posXbomb) {
-            for (int i = 0; i <= range; i++) {
-                breakableWalls[x][y + i] = false;
-                breakableWalls[x][y - i] = false;
+        for (int i = 0; i <= range; i++) {
+            if (breakableWalls[posXbomb][posYbomb + i] == true) {
+                breakableWalls[posXbomb][posYbomb + i] = false;
+                int randomItem = (int) Math.random() * 2;
+                if (randomItem == 0) {
+                    randomItem = (int) Math.random() * 5;
+                    items.add(new InfoItem(posXbomb, posYbomb + i, getInfoItemFromInt(randomItem)));
+                }
+            }
+            if (breakableWalls[posXbomb][posYbomb - i] == true) {
+                breakableWalls[posXbomb][posYbomb - i] = false;
+                int randomItem = (int) Math.random() * 2;
+                if (randomItem == 0) {
+                    randomItem = (int) Math.random() * 5;
+                    items.add(new InfoItem(posXbomb, posYbomb - i, getInfoItemFromInt(randomItem)));
+                }
             }
         }
-        if (y == posYbomb) {
-            for (int i = 0; i <= range; i++) {
-                breakableWalls[x + i][y] = false;
-                breakableWalls[x - i][y] = false;
+        for (int i = 0; i <= range; i++) {
+            if (breakableWalls[posXbomb + i][posYbomb] == true) {
+                breakableWalls[posXbomb + i][posYbomb] = false;
+                int randomItem = (int) Math.random() * 2;
+                if (randomItem == 0) {
+                    randomItem = (int) Math.random() * 5;
+                    items.add(new InfoItem(posXbomb + i, posYbomb, getInfoItemFromInt(randomItem)));
+                }
+            }
+            if (breakableWalls[posXbomb - i][posYbomb] == true) {
+                breakableWalls[posXbomb - i][posYbomb] = false;
+                int randomItem = (int) Math.random() * 2;
+                if (randomItem == 0) {
+                    randomItem = (int) Math.random() * 5;
+                    items.add(new InfoItem(posXbomb - i, posYbomb, getInfoItemFromInt(randomItem)));
+                }
             }
         }
 
+    }
 
+    public ItemType getInfoItemFromInt(int i) {
+        switch (i) {
+            case 0:
+                return ItemType.FIRE_UP;
+            case 1:
+                return ItemType.FIRE_DOWN;
+            case 2:
+                return ItemType.BOMB_UP;
+            case 3:
+                return ItemType.BOMB_DOWN;
+            case 4:
+                return ItemType.FIRE_SUIT;
+            case 5:
+                return ItemType.SKULL;
+            default:
+                // TODO Exception
+                return null;
+        }
+    }
+
+    public void update() {
+        setChanged();
+        notifyObservers();
     }
 
 }
