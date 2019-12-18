@@ -160,6 +160,7 @@ public class ActionSystem {
                 bombermanGame.getAgents().add(agent);
                 break;
         }
+        agent.setAgentAction(action);
     }
 
 

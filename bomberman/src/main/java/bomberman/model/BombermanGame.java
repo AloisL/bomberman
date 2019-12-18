@@ -97,7 +97,6 @@ public class BombermanGame extends Game {
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
     }
 
-
     /**
      * Méthode d'appel d'un tour de jeu d'un agent Bomberman
      * Cette méthode est indépendante de la méthode takeTurn().
@@ -235,6 +234,7 @@ public class BombermanGame extends Game {
 
 
     }
+
 
     public boolean isFree(Coordonne c){
         if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]){

@@ -25,6 +25,8 @@ public class StrategieSafe extends StrategieAgents {
         return c;
     }
 
+
+    //methode qui cherche une zone safe adjacente au rayon de la bombe
     public Coordonne zoneSafe(InfoBomb b){
         int diffX=agentCalling.getX() - b.getX();
         int diffY=agentCalling.getY() - b.getY();
