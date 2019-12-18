@@ -5,6 +5,7 @@ import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.BombermanAgent;
 import bomberman.model.engine.Map;
 import bomberman.model.repo.AgentAction;
+import bomberman.model.repo.ColorAgent;
 import bomberman.view.BombermanView;
 import bomberman.view.PanelBomberman;
 import common.Controller;
@@ -61,11 +62,13 @@ public class BombermanController implements Controller {
     public void stepBombermanAgent(AgentAction action) {
         log.debug("TEST MOUVEMENT");
         for (AbstractAgent agent : bombermanGame.getAgents()) {
-            if (agent.getClass() == BombermanAgent.class) {
-                log.debug("TEST BOMBERMAN");
-                BombermanAgent bombermanAgent = (BombermanAgent) agent;
-                bombermanGame.takeTurn(bombermanAgent, action);
-            }
+                if (agent.getClass() == BombermanAgent.class) {
+                    if(agent.getColor()== ColorAgent.BLEU) {
+                        log.debug("TEST BOMBERMAN");
+                        BombermanAgent bombermanAgent = (BombermanAgent) agent;
+                        bombermanGame.takeTurn(bombermanAgent, action);
+                    }
+                }
         }
     }
 

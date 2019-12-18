@@ -34,10 +34,12 @@ public class Noeud {
         Coordonne c2= new Coordonne(coordonne.x-1,coordonne.y);
         Coordonne c3= new Coordonne(coordonne.x,coordonne.y+1);
         Coordonne c4= new Coordonne(coordonne.x,coordonne.y-1);
+
+
         if (peutCreerNoeud(c1,mapMur)){
             Noeud n1=new Noeud(c1,nbMouve+1,creerHeuri(c1,objectif),this);
             tabVoisin.add(n1);
-        } else System.out.println("Pas de Voisin c1");
+        }
         if (peutCreerNoeud(c2,mapMur)){
             Noeud n2=new Noeud(c2,nbMouve+1,creerHeuri(c2,objectif),this);
             tabVoisin.add(n2);
@@ -87,110 +89,6 @@ public class Noeud {
 
 
 
-/*
-    // return true si la difference(en valeur obsolue) de chemin entre coordonne X et plus grande(ou égale) que la difference de coordonné Y
-    public boolean difference_X_Y(){
-        int diffX = objectif.x - coordonne.x;
-        int diffY = objectif.y - coordonne.y;
-        diffX=Math.abs(diffX);
-        diffY=Math.abs(diffY);
-        return (diffX>=diffY);
-
-    }
-
-    public int differenceX(){
-        int diffX = objectif.x - coordonne.x;
-        return diffX;
-
-    }
-
-    public int differenceY(){
-        int diffY = objectif.y - coordonne.y;
-        return diffY;
-
-    }
-
-    public Coordonne creerHeuri(int x,int y)
-
-    public boolean searchChemin(){
-        if (!arrivee) {
-            if (difference_X_Y()){
-                int diffX=differenceX();
-                boolean cheminArrivee=false;
-                while (((coordonne.x!=objectif.x)&&(difference_X_Y())) || (!cheminArrivee)){
-                    if (diffX<0){
-                        if(voisinIsArrived(-1,0)){
-
-                        }
-                    }
-                }
-            }
-            else {
-                int diffY=differenceY();
-
-            }
-        }
-    }
-
-
-
-
-
-    public Noeud creerVoisin(Coordonne objectif,Coordonne newPosition, boolean[][] mapMur,Noeud origineVoisin){
-
-        if(!mapMur[newPosition.x][newPosition.y]){
-            Noeud newNoeud = new Noeud(newPosition, origineVoisin.getNbMouve() + 1, creerHeuri(),objectif )
-            if(objectif!=newPosition) {
-               Noeud exixtant = noeudExiste(newPosition);
-                if (exixtant!=null) {
-
-                } else {
-                    if(compareNbMove2noeud(exixtant,newNoeud)<0){
-                        return exixtant;
-                    }
-                    else return newNoeud;
-                }
-            }
-            else
-        }
-    }
-
-    public int compareNbMove2noeud(Noeud n1, Noeud n2){
-        if(n1.getNbMouve()<n2.getNbMouve())
-            return 1;
-        else {
-            if (n1.getNbMouve()==n2.getNbMouve())
-                return 0;
-            else return -1;
-
-        }
-    }
-
-    public int compareH2noeud(Noeud n1, Noeud n2){
-        if(n1.getHcost()<n2.getHcost())
-            return 1;
-        else {
-            if (n1.getHcost()==n2.getHcost())
-                return 0;
-            else return -1;
-
-        }
-    }
-
-
-
-    public Noeud noeudExiste(Coordonne point){
-        if (voisin!=null) {
-            for (Noeud n : voisin) {
-                if (n.coordonne == coordonne) return n;
-                Noeud noeud= n.noeudExiste(point);
-                if (noeud!=null) return noeud;
-
-            }
-        }
-        return null;
-    }
-*/
 
     public Coordonne getCoordonne() {
         return coordonne;
