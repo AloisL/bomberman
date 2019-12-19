@@ -20,12 +20,9 @@ import java.util.ArrayList;
 public class BombermanGame extends Game {
 
     final static Logger log = (Logger) LogManager.getLogger(BombermanGame.class);
-
     private Map map;
     private ActionSystem actionSystem;
-
     private ArrayList<AbstractAgent> agents;
-
     private boolean[][] breakableWalls;
     private ArrayList<InfoItem> items;
     private ArrayList<InfoBomb> bombs;
@@ -51,6 +48,7 @@ public class BombermanGame extends Game {
 
         log.debug("Initialisation des agents");
         initAgents();
+        // TODO initiaisation des stratéggie (initStrategies())
 
         actionSystem = new ActionSystem(this);
 

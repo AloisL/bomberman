@@ -3,30 +3,21 @@ package bomberman.view;
 import bomberman.controller.BombermanController;
 import bomberman.model.BombermanGame;
 import bomberman.model.repo.AgentAction;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.Observable;
 import java.util.Observer;
 
 /**
  * Classe de gestion de la vue du jeu
  */
-public class BombermanView implements Observer {
-
-    final static org.apache.logging.log4j.core.Logger log = (Logger) LogManager.getLogger(BombermanView.class);
+public class BombermanView implements Observer, WindowListener {
 
     private BombermanController controller;
     private Integer currentTurn;
-
     private JFrame window;
-
     private JPanel mainPanel;
     private PanelCommand panelCommand;
     private PanelBomberman bombermanPanel;
@@ -189,5 +180,42 @@ public class BombermanView implements Observer {
 
     public PanelBomberman getBombermanPanel() {
         return bombermanPanel;
+    }
+
+    // Méthodes appelées aux différents états de la fenètre
+
+    @Override
+    public void windowOpened(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent windowEvent) {
+        controller.pause();
+    }
+
+    @Override
+    public void windowClosed(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent windowEvent) {
+
     }
 }
