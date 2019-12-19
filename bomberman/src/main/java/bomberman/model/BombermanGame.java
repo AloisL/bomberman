@@ -5,12 +5,15 @@ import bomberman.model.agent.AgentFactory;
 import bomberman.model.agent.BombermanAgent;
 import bomberman.model.engine.*;
 import bomberman.model.repo.AgentAction;
+import bomberman.model.repo.ColorAgent;
 import bomberman.model.repo.StateBomb;
 import bomberman.model.strategie.Coordonne;
+import bomberman.model.strategie.StrategieAgents;
 import bomberman.model.strategie.StrategieSafe;
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
+import sun.management.Agent;
 
 import java.util.ArrayList;
 
@@ -25,6 +28,7 @@ public class BombermanGame extends Game {
     private ActionSystem actionSystem;
 
     private ArrayList<AbstractAgent> agents;
+    private BombermanAgent agentJoueur;
 
     private boolean[][] breakableWalls;
     private ArrayList<InfoItem> items;
@@ -41,6 +45,8 @@ public class BombermanGame extends Game {
     public void initializeGame() {
         log.debug("Initialisation du jeu");
 
+
+
         AbstractAgent.resetId();
         items = new ArrayList<>();
         bombs = new ArrayList<>();
@@ -53,6 +59,15 @@ public class BombermanGame extends Game {
         initAgents();
 
         actionSystem = new ActionSystem(this);
+
+        for (AbstractAgent ag:agents) {
+            if (ag.getClass() == BombermanAgent.class) {
+                if(ag.getColor()== ColorAgent.BLEU) {
+                    this.agentJoueur=(BombermanAgent) ag;
+                    agents.remove(ag);
+                }
+            }
+        }
 
         log.debug("Jeu initialisé");
 
@@ -97,14 +112,13 @@ public class BombermanGame extends Game {
             bomb.getOwner().freeBombSlot();
             bombs.remove(bomb);
         }
-/*
+
         for (AbstractAgent agent: agents) {
-            if (agent.getId()!=1){
-                StrategieSafe strat=new StrategieSafe(this,agent);
+            if (agent.getColor()!= ColorAgent.BLEU){
+                StrategieAgents strat=new StrategieSafe(this,agent);
                 takeTurnIa(agent,strat.doStrategie());
             }
         }
-*/
 
 
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
@@ -187,6 +201,7 @@ public class BombermanGame extends Game {
     public ArrayList<InfoAgent> getInfoAgents() {
         ArrayList<InfoAgent> infoAgents = new ArrayList<>();
         infoAgents.addAll(agents);
+        infoAgents.add(agentJoueur);
         return infoAgents;
     }
 
@@ -208,6 +223,10 @@ public class BombermanGame extends Game {
 
     public ArrayList<AbstractAgent> getAgents() {
         return agents;
+    }
+
+    public BombermanAgent getAgentJoueur() {
+        return agentJoueur;
     }
 
     public void bombHit(InfoBomb bomb) {

@@ -61,7 +61,7 @@ public class BombermanController implements Controller {
 
     public void stepBombermanAgent(AgentAction action) {
         log.debug("TEST MOUVEMENT");
-        for (AbstractAgent agent : bombermanGame.getAgents()) {
+        /*for (AbstractAgent agent : bombermanGame.getAgents()) {
                 if (agent.getClass() == BombermanAgent.class) {
                     if(agent.getColor()== ColorAgent.BLEU) {
                         log.debug("TEST BOMBERMAN");
@@ -70,6 +70,11 @@ public class BombermanController implements Controller {
                     }
                 }
         }
+
+         */
+
+        BombermanAgent agentJ =bombermanGame.getAgentJoueur();
+        bombermanGame.takeTurn(agentJ,action);
     }
 
     /**
