@@ -7,5 +7,8 @@ public class RajionAgent extends AbstractAgent {
 
     public RajionAgent(int x, int y, AgentAction agentAction, ColorAgent color, boolean isInvincible, boolean isSick) {
         super(x, y, agentAction, 'R', color, isInvincible, isSick);
+
     }
+
+
 }

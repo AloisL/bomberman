@@ -133,6 +133,7 @@ public class BombermanView implements Observer {
         window.setSize(sizeX, sizeY + commandPanel.getHeight() + 40);
         window.repaint();
         initKeyListener();
+
         this.bombermanPanel.grabFocus();
     }
 
@@ -172,6 +173,8 @@ public class BombermanView implements Observer {
                     case KeyEvent.VK_SPACE: {
                         controller.stepBombermanAgent(AgentAction.PUT_BOMB);
                     }
+                    default:
+                        controller.stepBombermanAgent(AgentAction.STOP);
                     break;
                 }
             }

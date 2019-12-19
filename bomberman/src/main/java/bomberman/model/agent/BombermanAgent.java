@@ -43,4 +43,6 @@ public class BombermanAgent extends AbstractAgent {
     public void setBombRange(int bombRange) {
         this.bombRange = bombRange;
     }
+
+
 }
