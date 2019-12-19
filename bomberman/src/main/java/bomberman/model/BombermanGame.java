@@ -113,9 +113,15 @@ public class BombermanGame extends Game {
             bombs.remove(bomb);
         }
 
+        for (AbstractAgent agent: agents) {
+            if (agent.getColor()!= ColorAgent.BLEU){
+                StrategieAgents strat=new StrategieSafe(this,agent);
+                takeTurnIa(agent,strat.doStrategie());
+            }
+        }
+
+
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
-        setChanged();
-        notifyObservers();
     }
 
     /**
@@ -127,6 +133,17 @@ public class BombermanGame extends Game {
      * @param bombermanAgent
      * @param agentAction
      */
+    public void takeTurn(BombermanAgent bombermanAgent, AgentAction agentAction) {
+        if (actionSystem.isLegalAction(bombermanAgent, agentAction)) actionSystem.doAction(bombermanAgent, agentAction);
+        setChanged();
+        notifyObservers();
+    }
+
+    public void takeTurnIa(AbstractAgent agent, AgentAction agentAction) {
+        if (actionSystem.isLegalAction(agent, agentAction)) actionSystem.doAction(agent, agentAction);
+        setChanged();
+        notifyObservers();
+    }
 
 
     /**
@@ -257,19 +274,6 @@ public class BombermanGame extends Game {
     }
 
 
-    /*
-    *
-    *         for (AbstractAgent agent: agents) {
-            if (agent.getColor()!= ColorAgent.BLEU){
-                agent.setStrategie(this);
-                AgentAction action = agent.retourneAction();
-                if (actionSystem.isLegalAction(agent, action)) actionSystem.doAction(agent, action);
-                else actionSystem.doAction(agent,action);
-            }
-        }
-    *
-    * */
-
     public boolean isFree(Coordonne c){
         if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]){
             return false;
@@ -282,3 +286,5 @@ public class BombermanGame extends Game {
 
 
 }
+
+
