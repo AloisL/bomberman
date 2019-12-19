@@ -13,8 +13,10 @@ public class StrategieSafe extends StrategieAgents {
     public StrategieSafe(BombermanGame bombermanGame, AbstractAgent agent){
         super(bombermanGame,agent);
     }
+
     @Override
     public AgentAction doStrategie() {
+
         Coordonne c=zoneSafe(checkSiBesoinSafe());
         if(c.x!=0){
             //System.out.println("Pourquoi tu bouge pas!");
@@ -22,8 +24,6 @@ public class StrategieSafe extends StrategieAgents {
         }
         return AgentAction.STOP;
     }
-
-
 
 
 
@@ -56,6 +56,16 @@ public class StrategieSafe extends StrategieAgents {
 //int max = (x < y) ? y : x ; //Maintenant, max vaut 20
 //$number, ': ', $number ? abs($number) / $number : 0
 
+
+    public boolean isInRange(InfoBomb b) {
+        if (((agentCalling.getX() < b.getX() + b.getRange()) && (agentCalling.getX() > b.getX() - b.getRange())) && (agentCalling.getY() == b.getY())) {
+            return true;
+        }
+        if (((agentCalling.getY() < b.getY() + b.getRange()) && (agentCalling.getX() > b.getY() - b.getRange())) && (agentCalling.getX() == b.getX())) {
+            return true;
+        }
+        return false;
+    }
 
 
 

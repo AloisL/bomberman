@@ -3,32 +3,23 @@ package bomberman.view;
 import bomberman.controller.BombermanController;
 import bomberman.model.BombermanGame;
 import bomberman.model.repo.AgentAction;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.Observable;
 import java.util.Observer;
 
 /**
  * Classe de gestion de la vue du jeu
  */
-public class BombermanView implements Observer {
-
-    final static org.apache.logging.log4j.core.Logger log = (Logger) LogManager.getLogger(BombermanView.class);
+public class BombermanView implements Observer, WindowListener {
 
     private BombermanController controller;
     private Integer currentTurn;
-
     private JFrame window;
-
     private JPanel mainPanel;
-    private CommandPanel commandPanel;
+    private PanelCommand panelCommand;
     private PanelBomberman bombermanPanel;
 
     /**
@@ -85,8 +76,8 @@ public class BombermanView implements Observer {
      */
     private void setPanels() {
         mainPanel = new JPanel(new BorderLayout());
-        commandPanel = new CommandPanel(this);
-        mainPanel.add(commandPanel, BorderLayout.NORTH);
+        panelCommand = new PanelCommand(this);
+        mainPanel.add(panelCommand, BorderLayout.NORTH);
         window.add(mainPanel);
     }
 
@@ -111,7 +102,7 @@ public class BombermanView implements Observer {
      */
     private void displayUpdate() {
         String currentTurnStr = "Turn: " + currentTurn.toString();
-        commandPanel.getCurrentTurnLabel().setText(currentTurnStr);
+        panelCommand.getCurrentTurnLabel().setText(currentTurnStr);
     }
 
     /**
@@ -130,7 +121,7 @@ public class BombermanView implements Observer {
         Integer sizeY = controller.getMap().getSizeY() * 50;
         this.bombermanPanel.setSize(new Dimension(sizeX, sizeY));
         mainPanel.add(this.bombermanPanel, BorderLayout.CENTER);
-        window.setSize(sizeX, sizeY + commandPanel.getHeight() + 40);
+        window.setSize(sizeX, sizeY + panelCommand.getHeight() + 40);
         window.repaint();
         initKeyListener();
 
@@ -138,7 +129,7 @@ public class BombermanView implements Observer {
     }
 
     public String getLayout() {
-        return (String) commandPanel.getLayoutChooser().getSelectedItem();
+        return (String) panelCommand.getLayoutChooser().getSelectedItem();
     }
 
     public void initKeyListener() {
@@ -153,25 +144,25 @@ public class BombermanView implements Observer {
 
                 switch (key) {
                     case KeyEvent.VK_LEFT: {
-                        controller.stepBombermanAgent(AgentAction.MOVE_LEFT);
+                        controller.updatePlayerAction(AgentAction.MOVE_LEFT);
                     }
                     break;
                     case KeyEvent.VK_RIGHT: {
-                        controller.stepBombermanAgent(AgentAction.MOVE_RIGHT);
+                        controller.updatePlayerAction(AgentAction.MOVE_RIGHT);
                     }
                     break;
                     case KeyEvent.VK_UP: {
-                        controller.stepBombermanAgent(AgentAction.MOVE_UP);
+                        controller.updatePlayerAction(AgentAction.MOVE_UP);
 
                     }
                     break;
                     case KeyEvent.VK_DOWN: {
-                        controller.stepBombermanAgent(AgentAction.MOVE_DOWN);
+                        controller.updatePlayerAction(AgentAction.MOVE_DOWN);
 
                     }
                     break;
                     case KeyEvent.VK_SPACE: {
-                        controller.stepBombermanAgent(AgentAction.PUT_BOMB);
+                        controller.updatePlayerAction(AgentAction.PUT_BOMB);
                     }
                     default:
                         controller.stepBombermanAgent(AgentAction.STOP);
@@ -192,5 +183,42 @@ public class BombermanView implements Observer {
 
     public PanelBomberman getBombermanPanel() {
         return bombermanPanel;
+    }
+
+    // Méthodes appelées aux différents états de la fenètre
+
+    @Override
+    public void windowOpened(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent windowEvent) {
+        controller.pause();
+    }
+
+    @Override
+    public void windowClosed(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent windowEvent) {
+
     }
 }

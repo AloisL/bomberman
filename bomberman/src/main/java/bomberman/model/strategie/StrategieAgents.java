@@ -4,8 +4,7 @@ import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.engine.InfoBomb;
 import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.enumDirection;
-
+import bomberman.model.repo.EnumDirection;
 
 import java.util.ArrayList;
 import java.util.Observer;
@@ -19,49 +18,52 @@ public abstract class StrategieAgents {
     protected AbstractAgent agentCalling;
 
 
-    //public AgentAction mouvStrategie(InfoAgent infoAgent,boolean agentInSight, ArrayList<Boolean> rockMap); //effectue le mouvement choisie par la strategie
-    public  StrategieAgents(){}
+    //public AgentAction mouvStrategie(InfoAgent infoAgent,boolean agentInSight, ArrayList<Boolean> rockMap);
+    // effectue le mouvement choisie par la strategie
+    public StrategieAgents() {
+    }
 
-    public  StrategieAgents(BombermanGame bombermanGame, AbstractAgent agent){
-        this.agentCalling = agent;
+
+    public StrategieAgents(BombermanGame bombermanGame, AbstractAgent agent) {
+        agentCalling = agent;
         this.bombermanGame = bombermanGame;
         //mapChemin = makeMapbinaire(bombermanGame.getMap())
     }
 
     public abstract AgentAction doStrategie();
 
-    public AgentAction strategieAleatoire(Coordonne destination){
+    public AgentAction strategieAleatoire(Coordonnee destination) {
         AgentAction resultat = AgentAction.MOVE_UP;
 
         //int aleatoire = (int)(Math.random()*7);
-       destination= chercherDirection(destination);
-        switch (donneDirection(destination)){
+        destination = chercherDirection(destination);
+        switch (donneDirection(destination)) {
             case 0:
-                resultat= AgentAction.MOVE_UP;
+                resultat = AgentAction.MOVE_UP;
                 break;
             case 1:
-                resultat= AgentAction.MOVE_DOWN;
+                resultat = AgentAction.MOVE_DOWN;
                 break;
             case 2:
-                resultat= AgentAction.MOVE_RIGHT;
+                resultat = AgentAction.MOVE_RIGHT;
                 break;
             case 3:
-                resultat= AgentAction.MOVE_LEFT;
+                resultat = AgentAction.MOVE_LEFT;
                 break;
             case 4:
-                resultat= AgentAction.JUMP_DOWN;
+                resultat = AgentAction.JUMP_DOWN;
                 break;
             case 5:
-                resultat= AgentAction.JUMP_LEFT;
+                resultat = AgentAction.JUMP_LEFT;
                 break;
             case 6:
-                resultat= AgentAction.JUMP_RIGHT;
+                resultat = AgentAction.JUMP_RIGHT;
                 break;
             case 7:
-                resultat= AgentAction.JUMP_UP;
+                resultat = AgentAction.JUMP_UP;
                 break;
             case 8:
-                resultat= AgentAction.STOP;
+                resultat = AgentAction.STOP;
             default:
                 log("mouvement non reconnue");
                 break;
@@ -69,40 +71,39 @@ public abstract class StrategieAgents {
         }
 
 
-
         return resultat;
     }
 
-    public AgentAction doMouvement(Coordonne objectif){
+    public AgentAction doMouvement(Coordonnee objectif) {
         AgentAction resultat = AgentAction.PUT_BOMB;
-        objectif= chercherDirection(objectif);
-        switch (donneDirection(objectif)){
+        objectif = chercherDirection(objectif);
+        switch (donneDirection(objectif)) {
             case 0:
-                resultat= AgentAction.MOVE_UP;
+                resultat = AgentAction.MOVE_UP;
                 break;
             case 1:
-                resultat= AgentAction.MOVE_DOWN;
+                resultat = AgentAction.MOVE_DOWN;
                 break;
             case 2:
-                resultat= AgentAction.MOVE_RIGHT;
+                resultat = AgentAction.MOVE_RIGHT;
                 break;
             case 3:
-                resultat= AgentAction.MOVE_LEFT;
+                resultat = AgentAction.MOVE_LEFT;
                 break;
             case 4:
-                resultat= AgentAction.JUMP_DOWN;
+                resultat = AgentAction.JUMP_DOWN;
                 break;
             case 5:
-                resultat= AgentAction.JUMP_LEFT;
+                resultat = AgentAction.JUMP_LEFT;
                 break;
             case 6:
-                resultat= AgentAction.JUMP_RIGHT;
+                resultat = AgentAction.JUMP_RIGHT;
                 break;
             case 7:
-                resultat= AgentAction.JUMP_UP;
+                resultat = AgentAction.JUMP_UP;
                 break;
             case 8:
-                resultat= AgentAction.STOP;
+                resultat = AgentAction.STOP;
             default:
                 log("mouvement non reconnue");
                 break;
@@ -111,41 +112,38 @@ public abstract class StrategieAgents {
         return resultat;
     }
 
-    public int donneDirection(Coordonne direction){
+    public int donneDirection(Coordonnee direction) {
         int diffX = direction.x - agentCalling.getX();
         int diffY = direction.y - agentCalling.getY();
-        if (diffY<0){
+        if (diffY < 0) {
             return 0;
-        } else if (diffY>0) return 1;
-        if (diffX>0) return 2;
-        else if (diffX<0) return 3;
+        } else if (diffY > 0) return 1;
+        if (diffX > 0) return 2;
+        else if (diffX < 0) return 3;
         return 8;
 
     }
 
 
-
-    public Coordonne chercherDirection(Coordonne objectf){
-        Coordonne objectif = new Coordonne(17,6);
-        Astart astart = new Astart(bombermanGame,agentCalling,objectif);
-        Coordonne coordonne = new Coordonne();
-        Noeud noeud=astart.chemin(objectif,astart.creerOrigine());
-               coordonne=noeud.getCoordonne();
+    public Coordonnee chercherDirection(Coordonnee objectf) {
+        Coordonnee objectif = new Coordonnee(17, 6);
+        AlgorithmeAEtoile algorithmeAEtoile = new AlgorithmeAEtoile(bombermanGame, agentCalling, objectif);
+        Coordonnee coordonnee = new Coordonnee();
+        Noeud noeud = algorithmeAEtoile.chemin(objectif, algorithmeAEtoile.creerOrigine());
+        coordonnee = noeud.getCoordonnee();
                /*
         System.out.print(coordonne.x+" : "+coordonne.y);
                 */
-        return coordonne;
+        return coordonnee;
     }
 
 
+    public boolean checkEnnemie() {
 
-
-    public boolean checkEnnemie(){
-
-        for (AbstractAgent agent : this.bombermanGame.getAgents()) {
-            for (int i = 1; i<=this.viewNbBlocks; i++) {
-                if(agent.getId()!=agentCalling.getId()){
-                    if((agent.getX() == agentCalling.getX()+i) || (agent.getX() == agentCalling.getX()-i) || (agent.getY() == agentCalling.getY()+i) || (agent.getY() == agentCalling.getY()-i) )
+        for (AbstractAgent agent : bombermanGame.getAgents()) {
+            for (int i = 1; i <= viewNbBlocks; i++) {
+                if (agent.getId() != agentCalling.getId()) {
+                    if ((agent.getX() == agentCalling.getX() + i) || (agent.getX() == agentCalling.getX() - i) || (agent.getY() == agentCalling.getY() + i) || (agent.getY() == agentCalling.getY() - i))
                         return true;
                 }
             }
@@ -176,23 +174,24 @@ public abstract class StrategieAgents {
     }
 
 
-
-
     /*
     // verifie sur l'agents passer en parametre se trouve sur une diagonale haute
-    // x et y sont les coordonner de l'objectif, i est le nombre de cases de recherche depuis la position de l'agentCalling
-    private enumDirection isDiagonalTop(int x,int y, int i,int z) {
-        if ((x == this.agentCalling.getX() - i) && (y == agentCalling.getY() + z)) return enumDirection.HG;
-        else if((x == this.agentCalling.getX() + i) && (y == agentCalling.getY() + z)) return enumDirection.HD;
-        return enumDirection.STOP;
+    // x et y sont les coordonner de l'objectif, i est le nombre de cases de recherche depuis la position de
+    l'agentCalling
+     */
+    private EnumDirection isDiagonalTop(int x, int y, int i, int z) {
+        if ((x == agentCalling.getX() - i) && (y == agentCalling.getY() + z)) return EnumDirection.HG;
+        else if ((x == agentCalling.getX() + i) && (y == agentCalling.getY() + z)) return EnumDirection.HD;
+        return EnumDirection.STOP;
     }
 
     // verifie sur l'agents passer en parametre se trouve sur une diagonale basse
-    // x et y sont les coordonner de l'objectif, i est le nombre de cases de recherche depuis la position de l'agentCalling
-    private enumDirection isDiagonalBottom(int x,int y, int i,int z){
-        if ((x == this.agentCalling.getX() - i) && (y == agentCalling.getY() - z)) return enumDirection.BG;
-        else if((x == this.agentCalling.getX() + i) && (y == agentCalling.getY() - z)) return enumDirection.BH;
-         return enumDirection.STOP;
+    // x et y sont les coordonner de l'objectif, i est le nombre de cases de recherche depuis la position de
+    // l'agentCalling
+    private EnumDirection isDiagonalBottom(int x, int y, int i, int z) {
+        if ((x == agentCalling.getX() - i) && (y == agentCalling.getY() - z)) return EnumDirection.BG;
+        else if ((x == agentCalling.getX() + i) && (y == agentCalling.getY() - z)) return EnumDirection.BH;
+        return EnumDirection.STOP;
     }
 
 
@@ -260,12 +259,6 @@ public abstract class StrategieAgents {
     }
 
  */
-
-
-
-
-
-
 
 
 }

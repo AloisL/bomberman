@@ -5,11 +5,17 @@ import bomberman.model.agent.AgentFactory;
 import bomberman.model.agent.BombermanAgent;
 import bomberman.model.engine.*;
 import bomberman.model.repo.AgentAction;
+
 import bomberman.model.repo.ColorAgent;
 import bomberman.model.repo.StateBomb;
 import bomberman.model.strategie.Coordonne;
 import bomberman.model.strategie.StrategieAgents;
 import bomberman.model.strategie.StrategieSafe;
+
+import bomberman.model.repo.ItemType;
+import bomberman.model.repo.StateBomb;
+import bomberman.model.strategie.Coordonnee;
+
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -23,12 +29,10 @@ import java.util.ArrayList;
 public class BombermanGame extends Game {
 
     final static Logger log = (Logger) LogManager.getLogger(BombermanGame.class);
-
     private Map map;
     private ActionSystem actionSystem;
-
     private ArrayList<AbstractAgent> agents;
-    private BombermanAgent agentJoueur;
+
 
     private boolean[][] breakableWalls;
     private ArrayList<InfoItem> items;
@@ -57,6 +61,7 @@ public class BombermanGame extends Game {
 
         log.debug("Initialisation des agents");
         initAgents();
+        // TODO initiaisation des stratéggie (initStrategies())
 
         actionSystem = new ActionSystem(this);
 
@@ -80,9 +85,12 @@ public class BombermanGame extends Game {
      */
     @Override
     public void takeTurn() {
-        // TODO : takeTurn
 
-
+        for (InfoAgent infoAgent : getInfoAgents()) {
+            AgentAction agentAction = infoAgent.getAgentAction();
+            if (actionSystem.isLegalAction((AbstractAgent) infoAgent, agentAction))
+                actionSystem.doAction((AbstractAgent) infoAgent, agentAction);
+        }
 
         ArrayList<InfoBomb> bombToBeRemoved = new ArrayList<>();
 
@@ -104,9 +112,7 @@ public class BombermanGame extends Game {
             }
         }
 
-        for (InfoBomb bomb : bombs) {
-            if (bomb.getStateBomb() == StateBomb.Boom) bombHit(bomb);
-        }
+        for (InfoBomb bomb : bombs) if (bomb.getStateBomb() == StateBomb.Boom) bombHit(bomb);
 
         for (InfoBomb bomb : bombToBeRemoved) {
             bomb.getOwner().freeBombSlot();
@@ -119,7 +125,6 @@ public class BombermanGame extends Game {
                 takeTurnIa(agent,strat.doStrategie());
             }
         }
-
 
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
     }
@@ -254,32 +259,76 @@ public class BombermanGame extends Game {
         for (AbstractAgent agent : agentsToBeRemoved) agents.remove(agent);
 
         // Détruit les murs dans la range de la bombe
-        int x = posXbomb;
-        int y = posYbomb;
-
-        if (x == posXbomb) {
-            for (int i = 0; i <= range; i++) {
-                breakableWalls[x][y + i] = false;
-                breakableWalls[x][y - i] = false;
+        for (int i = 0; i <= range; i++) {
+            if (breakableWalls[posXbomb][posYbomb + i] == true) {
+                breakableWalls[posXbomb][posYbomb + i] = false;
+                int randomItem = (int) Math.random() * 2;
+                if (randomItem == 0) {
+                    randomItem = (int) Math.random() * 5;
+                    items.add(new InfoItem(posXbomb, posYbomb + i, getInfoItemFromInt(randomItem)));
+                }
+            }
+            if (breakableWalls[posXbomb][posYbomb - i] == true) {
+                breakableWalls[posXbomb][posYbomb - i] = false;
+                int randomItem = (int) Math.random() * 2;
+                if (randomItem == 0) {
+                    randomItem = (int) Math.random() * 5;
+                    items.add(new InfoItem(posXbomb, posYbomb - i, getInfoItemFromInt(randomItem)));
+                }
             }
         }
-        if (y == posYbomb) {
-            for (int i = 0; i <= range; i++) {
-                breakableWalls[x + i][y] = false;
-                breakableWalls[x - i][y] = false;
+        for (int i = 0; i <= range; i++) {
+            if (breakableWalls[posXbomb + i][posYbomb] == true) {
+                breakableWalls[posXbomb + i][posYbomb] = false;
+                int randomItem = (int) Math.random() * 2;
+                if (randomItem == 0) {
+                    randomItem = (int) Math.random() * 5;
+                    items.add(new InfoItem(posXbomb + i, posYbomb, getInfoItemFromInt(randomItem)));
+                }
+            }
+            if (breakableWalls[posXbomb - i][posYbomb] == true) {
+                breakableWalls[posXbomb - i][posYbomb] = false;
+                int randomItem = (int) Math.random() * 2;
+                if (randomItem == 0) {
+                    randomItem = (int) Math.random() * 5;
+                    items.add(new InfoItem(posXbomb - i, posYbomb, getInfoItemFromInt(randomItem)));
+                }
             }
         }
-
 
     }
 
+    public ItemType getInfoItemFromInt(int i) {
+        switch (i) {
+            case 0:
+                return ItemType.FIRE_UP;
+            case 1:
+                return ItemType.FIRE_DOWN;
+            case 2:
+                return ItemType.BOMB_UP;
+            case 3:
+                return ItemType.BOMB_DOWN;
+            case 4:
+                return ItemType.FIRE_SUIT;
+            case 5:
+                return ItemType.SKULL;
+            default:
+                log.error("Item inconnu ==> " + i);
+                return null;
+        }
+    }
 
-    public boolean isFree(Coordonne c){
-        if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]){
+    public void update() {
+        setChanged();
+        notifyObservers();
+    }
+
+    public boolean isFree(Coordonnee c) {
+        if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
             return false;
         }
-        for (InfoBomb b: bombs){
-            if(b.getX()==c.x && b.getY()==c.y) return false;
+        for (InfoBomb b : bombs) {
+            if (b.getX() == c.x && b.getY() == c.y) return false;
         }
         return true;
     }
