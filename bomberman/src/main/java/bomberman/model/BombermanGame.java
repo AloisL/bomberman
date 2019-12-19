@@ -8,18 +8,16 @@ import bomberman.model.repo.AgentAction;
 
 import bomberman.model.repo.ColorAgent;
 import bomberman.model.repo.StateBomb;
-import bomberman.model.strategie.Coordonne;
+
+import bomberman.model.strategie.Coordonnee;
 import bomberman.model.strategie.StrategieAgents;
 import bomberman.model.strategie.StrategieSafe;
 
 import bomberman.model.repo.ItemType;
-import bomberman.model.repo.StateBomb;
-import bomberman.model.strategie.Coordonnee;
 
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
-import sun.management.Agent;
 
 import java.util.ArrayList;
 
@@ -65,14 +63,6 @@ public class BombermanGame extends Game {
 
         actionSystem = new ActionSystem(this);
 
-        for (AbstractAgent ag:agents) {
-            if (ag.getClass() == BombermanAgent.class) {
-                if(ag.getColor()== ColorAgent.BLEU) {
-                    this.agentJoueur=(BombermanAgent) ag;
-                    agents.remove(ag);
-                }
-            }
-        }
 
         log.debug("Jeu initialisé");
 
@@ -206,7 +196,6 @@ public class BombermanGame extends Game {
     public ArrayList<InfoAgent> getInfoAgents() {
         ArrayList<InfoAgent> infoAgents = new ArrayList<>();
         infoAgents.addAll(agents);
-        infoAgents.add(agentJoueur);
         return infoAgents;
     }
 
@@ -230,9 +219,7 @@ public class BombermanGame extends Game {
         return agents;
     }
 
-    public BombermanAgent getAgentJoueur() {
-        return agentJoueur;
-    }
+
 
     public void bombHit(InfoBomb bomb) {
         int range = bomb.getRange();

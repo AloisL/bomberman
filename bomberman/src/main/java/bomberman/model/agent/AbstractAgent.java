@@ -50,9 +50,9 @@ public abstract class AbstractAgent extends InfoAgent {
         this.strategie = new StrategieSafe(bombermanGame,this);
     }
 
-    public AgentAction retourneAction(){
+    public AgentAction retourneAction() {
         return strategie.doStrategie();
-
+    }
     public void setStrategieAgents(StrategieAgents strategie) {
         this.strategie = strategie;
 

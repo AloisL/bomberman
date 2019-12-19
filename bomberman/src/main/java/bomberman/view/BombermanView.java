@@ -165,7 +165,7 @@ public class BombermanView implements Observer, WindowListener {
                         controller.updatePlayerAction(AgentAction.PUT_BOMB);
                     }
                     default:
-                        controller.stepBombermanAgent(AgentAction.STOP);
+                        controller.updatePlayerAction(AgentAction.STOP);
                     break;
                 }
             }
