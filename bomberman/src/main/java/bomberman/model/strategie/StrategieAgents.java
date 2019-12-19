@@ -2,10 +2,12 @@ package bomberman.model.strategie;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
+import bomberman.model.engine.InfoBomb;
 import bomberman.model.repo.AgentAction;
 import bomberman.model.repo.EnumDirection;
 
 import java.util.ArrayList;
+import java.util.Observer;
 
 import static com.sun.activation.registries.LogSupport.log;
 
@@ -15,10 +17,12 @@ public abstract class StrategieAgents {
     protected int viewNbBlocks;
     protected AbstractAgent agentCalling;
 
+
     //public AgentAction mouvStrategie(InfoAgent infoAgent,boolean agentInSight, ArrayList<Boolean> rockMap);
     // effectue le mouvement choisie par la strategie
     public StrategieAgents() {
     }
+
 
     public StrategieAgents(BombermanGame bombermanGame, AbstractAgent agent) {
         agentCalling = agent;
@@ -146,6 +150,26 @@ public abstract class StrategieAgents {
         }
 
 
+        return false;
+    }
+
+    public InfoBomb checkSiBesoinSafe(){
+        for (InfoBomb b: bombermanGame.getBombs()) {
+
+            if (isInRange(b)){
+             return b;  //zoneSafe(b);
+            }
+        }
+        return null;
+    }
+
+    public boolean isInRange(InfoBomb b){
+        if ( ( ( agentCalling.getX()<b.getX()+b.getRange() ) && ( agentCalling.getX()>b.getX()-b.getRange() ) ) && (agentCalling.getY()==b.getY()) ){
+            return true;
+        }
+        if ( ( ( agentCalling.getY()<b.getY()+b.getRange() ) && ( agentCalling.getX()>b.getY()-b.getRange() ) ) && (agentCalling.getX()==b.getX()) ){
+            return true;
+        }
         return false;
     }
 

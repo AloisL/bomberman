@@ -58,6 +58,7 @@ public class BombermanController implements Controller {
 
     public void updatePlayerAction(AgentAction action) {
         // TODO ajouter l'action dans la stratégie du joueur
+
     }
 
     /**
