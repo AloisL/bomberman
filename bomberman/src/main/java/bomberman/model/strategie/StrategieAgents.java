@@ -7,7 +7,6 @@ import bomberman.model.repo.AgentAction;
 import bomberman.model.repo.EnumDirection;
 
 import java.util.ArrayList;
-import java.util.Observer;
 
 import static com.sun.activation.registries.LogSupport.log;
 
@@ -132,7 +131,7 @@ public abstract class StrategieAgents {
         Noeud noeud = algorithmeAEtoile.chemin(objectif, algorithmeAEtoile.creerOrigine());
         coordonnee = noeud.getCoordonnee();
                /*
-        System.out.print(coordonne.x+" : "+coordonne.y);
+        System.out.print(coordonnee.x+" : "+coordonnee.y);
                 */
         return coordonnee;
     }

@@ -67,7 +67,7 @@ public class AlgorithmeAEtoile {
                     Noeud nSuivant = compareVoisin(depart);
                     if (nSuivant != null) { /*
                         System.out.println("objectif => " + objectif.x + " : " + objectif.y);
-                        System.out.println("depart => " + depart.getCoordonne().x + " : " + depart.getCoordonne().y);
+                        System.out.println("depart => " + depart.getCoordonnee().x + " : " + depart.getCoordonnee().y);
                         System.out.println("depart heuri => "+depart.getHcost());
                         afficherCloseList();*/
                         return chemin(objectif, nSuivant);
