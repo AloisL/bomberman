@@ -1,6 +1,7 @@
 package bomberman.controller;
 
 import bomberman.model.BombermanGame;
+import bomberman.model.engine.ActionSystem;
 import bomberman.model.engine.Map;
 import bomberman.model.repo.AgentAction;
 import bomberman.view.BombermanView;
@@ -26,7 +27,7 @@ public class BombermanController implements Controller {
      * @param maxTurn nombre maximal de tours
      */
     public BombermanController(int maxTurn) {
-        bombermanGame = new BombermanGame(maxTurn);
+        bombermanGame = new BombermanGame(maxTurn, 1);
         bombermanView = new BombermanView(this, "Bomberman Command");
         bombermanGame.addObserver(bombermanView);
     }
@@ -57,7 +58,13 @@ public class BombermanController implements Controller {
     }
 
     public void updatePlayerAction(AgentAction action) {
-        // TODO ajouter l'action dans la stratégie du joueur
+        if (action == AgentAction.PUT_BOMB) {
+            ActionSystem actionSystem = new ActionSystem(bombermanGame);
+            if (actionSystem.isLegalAction(bombermanGame.getPlayers().get(0), action)) {
+                actionSystem.doAction(bombermanGame.getPlayers().get(0), action);
+            }
+        }
+        bombermanGame.getPlayers().get(0).setAgentAction(action);
     }
 
     /**

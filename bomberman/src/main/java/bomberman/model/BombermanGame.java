@@ -2,7 +2,6 @@ package bomberman.model;
 
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.AgentFactory;
-import bomberman.model.agent.BombermanAgent;
 import bomberman.model.engine.*;
 import bomberman.model.repo.AgentAction;
 import bomberman.model.repo.ItemType;
@@ -26,9 +25,12 @@ public class BombermanGame extends Game {
     private boolean[][] breakableWalls;
     private ArrayList<InfoItem> items;
     private ArrayList<InfoBomb> bombs;
+    private int nbPlayers;
+    private ArrayList<AbstractAgent> players;
 
-    public BombermanGame(Integer maxTurn) {
+    public BombermanGame(Integer maxTurn, int nbPlayers) {
         super(maxTurn);
+        this.nbPlayers = nbPlayers;
     }
 
     /**
@@ -41,19 +43,16 @@ public class BombermanGame extends Game {
         AbstractAgent.resetId();
         items = new ArrayList<>();
         bombs = new ArrayList<>();
-        agents = new ArrayList<>();
 
         log.debug("Initialisation des broken_walls");
         breakableWalls = map.getStart_brokable_walls();
 
         log.debug("Initialisation des agents");
         initAgents();
-        // TODO initiaisation des stratéggie (initStrategies())
 
         actionSystem = new ActionSystem(this);
 
         log.debug("Jeu initialisé");
-
     }
 
     /**
@@ -63,7 +62,6 @@ public class BombermanGame extends Game {
      */
     @Override
     public void takeTurn() {
-
         for (InfoAgent infoAgent : getInfoAgents()) {
             AgentAction agentAction = infoAgent.getAgentAction();
             if (actionSystem.isLegalAction((AbstractAgent) infoAgent, agentAction))
@@ -104,30 +102,10 @@ public class BombermanGame extends Game {
             }
         }
 */
+        setChanged();
+        notifyObservers();
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
     }
-
-    /**
-     * Méthode d'appel d'un tour de jeu d'un agent Bomberman
-     * Cette méthode est indépendante de la méthode takeTurn().
-     * Cette méthode est appelée dès qu'un agent bomberman effectue une action clavier.*
-     * Cette méthode met à jour le jeu indépendemment des tours classiques.
-     *
-     * @param bombermanAgent
-     * @param agentAction
-     */
-    public void takeTurn(BombermanAgent bombermanAgent, AgentAction agentAction) {
-        if (actionSystem.isLegalAction(bombermanAgent, agentAction)) actionSystem.doAction(bombermanAgent, agentAction);
-        setChanged();
-        notifyObservers();
-    }
-
-    public void takeTurnIa(AbstractAgent agent, AgentAction agentAction) {
-        if (actionSystem.isLegalAction(agent, agentAction)) actionSystem.doAction(agent, agentAction);
-        setChanged();
-        notifyObservers();
-    }
-
 
     /**
      * Méthode appelée en fin de jeu
@@ -164,11 +142,19 @@ public class BombermanGame extends Game {
      * Méthode d'initialisation des agents du jeu
      */
     public void initAgents() {
+        agents = new ArrayList<>();
+        players = new ArrayList<>();
         for (InfoAgent agent : map.getStart_agents()) {
+            int i = 0;
             try {
                 AbstractAgent abstractAgent = AgentFactory.newAgent(agent.getType(), agent.getX(), agent.getY(),
                         agent.getAgentAction(), agent.getColor(), false, false);
+                // ajout des joueurs
                 agents.add(abstractAgent);
+                if ((agent.getType() == 'B') && (i < nbPlayers)) {
+                    players.add(abstractAgent);
+                    i++;
+                }
                 log.debug("Agent initialisé ==> " + agents.get(agents.size() - 1).toString());
             } catch (Exception e) {
                 log.error(e.getMessage());
@@ -182,8 +168,7 @@ public class BombermanGame extends Game {
      * @return La liste des infosAgents
      */
     public ArrayList<InfoAgent> getInfoAgents() {
-        ArrayList<InfoAgent> infoAgents = new ArrayList<>();
-        infoAgents.addAll(agents);
+        ArrayList<InfoAgent> infoAgents = new ArrayList<>(agents);
         return infoAgents;
     }
 
@@ -233,37 +218,37 @@ public class BombermanGame extends Game {
 
         // Détruit les murs dans la range de la bombe
         for (int i = 0; i <= range; i++) {
-            if (breakableWalls[posXbomb][posYbomb + i] == true) {
+            if (breakableWalls[posXbomb][posYbomb + i]) {
                 breakableWalls[posXbomb][posYbomb + i] = false;
-                int randomItem = (int) Math.random() * 2;
+                int randomItem = (int) (Math.random() * 2);
                 if (randomItem == 0) {
-                    randomItem = (int) Math.random() * 5;
+                    randomItem = (int) (Math.random() * 5);
                     items.add(new InfoItem(posXbomb, posYbomb + i, getInfoItemFromInt(randomItem)));
                 }
             }
-            if (breakableWalls[posXbomb][posYbomb - i] == true) {
+            if (breakableWalls[posXbomb][posYbomb - i]) {
                 breakableWalls[posXbomb][posYbomb - i] = false;
-                int randomItem = (int) Math.random() * 2;
+                int randomItem = (int) (Math.random() * 2);
                 if (randomItem == 0) {
-                    randomItem = (int) Math.random() * 5;
+                    randomItem = (int) (Math.random() * 5);
                     items.add(new InfoItem(posXbomb, posYbomb - i, getInfoItemFromInt(randomItem)));
                 }
             }
         }
         for (int i = 0; i <= range; i++) {
-            if (breakableWalls[posXbomb + i][posYbomb] == true) {
+            if (breakableWalls[posXbomb + i][posYbomb]) {
                 breakableWalls[posXbomb + i][posYbomb] = false;
-                int randomItem = (int) Math.random() * 2;
+                int randomItem = (int) (Math.random() * 2);
                 if (randomItem == 0) {
-                    randomItem = (int) Math.random() * 5;
+                    randomItem = (int) (Math.random() * 5);
                     items.add(new InfoItem(posXbomb + i, posYbomb, getInfoItemFromInt(randomItem)));
                 }
             }
-            if (breakableWalls[posXbomb - i][posYbomb] == true) {
+            if (breakableWalls[posXbomb - i][posYbomb]) {
                 breakableWalls[posXbomb - i][posYbomb] = false;
-                int randomItem = (int) Math.random() * 2;
+                int randomItem = (int) (Math.random() * 2);
                 if (randomItem == 0) {
-                    randomItem = (int) Math.random() * 5;
+                    randomItem = (int) (Math.random() * 5);
                     items.add(new InfoItem(posXbomb - i, posYbomb, getInfoItemFromInt(randomItem)));
                 }
             }
@@ -306,5 +291,8 @@ public class BombermanGame extends Game {
         return true;
     }
 
+    public ArrayList<AbstractAgent> getPlayers() {
+        return players;
+    }
 
 }

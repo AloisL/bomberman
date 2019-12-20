@@ -21,6 +21,7 @@ public class BombermanView implements Observer, WindowListener {
     private JPanel mainPanel;
     private PanelCommand panelCommand;
     private PanelBomberman bombermanPanel;
+    private boolean keyboardInputLocked = false;
 
     /**
      * Constructeur de la vue
@@ -134,13 +135,16 @@ public class BombermanView implements Observer, WindowListener {
     public void initKeyListener() {
         bombermanPanel.addKeyListener(new KeyListener() {
             @Override
-            public void keyPressed(KeyEvent keyEvent) {
+            public void keyReleased(KeyEvent keyEvent) {
+                int key = keyEvent.getKeyCode();
+                if (key != KeyEvent.VK_SPACE) {
+                    controller.updatePlayerAction(AgentAction.STOP);
+                }
             }
 
             @Override
-            public void keyReleased(KeyEvent keyEvent) {
+            public void keyPressed(KeyEvent keyEvent) {
                 int key = keyEvent.getKeyCode();
-
                 switch (key) {
                     case KeyEvent.VK_LEFT: {
                         controller.updatePlayerAction(AgentAction.MOVE_LEFT);
@@ -152,7 +156,6 @@ public class BombermanView implements Observer, WindowListener {
                     break;
                     case KeyEvent.VK_UP: {
                         controller.updatePlayerAction(AgentAction.MOVE_UP);
-
                     }
                     break;
                     case KeyEvent.VK_DOWN: {
@@ -164,6 +167,9 @@ public class BombermanView implements Observer, WindowListener {
                         controller.updatePlayerAction(AgentAction.PUT_BOMB);
                     }
                     break;
+                    default: {
+                        controller.updatePlayerAction(AgentAction.STOP);
+                    }
                 }
             }
 
@@ -183,7 +189,6 @@ public class BombermanView implements Observer, WindowListener {
     }
 
     // Méthodes appelées aux différents états de la fenètre
-
     @Override
     public void windowOpened(WindowEvent windowEvent) {
 
@@ -196,7 +201,7 @@ public class BombermanView implements Observer, WindowListener {
 
     @Override
     public void windowClosed(WindowEvent windowEvent) {
-
+        controller.pause();
     }
 
     @Override
