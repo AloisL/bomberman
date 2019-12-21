@@ -125,6 +125,7 @@ public class BombermanView implements Observer, WindowListener {
         window.setSize(sizeX, sizeY + panelCommand.getHeight() + 40);
         window.repaint();
         initKeyListener();
+
         this.bombermanPanel.grabFocus();
     }
 
@@ -166,6 +167,8 @@ public class BombermanView implements Observer, WindowListener {
                     case KeyEvent.VK_SPACE: {
                         controller.updatePlayerAction(AgentAction.PUT_BOMB);
                     }
+                    default:
+                        controller.updatePlayerAction(AgentAction.STOP);
                     break;
                     default: {
                         controller.updatePlayerAction(AgentAction.STOP);

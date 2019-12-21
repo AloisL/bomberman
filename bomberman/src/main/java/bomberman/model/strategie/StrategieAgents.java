@@ -2,6 +2,7 @@ package bomberman.model.strategie;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
+import bomberman.model.engine.InfoBomb;
 import bomberman.model.repo.AgentAction;
 import bomberman.model.repo.EnumDirection;
 
@@ -15,10 +16,12 @@ public abstract class StrategieAgents {
     protected int viewNbBlocks;
     protected AbstractAgent agentCalling;
 
+
     //public AgentAction mouvStrategie(InfoAgent infoAgent,boolean agentInSight, ArrayList<Boolean> rockMap);
     // effectue le mouvement choisie par la strategie
     public StrategieAgents() {
     }
+
 
     public StrategieAgents(BombermanGame bombermanGame, AbstractAgent agent) {
         agentCalling = agent;
@@ -128,7 +131,7 @@ public abstract class StrategieAgents {
         Noeud noeud = algorithmeAEtoile.chemin(objectif, algorithmeAEtoile.creerOrigine());
         coordonnee = noeud.getCoordonnee();
                /*
-        System.out.print(coordonne.x+" : "+coordonne.y);
+        System.out.print(coordonnee.x+" : "+coordonnee.y);
                 */
         return coordonnee;
     }
@@ -146,6 +149,26 @@ public abstract class StrategieAgents {
         }
 
 
+        return false;
+    }
+
+    public InfoBomb checkSiBesoinSafe(){
+        for (InfoBomb b: bombermanGame.getBombs()) {
+
+            if (isInRange(b)){
+             return b;  //zoneSafe(b);
+            }
+        }
+        return null;
+    }
+
+    public boolean isInRange(InfoBomb b){
+        if ( ( ( agentCalling.getX()<b.getX()+b.getRange() ) && ( agentCalling.getX()>b.getX()-b.getRange() ) ) && (agentCalling.getY()==b.getY()) ){
+            return true;
+        }
+        if ( ( ( agentCalling.getY()<b.getY()+b.getRange() ) && ( agentCalling.getX()>b.getY()-b.getRange() ) ) && (agentCalling.getX()==b.getX()) ){
+            return true;
+        }
         return false;
     }
 

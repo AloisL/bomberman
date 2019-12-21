@@ -4,9 +4,16 @@ import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.AgentFactory;
 import bomberman.model.engine.*;
 import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.ItemType;
+
+import bomberman.model.repo.ColorAgent;
 import bomberman.model.repo.StateBomb;
+
 import bomberman.model.strategie.Coordonnee;
+import bomberman.model.strategie.StrategieAgents;
+import bomberman.model.strategie.StrategieSafe;
+
+import bomberman.model.repo.ItemType;
+
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -22,6 +29,8 @@ public class BombermanGame extends Game {
     private Map map;
     private ActionSystem actionSystem;
     private ArrayList<AbstractAgent> agents;
+
+
     private boolean[][] breakableWalls;
     private ArrayList<InfoItem> items;
     private ArrayList<InfoBomb> bombs;
@@ -40,6 +49,8 @@ public class BombermanGame extends Game {
     public void initializeGame() {
         log.debug("Initialisation du jeu");
 
+
+
         AbstractAgent.resetId();
         items = new ArrayList<>();
         bombs = new ArrayList<>();
@@ -51,6 +62,7 @@ public class BombermanGame extends Game {
         initAgents();
 
         actionSystem = new ActionSystem(this);
+
 
         log.debug("Jeu initialisé");
     }
@@ -94,14 +106,14 @@ public class BombermanGame extends Game {
             bomb.getOwner().freeBombSlot();
             bombs.remove(bomb);
         }
-/*
+
         for (AbstractAgent agent: agents) {
-            if (agent.getId()!=1){
-                StrategieSafe strat=new StrategieSafe(this,agent);
+            if (agent.getColor()!= ColorAgent.BLEU){
+                StrategieAgents strat=new StrategieSafe(this,agent);
                 takeTurnIa(agent,strat.doStrategie());
             }
         }
-*/
+      
         setChanged();
         notifyObservers();
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
@@ -191,6 +203,8 @@ public class BombermanGame extends Game {
     public ArrayList<AbstractAgent> getAgents() {
         return agents;
     }
+
+
 
     public void bombHit(InfoBomb bomb) {
         int range = bomb.getRange();
@@ -296,3 +310,5 @@ public class BombermanGame extends Game {
     }
 
 }
+
+
