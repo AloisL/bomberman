@@ -42,8 +42,8 @@ public abstract class Game extends Observable implements Runnable {
             isRunning = Boolean.FALSE;
             gameOver();
         }
-        this.setChanged();
-        this.notifyObservers();
+        setChanged();
+        notifyObservers();
     }
 
     public void stop() {
@@ -79,4 +79,5 @@ public abstract class Game extends Observable implements Runnable {
     public Boolean getIsRunning() {
         return isRunning;
     }
+
 }
