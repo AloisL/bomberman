@@ -7,7 +7,7 @@ public abstract class Game extends Observable implements Runnable {
     private Integer currentTurn;
     private Integer maxTurn;
     private Boolean isRunning = Boolean.FALSE;
-    private Long sleepTime = 1000L;
+    private Long sleepTime = 650L;
 
     protected Game(Integer maxTurn) {
         this.maxTurn = maxTurn;
