@@ -1,14 +1,12 @@
 package bomberman.model.agent;
 
 import bomberman.model.BombermanGame;
-import bomberman.model.engine.InfoBomb;
-import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.ColorAgent;
-import bomberman.model.repo.StateBomb;
-import bomberman.model.strategie.Coordonnee;
-import bomberman.model.strategie.StrategieAttaque;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.enums.ColorAgent;
+import bomberman.model.engine.enums.StateBomb;
+import bomberman.model.engine.info.InfoBomb;
 import bomberman.model.strategie.StrategieBasic;
-import bomberman.model.strategie.StrategieSafe;
+
 
 public class BombermanAgent extends AbstractAgent {
 
