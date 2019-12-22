@@ -1,4 +1,6 @@
-package bomberman.model.strategie.utils;
+package bomberman.model.strategie;
+
+import bomberman.model.BombermanGame;
 
 import java.util.ArrayList;
 
@@ -14,8 +16,8 @@ public class Noeud {
     public Noeud() {
     }
 
-    public Noeud(Coordonnee perso, Coordonnee objectif) {
-        creerHeuri(perso, objectif);
+    public Noeud(Coordonnee perso,Coordonnee objectif){
+        creerHeuri(perso,objectif);
     }
 
     public Noeud(Coordonnee coordo, int nbDeplacement, int valheuri, Noeud origine) {
