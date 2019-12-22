@@ -185,7 +185,7 @@ public class BombermanGame extends Game {
                         agent.getAgentAction(), agent.getColor(), false, false);
                 // ajout des joueurs
                 agents.add(abstractAgent);
-                if ((agent.getType() == 'B') && (i < nbPlayers)) {
+                if ((agent.getColor() == ColorAgent.BLEU ) && (i < nbPlayers)) {
                     players.add(abstractAgent);
                     i++;
                 }
@@ -322,16 +322,20 @@ public class BombermanGame extends Game {
     }
 
     public boolean isFree(Coordonnee c) {
-        if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
-            return false;
-        }
-        for (InfoBomb b : bombs) {
-            if (b.getX() == c.x && b.getY() == c.y) {
-
+        if (c.x>0 && c.y>0 && c.x<map.getSizeX() && c.y<map.getSizeY()) {
+            if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
                 return false;
             }
+            for (InfoBomb b : bombs) {
+                if (b.getX() == c.x && b.getY() == c.y) {
+
+                    return false;
+                }
+            }
+
+            return true;
         }
-        return true;
+        return false;
     }
 
     public ArrayList<AbstractAgent> getPlayers() {

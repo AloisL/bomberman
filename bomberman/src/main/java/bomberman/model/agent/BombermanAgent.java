@@ -22,12 +22,13 @@ public class BombermanAgent extends AbstractAgent {
         nbMaxBomb = 1;
         bombRange = 1;
         nbBombPlaced = 0;
-        rangeView= 10;
+        rangeView= 5;
 
 
     }
 
     public void setStrategie(BombermanGame bombermanGame) {
+        /*
         StrategieAttaque attaque = new StrategieAttaque(bombermanGame,this);
         setStrategieAgents(attaque);
 
@@ -37,11 +38,32 @@ public class BombermanAgent extends AbstractAgent {
         }else {
             this.setStrategieAgents(attaque);
         }
+
+         */
+/*
+        StrategieSafe strategieSafe=new StrategieSafe(bombermanGame,this);
+        setStrategieAgents(strategieSafe);
+
+ */
+    //    if(strategieSafe.checkSiBesoinSafe()==null) {
+            StrategieAttaque attaque = new StrategieAttaque(bombermanGame, this);
+            setStrategieAgents(attaque);
+     //   }
+
+
     }
 
         public boolean canPlaceBomb() {
         if (nbBombPlaced < nbMaxBomb) return true;
         else return false;
+    }
+
+    public boolean isSafeSibombe(BombermanGame bombermanGame){
+        StrategieSafe strat=new StrategieSafe(bombermanGame,this);
+        InfoBomb bomb=new InfoBomb(this,this.getX(),this.getY(),this.getBombRange(),StateBomb.Step1);
+        System.out.println(strat.zoneSafe(bomb).x+" : "+strat.zoneSafe(bomb).y);
+        if (strat.zoneSafe(bomb).x==0) return false;
+        return true;
     }
 
     public InfoBomb addBomb() {

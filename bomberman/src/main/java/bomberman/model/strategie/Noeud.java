@@ -1,5 +1,7 @@
 package bomberman.model.strategie;
 
+import bomberman.model.BombermanGame;
+
 import java.util.ArrayList;
 
 public class Noeud {
@@ -36,6 +38,7 @@ public class Noeud {
 
     public void creerVoisin(Coordonnee objectif, boolean[][] mapMur) {
         ArrayList<Noeud> tabVoisin = new ArrayList<>();
+
         Coordonnee c1 = new Coordonnee(coordonnee.x + 1, coordonnee.y);
         Coordonnee c2 = new Coordonnee(coordonnee.x - 1, coordonnee.y);
         Coordonnee c3 = new Coordonnee(coordonnee.x, coordonnee.y + 1);

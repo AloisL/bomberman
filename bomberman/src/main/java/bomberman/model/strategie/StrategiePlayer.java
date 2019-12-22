@@ -6,7 +6,7 @@ public class StrategiePlayer extends StrategieAgents {
 
     @Override
     public AgentAction doStrategie() {
-        return null;
+        return AgentAction.STOP;
     }
 
 }

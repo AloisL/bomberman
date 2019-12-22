@@ -42,6 +42,15 @@ public class ActionSystem {
                 return canMove(agent, AgentAction.MOVE_LEFT);
             case MOVE_RIGHT:
                 return canMove(agent, AgentAction.MOVE_RIGHT);
+            case JUMP_DOWN:
+                return canMove(agent, AgentAction.JUMP_DOWN);
+            case JUMP_LEFT:
+                return canMove(agent, AgentAction.JUMP_LEFT);
+            case JUMP_RIGHT:
+                return canMove(agent, AgentAction.JUMP_RIGHT);
+            case JUMP_UP:
+                return canMove(agent, AgentAction.JUMP_UP);
+
             case STOP:
                 return true;
             case PUT_BOMB: {
@@ -109,6 +118,48 @@ public class ActionSystem {
                     log.debug(canMoveMessage + AgentAction.MOVE_RIGHT.toString());
                     return true;
                 }
+            case JUMP_UP:
+                if ((posY - 2 < 0)
+                        || bombermanGame.getMap().get_walls()[posX][posY - 2]
+                        || bombermanGame.getBreakableWalls()[posX][posY - 2]) {
+                    log.debug(cannotMoveMessage + AgentAction.MOVE_UP.toString());
+                    return false;
+                } else {
+                    log.debug(canMoveMessage + AgentAction.JUMP_UP.toString());
+                    return true;
+                }
+            case JUMP_DOWN:
+                if(posY + 2 < bombermanGame.getMap().getSizeY()) {
+                    if (bombermanGame.getMap().get_walls()[posX][posY + 2]
+                            || bombermanGame.getBreakableWalls()[posX][posY + 2]) {
+                        log.debug(cannotMoveMessage + AgentAction.JUMP_DOWN.toString());
+                        return false;
+                    } else {
+                        log.debug(canMoveMessage + AgentAction.JUMP_DOWN.toString());
+                        return true;
+                    }
+                }return false;
+            case JUMP_LEFT:
+                if ((posX - 2 < 0)
+                        || bombermanGame.getMap().get_walls()[posX - 2][posY]
+                        || bombermanGame.getBreakableWalls()[posX - 2][posY]) {
+                    log.debug(cannotMoveMessage + AgentAction.JUMP_LEFT.toString());
+                    return false;
+                } else {
+                    log.debug(canMoveMessage + AgentAction.JUMP_LEFT.toString());
+                    return true;
+                }
+            case JUMP_RIGHT:
+                if (posX + 2 < bombermanGame.getMap().getSizeX()) {
+                    if (bombermanGame.getMap().get_walls()[posX + 2][posY]
+                            || bombermanGame.getBreakableWalls()[posX + 2][posY]) {
+                        log.debug(cannotMoveMessage + AgentAction.JUMP_RIGHT.toString());
+                        return false;
+                    } else {
+                        log.debug(canMoveMessage + AgentAction.JUMP_LEFT.toString());
+                        return true;
+                    }
+                } return false;
             default:
                 log.error(agent.toString() + " ==> Action: " + action.toString() + " non compatible");
                 return false;
@@ -142,6 +193,23 @@ public class ActionSystem {
                 agent.setX(posX + 1);
                 bombermanGame.getAgents().add(agent);
                 break;
+            case JUMP_UP:
+                agent.setY(posY - 2);
+                bombermanGame.getAgents().add(agent);
+                break;
+            case JUMP_DOWN:
+                agent.setY(posY + 2);
+                bombermanGame.getAgents().add(agent);
+                break;
+            case JUMP_LEFT:
+                agent.setX(posX - 2);
+                bombermanGame.getAgents().add(agent);
+                break;
+            case JUMP_RIGHT:
+                agent.setX(posX + 2);
+                bombermanGame.getAgents().add(agent);
+                break;
+
             case STOP:
                 bombermanGame.getAgents().add(agent);
                 break;

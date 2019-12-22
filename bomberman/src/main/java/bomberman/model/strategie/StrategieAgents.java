@@ -32,6 +32,35 @@ public abstract class StrategieAgents {
     public abstract AgentAction doStrategie();
 
 
+//utilisé pour eviter des bug qui non malheuresement pas reussi a etre corrigé a temps
+    public AgentAction strategieAleatoire(){
+        AgentAction resultat = AgentAction.MOVE_UP;
+        int aleatoire = (int)(Math.random()*4);
+        switch (aleatoire){
+            case 0:
+                resultat= AgentAction.MOVE_UP;
+                break;
+            case 1:
+                resultat= AgentAction.MOVE_DOWN;
+                break;
+            case 2:
+                resultat= AgentAction.MOVE_RIGHT;
+                break;
+            case 3:
+                resultat= AgentAction.MOVE_LEFT;
+                break;
+            default:
+                log("mouvement non reconnue");
+                break;
+
+        }
+
+
+
+        return resultat;
+    }
+
+
 
     public AgentAction doMouvement(Coordonnee objectif) {
         AgentAction resultat = AgentAction.STOP;
@@ -72,14 +101,15 @@ public abstract class StrategieAgents {
     }
 
     public int donneDirection(Coordonnee direction) {
-
-        int diffX = direction.x - agentCalling.getX();
-        int diffY = direction.y - agentCalling.getY();
-        if (diffY < 0) {
-            return 0;
-        } else if (diffY > 0) return 1;
-        if (diffX > 0) return 2;
-        else if (diffX < 0) return 3;
+        if (direction.x!=0) {
+            int diffX = direction.x - agentCalling.getX();
+            int diffY = direction.y - agentCalling.getY();
+            if (diffY < 0) {
+                return 0;
+            } else if (diffY > 0) return 1;
+            if (diffX > 0) return 2;
+            else if (diffX < 0) return 3;
+        }
         return 8;
 
     }
@@ -87,9 +117,11 @@ public abstract class StrategieAgents {
 
     public Coordonnee chercherDirection(Coordonnee objectif) {
         AlgorithmeAEtoile algorithmeAEtoile = new AlgorithmeAEtoile(bombermanGame, agentCalling, objectif);
-        Coordonnee coordonnee = new Coordonnee();
+        Coordonnee coordonnee = new Coordonnee(0,0);
         Noeud noeud = algorithmeAEtoile.chemin(objectif, algorithmeAEtoile.creerOrigine());
-        coordonnee = noeud.getCoordonnee();
+        if (noeud!=null) {
+            coordonnee = noeud.getCoordonnee();
+        }
                /*
         System.out.print(coordonnee.x+" : "+coordonnee.y);
                 */

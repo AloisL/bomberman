@@ -34,48 +34,56 @@ public class StrategieSafe extends StrategieAgents {
             int diffY = agentCalling.getY() - b.getY();
             if (diffX != 0) diffX = Math.abs(diffX) / diffX;
             if (diffY != 0) diffY = Math.abs(diffY) / diffY;
-            for (int i = 0; i <= b.getRange(); i++) {
-                Coordonnee c1= new Coordonnee(0,0);
-                Coordonnee c2= new Coordonnee(0,0);
-                Coordonnee c3= new Coordonnee(0,0);
-                Coordonnee c4= new Coordonnee(0,0);
-                if (diffX==0 && diffY==0){
-                    c1 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY()+1);
-                    c2 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY()+1);
-                    c3 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY()-1);
-                    c4 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY()-1);
-                }
-                else {
-                    if (diffX == 0) {
-                        c1 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY() + i);
-                        c2 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY() + i);
-                        c3 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY() - i);
-                        c4 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY() - i);
-                    } else if (diffY == 0) {
-                        c1 = new Coordonnee(agentCalling.getX() + i, agentCalling.getY() + 1);
-                        c2 = new Coordonnee(agentCalling.getX() + i, agentCalling.getY() - 1);
-                        c3 = new Coordonnee(agentCalling.getX() - i, agentCalling.getY() + 1);
-                        c4 = new Coordonnee(agentCalling.getX() - i, agentCalling.getY() - 1);
+            Coordonnee c1 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY());
+            Coordonnee c2 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY());
+            Coordonnee c3 = new Coordonnee(agentCalling.getX(), agentCalling.getY() + 1);
+            Coordonnee c4 = new Coordonnee(agentCalling.getX(), agentCalling.getY() - 1);
+            if (bombermanGame.isFree(c1) || bombermanGame.isFree(c2) || bombermanGame.isFree(c3) || bombermanGame.isFree(c4)) {
+                for (int i = 0; i <= b.getRange(); i++) {
+
+                    if (diffX == 0 && diffY == 0) {
+                        c1 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY() + 1);
+                        c2 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY() + 1);
+                        c3 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY() - 1);
+                        c4 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY() - 1);
+                    } else {
+                        if (diffX == 0) {
+                            c1 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY() + i);
+                            c2 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY() + i);
+                            c3 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY() - i);
+                            c4 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY() - i);
+                        } else if (diffY == 0) {
+                            c1 = new Coordonnee(agentCalling.getX() + i, agentCalling.getY() + 1);
+                            c2 = new Coordonnee(agentCalling.getX() + i, agentCalling.getY() - 1);
+                            c3 = new Coordonnee(agentCalling.getX() - i, agentCalling.getY() + 1);
+                            c4 = new Coordonnee(agentCalling.getX() - i, agentCalling.getY() - 1);
+                        }
+                    }
+
+                    if (bombermanGame.isFree(c1) && (!isInRange(b, c1))){
+                        if (doMouvement(c4)!=AgentAction.STOP)
+                            return c1;
+                    }
+                    if (bombermanGame.isFree(c2) && (!isInRange(b, c2))){
+                        if (doMouvement(c4)!=AgentAction.STOP)
+                            return c2;
+                    }
+                    if (bombermanGame.isFree(c3) && (!isInRange(b, c3))) {
+                        if (doMouvement(c4)!=AgentAction.STOP)
+                            return c3;
+                    }
+                    if (bombermanGame.isFree(c4) && (!isInRange(b, c4))) {
+                        if (doMouvement(c4)!=AgentAction.STOP)
+                            return c4;
                     }
                 }
-                /*
-                System.out.println("c1 :" +c1.x+"/"+c1.y+" | "+(bombermanGame.isFree(c1) )+" | "+ (!isInRange(b,c1)));
-                System.out.println("c2 :" +c2.x+"/"+c2.y+" | "+(bombermanGame.isFree(c2) )+" | "+(!isInRange(b,c2)));
-                System.out.println("c3 :" +c3.x+"/"+c3.y+" | "+(bombermanGame.isFree(c3) )+" | "+ (!isInRange(b,c3)));
-                System.out.println("c4 :" +c4.x+"/"+c4.y+" | "+(bombermanGame.isFree(c3) )+" | "+ (!isInRange(b,c3)));
 
-
-                 */
-
-                if (bombermanGame.isFree(c1) && (!isInRange(b,c1))) return c1;
-                if (bombermanGame.isFree(c2) && (!isInRange(b,c2))) return c2;
-                if (bombermanGame.isFree(c3) && (!isInRange(b,c3))) return c3;
-                if (bombermanGame.isFree(c4) && (!isInRange(b,c4))) return c4;
-            }
-            //la coordonnée de l'extrimité de la range
-            Coordonnee c = new Coordonnee(b.getX() + (b.getRange() * diffX) + (diffY), b.getY() + (b.getRange() * diffY) + diffX);
-            if (bombermanGame.isFree(c) && (isInRange(b,c))) {
-                return c;
+                //la coordonnée de l'extrimité de la range
+                Coordonnee c = new Coordonnee(b.getX() + (b.getRange() * diffX) + (diffY), b.getY() + (b.getRange() * diffY) + diffX);
+                if (bombermanGame.isFree(c) && (isInRange(b, c))) {
+                    if (doMouvement(c4)!=AgentAction.STOP)
+                        return c;
+                }
             }
         }
 

@@ -60,8 +60,7 @@ public class AlgorithmeAEtoile {
                     nTmp.creerVoisin(objectif, mapMur);
                     Noeud nSuivant = compareVoisin(depart);
                     if (nSuivant != null) {
-                            return chemin(objectif, nSuivant);
-
+                        return chemin(objectif, nSuivant);
                     } else {
                         closeList.add(depiler(openList));
                     }
@@ -86,8 +85,8 @@ public class AlgorithmeAEtoile {
         if (openList != null) {
             for (Noeud nopen : openList) {
                 if (n.getCoordonnee() == nopen.getCoordonnee()) {
-                    if (n.getNbMouve() > nopen.getNbMouve()) return true;
-                    else return false;
+                    if (n.getNbMouve() > nopen.getNbMouve()) return false;
+                    else return true;
                 }
             }
         }

@@ -17,10 +17,10 @@ public class BasicEnemyAgent extends AbstractAgent {
 
     }
         @Override
-        public void setStrategie(BombermanGame bombermanGame) {/*
+        public void setStrategie(BombermanGame bombermanGame) {
             StrategieBasic strat=new StrategieBasic(bombermanGame,this);
             setStrategieAgents(strat);
-            */
+
         }
 
 

@@ -16,7 +16,10 @@ public class RajionAgent extends AbstractAgent {
 
     @Override
     public void setStrategie(BombermanGame bombermanGame) {
-        StrategieSafe strat=new StrategieSafe(bombermanGame,this);
+        StrategieBasic strat = new StrategieBasic(bombermanGame,this);
         setStrategieAgents(strat);
+        /*
+        StrategieSafe strat=new StrategieSafe(bombermanGame,this);
+        setStrategieAgents(strat);*/
     }
 }
