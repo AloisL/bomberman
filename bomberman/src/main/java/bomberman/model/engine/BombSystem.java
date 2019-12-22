@@ -20,6 +20,9 @@ public class BombSystem extends AbstractSystem {
         super(bombermanGame);
     }
 
+    /**
+     * Méthode de gestion des bombes pour un tour de jeu
+     */
     public void run() {
         ArrayList<InfoBomb> bombToBeRemoved = new ArrayList<>();
 

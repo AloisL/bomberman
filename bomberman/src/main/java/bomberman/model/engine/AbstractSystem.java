@@ -8,7 +8,7 @@ import bomberman.model.engine.info.InfoItem;
 
 import java.util.ArrayList;
 
-public class AbstractSystem {
+public abstract class AbstractSystem {
 
     BombermanGame bombermanGame;
     ArrayList<AbstractAgent> agents;
@@ -25,4 +25,10 @@ public class AbstractSystem {
         items = bombermanGame.getItems();
         breakableWalls = bombermanGame.getBreakableWalls();
     }
+
+    /**
+     * Méthode appelé lors d'un tour de jeu pour chaque sous-sytème
+     */
+    public abstract void run();
+
 }

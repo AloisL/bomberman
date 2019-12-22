@@ -30,6 +30,9 @@ public class ActionSystem extends AbstractSystem {
         super(bombermanGame);
     }
 
+    /**
+     * Méthode effectuant les actions de chacunes des entités du jeu pour un tour de jeu
+     */
     public void run() {
         for (InfoAgent infoAgent : infoAgents) {
             AbstractAgent agent = (AbstractAgent) infoAgent;
@@ -40,7 +43,7 @@ public class ActionSystem extends AbstractSystem {
     }
 
     /**
-     * Méthode de vérification da possibilité d'effectuer une action
+     * Méthode de vérification de la possibilité d'effectuer une action
      *
      * @param agent  Un ajent du jeu
      * @param action Une action
@@ -71,7 +74,7 @@ public class ActionSystem extends AbstractSystem {
     }
 
     /**
-     * Méthode de vérification da possibilité d'effectuer une mouvement
+     * Méthode de vérification de la possibilité d'effectuer une mouvement
      *
      * @param agent  Un agent du jeu
      * @param action Une action (mouvement)
