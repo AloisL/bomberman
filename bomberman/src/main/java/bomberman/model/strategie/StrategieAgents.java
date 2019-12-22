@@ -2,11 +2,9 @@ package bomberman.model.strategie;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
-import bomberman.model.engine.enums.AgentAction;
-import bomberman.model.engine.info.InfoBomb;
-import bomberman.model.strategie.utils.AlgorithmeAEtoile;
-import bomberman.model.strategie.utils.Coordonnee;
-import bomberman.model.strategie.utils.Noeud;
+import bomberman.model.engine.InfoBomb;
+import bomberman.model.repo.AgentAction;
+import bomberman.model.repo.EnumDirection;
 
 import java.util.ArrayList;
 
@@ -34,22 +32,22 @@ public abstract class StrategieAgents {
     public abstract AgentAction doStrategie();
 
 
-    //utilisé pour eviter des bug qui non malheuresement pas reussi a etre corrigé a temps
-    public AgentAction strategieAleatoire() {
+//utilisé pour eviter des bug qui non malheuresement pas reussi a etre corrigé a temps
+    public AgentAction strategieAleatoire(){
         AgentAction resultat = AgentAction.MOVE_UP;
-        int aleatoire = (int) (Math.random() * 4);
-        switch (aleatoire) {
+        int aleatoire = (int)(Math.random()*4);
+        switch (aleatoire){
             case 0:
-                resultat = AgentAction.MOVE_UP;
+                resultat= AgentAction.MOVE_UP;
                 break;
             case 1:
-                resultat = AgentAction.MOVE_DOWN;
+                resultat= AgentAction.MOVE_DOWN;
                 break;
             case 2:
-                resultat = AgentAction.MOVE_RIGHT;
+                resultat= AgentAction.MOVE_RIGHT;
                 break;
             case 3:
-                resultat = AgentAction.MOVE_LEFT;
+                resultat= AgentAction.MOVE_LEFT;
                 break;
             default:
                 log("mouvement non reconnue");
@@ -58,8 +56,10 @@ public abstract class StrategieAgents {
         }
 
 
+
         return resultat;
     }
+
 
 
     public AgentAction doMouvement(Coordonnee objectif) {
@@ -101,7 +101,7 @@ public abstract class StrategieAgents {
     }
 
     public int donneDirection(Coordonnee direction) {
-        if (direction.x != 0) {
+        if (direction.x!=0) {
             int diffX = direction.x - agentCalling.getX();
             int diffY = direction.y - agentCalling.getY();
             if (diffY < 0) {
@@ -117,9 +117,9 @@ public abstract class StrategieAgents {
 
     public Coordonnee chercherDirection(Coordonnee objectif) {
         AlgorithmeAEtoile algorithmeAEtoile = new AlgorithmeAEtoile(bombermanGame, agentCalling, objectif);
-        Coordonnee coordonnee = new Coordonnee(0, 0);
+        Coordonnee coordonnee = new Coordonnee(0,0);
         Noeud noeud = algorithmeAEtoile.chemin(objectif, algorithmeAEtoile.creerOrigine());
-        if (noeud != null) {
+        if (noeud!=null) {
             coordonnee = noeud.getCoordonnee();
         }
                /*
@@ -129,45 +129,48 @@ public abstract class StrategieAgents {
     }
 
 
-    public InfoBomb checkSiBesoinSafe() {
-        for (InfoBomb b : bombermanGame.getBombs()) {
-            boolean test = isInRange(b);
-            if (isInRange(b)) {
 
-                return b;  //zoneSafe(b);
+
+    public InfoBomb checkSiBesoinSafe(){
+        for (InfoBomb b: bombermanGame.getBombs()) {
+            boolean test = isInRange(b);
+            if (isInRange(b)){
+
+             return b;  //zoneSafe(b);
             }
         }
         return null;
     }
 
-
     public Coordonnee checkEnnemie() {
-        Coordonnee c = new Coordonnee();
-        for (AbstractAgent agentP : bombermanGame.getPlayers()) {
-            c.x = agentP.getX();
-            c.y = agentP.getY();
+        Coordonnee c=new Coordonnee();
+        for (AbstractAgent agentP:bombermanGame.getPlayers()) {
+            c.x=agentP.getX();
+            c.y=agentP.getY();
         }
         return c;
 
     }
 
 
-    public boolean isInRange(InfoBomb b) {
-        if (((agentCalling.getX() <= (b.getX() + b.getRange())) && (agentCalling.getX() >= (b.getX() - b.getRange()))) && (agentCalling.getY() == b.getY())) {
+
+    public boolean isInRange(InfoBomb b){
+        if ( ( ( agentCalling.getX()<=(b.getX()+b.getRange()) ) && ( agentCalling.getX()>=(b.getX()-b.getRange()) ) ) && (agentCalling.getY()==b.getY()) ){
             return true;
         }
-        if (((agentCalling.getY() <= (b.getY() + b.getRange())) && (agentCalling.getY() >= (b.getY() - b.getRange()))) && (agentCalling.getX() == b.getX())) {
+        if ( ( ( agentCalling.getY()<=(b.getY()+b.getRange()) ) && ( agentCalling.getY()>=(b.getY()-b.getRange()) ) ) && (agentCalling.getX()==b.getX()) ){
+
             return true;
         }
         return false;
     }
 
-    public boolean isInRange(Coordonnee self, int range, Coordonnee ennemie) {
+    public boolean isInRange(Coordonnee self,int range, Coordonnee ennemie){
 
-        if (((ennemie.x <= (self.x + range)) && (ennemie.x >= (self.x - range))) && (ennemie.y) == self.y) {
+        if ( ( ( ennemie.x<=(self.x+range) ) && ( ennemie.x>=(self.x-range) ) ) && (ennemie.y)==self.y ){
             return true;
         }
-        if (((ennemie.y <= (self.y + range)) && (ennemie.y >= (self.y - range))) && ((ennemie.x) == self.x)) {
+        if (( (  ennemie.y<=(self.y+range) ) && ( ennemie.y>=(self.y-range)) ) && ((ennemie.x)==self.x ) ){
             return true;
         }
         return false;
