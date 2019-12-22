@@ -2,7 +2,8 @@ package bomberman.model.strategie;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
-import bomberman.model.repo.AgentAction;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.strategie.utils.Coordonnee;
 
 public class StrategieBirdAgent extends StrategieAgents {
 
