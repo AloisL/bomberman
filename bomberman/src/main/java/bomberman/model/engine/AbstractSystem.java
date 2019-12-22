@@ -9,6 +9,9 @@ import org.apache.logging.log4j.core.Logger;
 
 import java.util.ArrayList;
 
+/**
+ * Patron de méthode représentant les sous-sytème
+ */
 public abstract class AbstractSystem {
 
     final static Logger log = (Logger) LogManager.getLogger(AbstractSystem.class);
