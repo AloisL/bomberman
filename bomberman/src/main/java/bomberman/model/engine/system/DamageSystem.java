@@ -12,11 +12,13 @@ import org.apache.logging.log4j.core.Logger;
 
 import java.util.ArrayList;
 
-public class BombSystem extends AbstractSystem {
+public class DamageSystem extends AbstractSystem {
 
-    final static Logger log = (Logger) LogManager.getLogger(BombSystem.class);
+    final static Logger log = (Logger) LogManager.getLogger(DamageSystem.class);
 
-    public BombSystem(BombermanGame bombermanGame) {
+    ArrayList<AbstractAgent> agentsToBeRemoved;
+
+    public DamageSystem(BombermanGame bombermanGame) {
         super(bombermanGame);
     }
 
@@ -25,6 +27,19 @@ public class BombSystem extends AbstractSystem {
      */
     @Override
     public void run() {
+        agentsToBeRemoved = new ArrayList<>();
+
+        bombDamages();
+        closeCombatDamages();
+
+        for (AbstractAgent agent : agentsToBeRemoved) {
+            agents.remove(agent);
+            players.remove(agent);
+            if (players.size() == 0) bombermanGame.gameOver();
+        }
+    }
+
+    private void bombDamages() {
         ArrayList<InfoBomb> bombToBeRemoved = new ArrayList<>();
 
         for (InfoBomb bomb : bombs) {
@@ -41,7 +56,8 @@ public class BombSystem extends AbstractSystem {
                 case Boom:
                     bombToBeRemoved.add(bomb);
                 default:
-                    log.error("Etat de bombe inconnu");
+                    bomb.setStateBomb(StateBomb.Step1);
+                    break;
             }
         }
 
@@ -53,13 +69,24 @@ public class BombSystem extends AbstractSystem {
         for (InfoBomb bomb : bombs) if (bomb.getStateBomb() == StateBomb.Boom) bombHit(bomb);
     }
 
+    private void closeCombatDamages() {
+        for (AbstractAgent agent : agents) {
+            for (AbstractAgent player : players) {
+                BombermanAgent bombermanAgent = (BombermanAgent) player;
+                if ((bombermanAgent != agent) && (agent.getX() == bombermanAgent.getX()) && (agent.getY() == bombermanAgent.getY())) {
+                    bombermanAgent.removeLife();
+                    if (bombermanAgent.isDead()) agentsToBeRemoved.add(bombermanAgent);
+                }
+            }
+        }
+    }
+
     public void bombHit(InfoBomb bomb) {
         int range = bomb.getRange();
         int posXbomb = bomb.getX();
         int posYbomb = bomb.getY();
 
         // Tue les agents dans la range de la bombe
-        ArrayList<AbstractAgent> agentsToBeRemoved = new ArrayList<>();
         for (AbstractAgent agent : agents) {
             int posXagent = agent.getX();
             int posYagent = agent.getY();
@@ -87,11 +114,6 @@ public class BombSystem extends AbstractSystem {
                     }
                 }
             }
-        }
-        for (AbstractAgent agent : agentsToBeRemoved) {
-            agents.remove(agent);
-            players.remove(agent);
-            if (players.size() == 0) bombermanGame.gameOver();
         }
 
         // Détruit les murs dans la range de la bombe

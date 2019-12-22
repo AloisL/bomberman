@@ -103,7 +103,12 @@ public class BombermanView implements Observer, WindowListener {
      */
     private void displayUpdate() {
         String currentTurnStr = "Turn: " + currentTurn.toString();
-        panelCommand.getCurrentTurnLabel().setText(currentTurnStr);
+        if (panelCommand.isGameOver()) panelCommand.getCurrentTurnLabel().setText("< GAME OVER >");
+        else panelCommand.getCurrentTurnLabel().setText(currentTurnStr);
+    }
+
+    public void gameOver() {
+        panelCommand.gameOver(controller);
     }
 
     /**

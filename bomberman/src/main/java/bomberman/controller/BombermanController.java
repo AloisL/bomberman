@@ -27,7 +27,7 @@ public class BombermanController implements Controller {
      * @param maxTurn nombre maximal de tours
      */
     public BombermanController(int maxTurn) {
-        bombermanGame = new BombermanGame(maxTurn, 1);
+        bombermanGame = new BombermanGame(this, maxTurn, 1);
         bombermanView = new BombermanView(this, "Bomberman Command");
         bombermanGame.addObserver(bombermanView);
     }
@@ -85,6 +85,11 @@ public class BombermanController implements Controller {
     public void setTime(Integer turnPerSec) {
         Long sleepTime = (long) 1000 / turnPerSec;
         bombermanGame.setSleepTime(sleepTime);
+    }
+
+    @Override
+    public void gameOver() {
+        bombermanView.gameOver();
     }
 
     /**

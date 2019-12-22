@@ -10,4 +10,6 @@ public interface Controller {
     void pause();
 
     void setTime(Integer turnPerSec);
+
+    void gameOver();
 }

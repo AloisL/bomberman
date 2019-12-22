@@ -9,9 +9,10 @@ import bomberman.model.engine.info.InfoAgent;
 import bomberman.model.engine.info.InfoBomb;
 import bomberman.model.engine.info.InfoItem;
 import bomberman.model.engine.system.ActionSystem;
-import bomberman.model.engine.system.BombSystem;
+import bomberman.model.engine.system.DamageSystem;
 import bomberman.model.engine.system.ItemSystem;
 import bomberman.model.strategie.utils.Coordonnee;
+import common.Controller;
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -25,9 +26,10 @@ public class BombermanGame extends Game {
 
     final static Logger log = (Logger) LogManager.getLogger(BombermanGame.class);
 
+    private Controller controller;
     private Map map;
     private ActionSystem actionSystem;
-    private BombSystem bombSystem;
+    private DamageSystem damageSystem;
     private ItemSystem itemSystem;
     private ArrayList<AbstractAgent> agents;
     private ArrayList<AbstractAgent> agentsIa;
@@ -37,9 +39,10 @@ public class BombermanGame extends Game {
     private int nbPlayers;
     private ArrayList<AbstractAgent> players;
 
-    public BombermanGame(Integer maxTurn, int nbPlayers) {
+    public BombermanGame(Controller controller, Integer maxTurn, int nbPlayers) {
         super(maxTurn);
         this.nbPlayers = nbPlayers;
+        this.controller = controller;
     }
 
     /**
@@ -67,7 +70,7 @@ public class BombermanGame extends Game {
         }
 
         actionSystem = new ActionSystem(this);
-        bombSystem = new BombSystem(this);
+        damageSystem = new DamageSystem(this);
         itemSystem = new ItemSystem(this);
 
         log.debug("Jeu initialisé");
@@ -83,13 +86,12 @@ public class BombermanGame extends Game {
         log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
 
         actionSystem.run();
-        bombSystem.run();
+        damageSystem.run();
         itemSystem.run();
 
         for (AbstractAgent agent : agentsIa) {
             if (agent.getColor() != ColorAgent.BLEU) {
                 agent.setStrategie(this);
-
                 AgentAction action = agent.getStrategie().doStrategie();
                 if (actionSystem.isLegalAction(agent, action)) {
                     agent.setAgentAction(action);
@@ -109,6 +111,7 @@ public class BombermanGame extends Game {
     @Override
     public void gameOver() {
         isRunning = false;
+        controller.gameOver();
         log.debug("Le jeu est fini");
     }
 
