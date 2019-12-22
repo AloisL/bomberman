@@ -13,6 +13,7 @@ public class InfoAgent {
     private AgentAction agentAction;
     private ColorAgent color;
     private char type;
+    protected int rangeView;
 
     private boolean isInvincible;
     private boolean isSick;
@@ -94,6 +95,8 @@ public class InfoAgent {
         this.agentAction = agentAction;
     }
 
-
+    public int getRangeView() {
+        return rangeView;
+    }
 }
 	

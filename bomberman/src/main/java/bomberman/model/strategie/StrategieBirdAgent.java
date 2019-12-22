@@ -16,45 +16,30 @@ public class StrategieBirdAgent extends StrategieAgents {
     }
 
     @Override
-    public AgentAction doStrategie() {
-        return AgentAction.MOVE_UP;
-    }
+    public AgentAction doStrategie(){
+        Coordonnee imSelf= new Coordonnee(agentCalling.getX(),agentCalling.getY());
+        AgentAction action = doMouvement(checkEnnemie());
+        if (isInRange(imSelf,agentCalling.getRangeView(),checkEnnemie())) {
+            if(!bombermanGame.getActionSystem().isLegalAction(this.agentCalling,action)) {
+                switch (action){
+                    case MOVE_UP:
+                        return AgentAction.JUMP_UP;
+                    case MOVE_DOWN:
+                        return AgentAction.JUMP_DOWN;
+                    case MOVE_LEFT:
+                        return AgentAction.JUMP_LEFT;
+                    case MOVE_RIGHT:
+                        return AgentAction.JUMP_RIGHT;
+                    default:
+                        return action;
 
-    private void strategieBird(EnumDirection direction) {
-        switch (direction) {
-            case D:
-
-                break;
-
-            case B:
-                break;
-
-            case G:
-                break;
-
-            case H:
-                break;
-
-            case BG:
-                break;
-
-            case BH:
-                break;
-
-            case HD:
-                break;
-
-            case HG:
-                break;
-
-            case STOP:
-                break;
-
-            default:
-                break;
-
+                }
+            }
         }
+        return AgentAction.STOP;
     }
+
+
 
 
 }

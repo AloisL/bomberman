@@ -10,6 +10,7 @@ public class InfoBomb {
     private int x;
     private int y;
     private int range;
+    public boolean alfStep; //fait en sorte que les bombe prenne 2X plus de temps pour exploser
 
     public InfoBomb(BombermanAgent owner, int x, int y, int range, StateBomb stateBomb) {
         this.owner = owner;
@@ -17,6 +18,7 @@ public class InfoBomb {
         this.y = y;
         this.range = range;
         this.stateBomb = stateBomb;
+        this.alfStep = false;
     }
 
     public int getX() {
