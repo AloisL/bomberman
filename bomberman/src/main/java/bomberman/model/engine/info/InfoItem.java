@@ -1,4 +1,4 @@
-package bomberman.model.engine;
+package bomberman.model.engine.info;
 
 import bomberman.model.repo.ItemType;
 

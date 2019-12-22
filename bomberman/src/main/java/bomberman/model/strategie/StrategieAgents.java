@@ -2,7 +2,7 @@ package bomberman.model.strategie;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
-import bomberman.model.engine.InfoBomb;
+import bomberman.model.engine.info.InfoBomb;
 import bomberman.model.repo.AgentAction;
 import bomberman.model.repo.EnumDirection;
 
@@ -152,21 +152,21 @@ public abstract class StrategieAgents {
         return false;
     }
 
-    public InfoBomb checkSiBesoinSafe(){
-        for (InfoBomb b: bombermanGame.getBombs()) {
+    public InfoBomb checkSiBesoinSafe() {
+        for (InfoBomb b : bombermanGame.getBombs()) {
 
-            if (isInRange(b)){
-             return b;  //zoneSafe(b);
+            if (isInRange(b)) {
+                return b;  //zoneSafe(b);
             }
         }
         return null;
     }
 
-    public boolean isInRange(InfoBomb b){
-        if ( ( ( agentCalling.getX()<b.getX()+b.getRange() ) && ( agentCalling.getX()>b.getX()-b.getRange() ) ) && (agentCalling.getY()==b.getY()) ){
+    public boolean isInRange(InfoBomb b) {
+        if (((agentCalling.getX() < b.getX() + b.getRange()) && (agentCalling.getX() > b.getX() - b.getRange())) && (agentCalling.getY() == b.getY())) {
             return true;
         }
-        if ( ( ( agentCalling.getY()<b.getY()+b.getRange() ) && ( agentCalling.getX()>b.getY()-b.getRange() ) ) && (agentCalling.getX()==b.getX()) ){
+        if (((agentCalling.getY() < b.getY() + b.getRange()) && (agentCalling.getX() > b.getY() - b.getRange())) && (agentCalling.getX() == b.getX())) {
             return true;
         }
         return false;

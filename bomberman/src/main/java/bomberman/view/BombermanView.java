@@ -161,7 +161,6 @@ public class BombermanView implements Observer, WindowListener {
                     break;
                     case KeyEvent.VK_DOWN: {
                         controller.updatePlayerAction(AgentAction.MOVE_DOWN);
-
                     }
                     break;
                     case KeyEvent.VK_SPACE: {

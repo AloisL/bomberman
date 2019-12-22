@@ -2,10 +2,12 @@ package bomberman.model;
 
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.AgentFactory;
-import bomberman.model.engine.*;
-import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.ItemType;
-import bomberman.model.repo.StateBomb;
+import bomberman.model.engine.ActionSystem;
+import bomberman.model.engine.BombSystem;
+import bomberman.model.engine.Map;
+import bomberman.model.engine.info.InfoAgent;
+import bomberman.model.engine.info.InfoBomb;
+import bomberman.model.engine.info.InfoItem;
 import bomberman.model.strategie.Coordonnee;
 import common.Game;
 import org.apache.logging.log4j.LogManager;
@@ -21,8 +23,8 @@ public class BombermanGame extends Game {
     final static Logger log = (Logger) LogManager.getLogger(BombermanGame.class);
     private Map map;
     private ActionSystem actionSystem;
+    private BombSystem bombSystem;
     private ArrayList<AbstractAgent> agents;
-
 
     private boolean[][] breakableWalls;
     private ArrayList<InfoItem> items;
@@ -42,7 +44,6 @@ public class BombermanGame extends Game {
     public void initializeGame() {
         log.debug("Initialisation du jeu");
 
-
         AbstractAgent.resetId();
         items = new ArrayList<>();
         bombs = new ArrayList<>();
@@ -54,7 +55,7 @@ public class BombermanGame extends Game {
         initAgents();
 
         actionSystem = new ActionSystem(this);
-
+        bombSystem = new BombSystem(this);
 
         log.debug("Jeu initialisé");
     }
@@ -66,51 +67,15 @@ public class BombermanGame extends Game {
      */
     @Override
     public void takeTurn() {
-        for (InfoAgent infoAgent : getInfoAgents()) {
-            AgentAction agentAction = infoAgent.getAgentAction();
-            if (actionSystem.isLegalAction((AbstractAgent) infoAgent, agentAction))
-                actionSystem.doAction((AbstractAgent) infoAgent, agentAction);
-        }
+        log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
 
-        ArrayList<InfoBomb> bombToBeRemoved = new ArrayList<>();
+        actionSystem.run();
+        bombSystem.run();
 
-        for (InfoBomb bomb : bombs) {
-            switch (bomb.getStateBomb()) {
-                case Step1:
-                    bomb.setStateBomb(StateBomb.Step2);
-                    break;
-                case Step2:
-                    bomb.setStateBomb(StateBomb.Step3);
-                    break;
-                case Step3:
-                    bomb.setStateBomb(StateBomb.Boom);
-                    break;
-                case Boom:
-                    bombToBeRemoved.add(bomb);
-                default:
-                    log.error("Etat de bombe inconnu");
-            }
-        }
-
-        for (InfoBomb bomb : bombs) if (bomb.getStateBomb() == StateBomb.Boom) bombHit(bomb);
-
-        for (InfoBomb bomb : bombToBeRemoved) {
-            bomb.getOwner().freeBombSlot();
-            bombs.remove(bomb);
-        }
-
-        /*
-        for (AbstractAgent agent: agents) {
-            if (agent.getColor()!= ColorAgent.BLEU){
-                StrategieAgents strat=new StrategieSafe(this,agent);
-                takeTurnIa(agent,strat.doStrategie());
-            }
-        }
-        */
+        log.debug("Tour " + getCurrentTurn() + " du jeu terminé");
 
         setChanged();
         notifyObservers();
-        log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
     }
 
     /**
@@ -196,91 +161,6 @@ public class BombermanGame extends Game {
 
     public ArrayList<AbstractAgent> getAgents() {
         return agents;
-    }
-
-
-    public void bombHit(InfoBomb bomb) {
-        int range = bomb.getRange();
-        int posXbomb = bomb.getX();
-        int posYbomb = bomb.getY();
-
-        // Tue les agents dans la range de la bombe
-        ArrayList<AbstractAgent> agentsToBeRemoved = new ArrayList<>();
-        for (AbstractAgent agent : agents) {
-            int posXagent = agent.getX();
-            int posYagent = agent.getY();
-
-            if (posXagent == posXbomb) {
-                for (int i = 0; i <= range; i++) {
-                    if ((posYagent == posYbomb + i) || (posYagent == posYbomb - i)) agentsToBeRemoved.add(agent);
-                }
-            }
-            if (posYagent == posYbomb) {
-                for (int i = 0; i <= range; i++) {
-                    if ((posXagent == posXbomb + i) || (posXagent == posXbomb - i)) agentsToBeRemoved.add(agent);
-                }
-            }
-        }
-        for (AbstractAgent agent : agentsToBeRemoved) agents.remove(agent);
-
-        // Détruit les murs dans la range de la bombe
-        for (int i = 0; i <= range; i++) {
-            if (breakableWalls[posXbomb][posYbomb + i]) {
-                breakableWalls[posXbomb][posYbomb + i] = false;
-                int randomItem = (int) (Math.random() * 2);
-                if (randomItem == 0) {
-                    randomItem = (int) (Math.random() * 5);
-                    items.add(new InfoItem(posXbomb, posYbomb + i, getInfoItemFromInt(randomItem)));
-                }
-            }
-            if (breakableWalls[posXbomb][posYbomb - i]) {
-                breakableWalls[posXbomb][posYbomb - i] = false;
-                int randomItem = (int) (Math.random() * 2);
-                if (randomItem == 0) {
-                    randomItem = (int) (Math.random() * 5);
-                    items.add(new InfoItem(posXbomb, posYbomb - i, getInfoItemFromInt(randomItem)));
-                }
-            }
-        }
-        for (int i = 0; i <= range; i++) {
-            if (breakableWalls[posXbomb + i][posYbomb]) {
-                breakableWalls[posXbomb + i][posYbomb] = false;
-                int randomItem = (int) (Math.random() * 2);
-                if (randomItem == 0) {
-                    randomItem = (int) (Math.random() * 5);
-                    items.add(new InfoItem(posXbomb + i, posYbomb, getInfoItemFromInt(randomItem)));
-                }
-            }
-            if (breakableWalls[posXbomb - i][posYbomb]) {
-                breakableWalls[posXbomb - i][posYbomb] = false;
-                int randomItem = (int) (Math.random() * 2);
-                if (randomItem == 0) {
-                    randomItem = (int) (Math.random() * 5);
-                    items.add(new InfoItem(posXbomb - i, posYbomb, getInfoItemFromInt(randomItem)));
-                }
-            }
-        }
-
-    }
-
-    public ItemType getInfoItemFromInt(int i) {
-        switch (i) {
-            case 0:
-                return ItemType.FIRE_UP;
-            case 1:
-                return ItemType.FIRE_DOWN;
-            case 2:
-                return ItemType.BOMB_UP;
-            case 3:
-                return ItemType.BOMB_DOWN;
-            case 4:
-                return ItemType.FIRE_SUIT;
-            case 5:
-                return ItemType.SKULL;
-            default:
-                log.error("Item inconnu ==> " + i);
-                return null;
-        }
     }
 
     public void update() {

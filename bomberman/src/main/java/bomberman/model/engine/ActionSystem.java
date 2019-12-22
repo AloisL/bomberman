@@ -3,18 +3,23 @@ package bomberman.model.engine;
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.BombermanAgent;
+import bomberman.model.engine.info.InfoAgent;
+import bomberman.model.engine.info.InfoBomb;
 import bomberman.model.repo.AgentAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 
+import java.util.ArrayList;
+
 /**
  * Classe de gestion des actions du jeu
  */
-public class ActionSystem {
+public class ActionSystem extends AbstractSystem {
 
     final static Logger log = (Logger) LogManager.getLogger(ActionSystem.class);
 
     BombermanGame bombermanGame;
+    private ArrayList<InfoAgent> infoAgents;
 
     /**
      * Constructeur
@@ -22,7 +27,16 @@ public class ActionSystem {
      * @param bombermanGame Le jeu
      */
     public ActionSystem(BombermanGame bombermanGame) {
-        this.bombermanGame = bombermanGame;
+        super(bombermanGame);
+    }
+
+    public void run() {
+        for (InfoAgent infoAgent : infoAgents) {
+            AbstractAgent agent = (AbstractAgent) infoAgent;
+            AgentAction agentAction = agent.getAgentAction();
+            if (isLegalAction(agent, agentAction))
+                doAction(agent, agentAction);
+        }
     }
 
     /**
@@ -158,6 +172,5 @@ public class ActionSystem {
         }
         agent.setAgentAction(action);
     }
-
 
 }

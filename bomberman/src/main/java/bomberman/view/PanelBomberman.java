@@ -1,9 +1,9 @@
 package bomberman.view;
 
-import bomberman.model.engine.InfoAgent;
-import bomberman.model.engine.InfoBomb;
-import bomberman.model.engine.InfoItem;
 import bomberman.model.engine.Map;
+import bomberman.model.engine.info.InfoAgent;
+import bomberman.model.engine.info.InfoBomb;
+import bomberman.model.engine.info.InfoItem;
 import bomberman.model.repo.AgentAction;
 import bomberman.model.repo.ItemType;
 import bomberman.model.repo.StateBomb;
@@ -18,7 +18,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Classe qui permet de charger d'afficher le panneau du jeu à partir d'une carte et de listes d'agents avec leurs positions.
+ * Classe qui permet de charger d'afficher le panneau du jeu à partir d'une carte et de listes d'agents avec leurs
+ * positions.
  * Inspiré du code de Kevin Balavoine et Victor Lelu--Ribaimont.
  */
 
@@ -370,14 +371,16 @@ public class PanelBomberman extends JPanel {
                     if (i == range) {
                         try {
                             Image img = ImageIO.read(new File("./image/Range_EAST_Fin.png"));
-                            g.drawImage(img, (int) (pos_x + (stepy * i)), (int) (pos_y), (int) stepx, (int) stepy, this);
+                            g.drawImage(img, (int) (pos_x + (stepy * i)), (int) (pos_y), (int) stepx, (int) stepy,
+                                    this);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     } else {
                         try {
                             Image img = ImageIO.read(new File("./image/Range_EAST.png"));
-                            g.drawImage(img, (int) (pos_x + (stepy * i)), (int) (pos_y), (int) stepx, (int) stepy, this);
+                            g.drawImage(img, (int) (pos_x + (stepy * i)), (int) (pos_y), (int) stepx, (int) stepy,
+                                    this);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -388,14 +391,16 @@ public class PanelBomberman extends JPanel {
                     if (i == range) {
                         try {
                             Image img = ImageIO.read(new File("./image/Range_WEST_Fin.png"));
-                            g.drawImage(img, (int) (pos_x - (stepy * i)), (int) (pos_y), (int) stepx, (int) stepy, this);
+                            g.drawImage(img, (int) (pos_x - (stepy * i)), (int) (pos_y), (int) stepx, (int) stepy,
+                                    this);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     } else {
                         try {
                             Image img = ImageIO.read(new File("./image/Range_WEST.png"));
-                            g.drawImage(img, (int) (pos_x - (stepy * i)), (int) (pos_y), (int) stepx, (int) stepy, this);
+                            g.drawImage(img, (int) (pos_x - (stepy * i)), (int) (pos_y), (int) stepx, (int) stepy,
+                                    this);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -410,7 +415,8 @@ public class PanelBomberman extends JPanel {
     }
 
 
-    public void setInfoGame(boolean[][] breakable_walls, ArrayList<InfoAgent> listInfoAgents, ArrayList<InfoItem> listInfoItems, ArrayList<InfoBomb> listInfoBombs) {
+    public void setInfoGame(boolean[][] breakable_walls, ArrayList<InfoAgent> listInfoAgents,
+                            ArrayList<InfoItem> listInfoItems, ArrayList<InfoBomb> listInfoBombs) {
 
         this.listInfoAgents = listInfoAgents;
         this.listInfoItems = listInfoItems;

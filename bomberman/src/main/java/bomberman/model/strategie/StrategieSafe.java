@@ -2,34 +2,36 @@ package bomberman.model.strategie;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
-import bomberman.model.engine.InfoBomb;
+import bomberman.model.engine.info.InfoBomb;
 import bomberman.model.repo.AgentAction;
 
 public class StrategieSafe extends StrategieAgents {
 
 
+    public StrategieSafe() {
+    }
 
-    public StrategieSafe(){};
-    public StrategieSafe(BombermanGame bombermanGame, AbstractAgent agent){
-        super(bombermanGame,agent);
+    ;
+
+    public StrategieSafe(BombermanGame bombermanGame, AbstractAgent agent) {
+        super(bombermanGame, agent);
     }
 
     @Override
     public AgentAction doStrategie() {
 
-        Coordonnee c=zoneSafe(checkSiBesoinSafe());
-        if(c.x!=0){
+        Coordonnee c = zoneSafe(checkSiBesoinSafe());
+        if (c.x != 0) {
             //System.out.println("Pourquoi tu bouge pas!");
-           return doMouvement(c);
+            return doMouvement(c);
         }
         return AgentAction.STOP;
     }
 
 
-
     //methode qui cherche une zone safe adjacente au rayon de la bombe
-    public Coordonnee zoneSafe(InfoBomb b){
-        if (b!=null) {
+    public Coordonnee zoneSafe(InfoBomb b) {
+        if (b != null) {
             int diffX = agentCalling.getX() - b.getX();
             int diffY = agentCalling.getY() - b.getY();
             if (diffX != 0) diffX = Math.abs(diffX) / diffX;
@@ -43,13 +45,14 @@ public class StrategieSafe extends StrategieAgents {
                 if (bombermanGame.isFree(c2)) return c2;
             }
             //la coordonnée de l'extrimité de la range
-            Coordonnee c = new Coordonnee(b.getX() + (b.getRange() * diffX) + (diffY), b.getY() + (b.getRange() * diffY) + diffX);
+            Coordonnee c = new Coordonnee(b.getX() + (b.getRange() * diffX) + (diffY),
+                    b.getY() + (b.getRange() * diffY) + diffX);
             if (bombermanGame.isFree(c)) {
                 return c;
             }
         }
 
-       Coordonnee c=new Coordonnee(0,0);
+        Coordonnee c = new Coordonnee(0, 0);
         return c;
     }
 //int x = 10, y = 20;
@@ -57,6 +60,7 @@ public class StrategieSafe extends StrategieAgents {
 //$number, ': ', $number ? abs($number) / $number : 0
 
 
+    @Override
     public boolean isInRange(InfoBomb b) {
         if (((agentCalling.getX() < b.getX() + b.getRange()) && (agentCalling.getX() > b.getX() - b.getRange())) && (agentCalling.getY() == b.getY())) {
             return true;
@@ -66,7 +70,6 @@ public class StrategieSafe extends StrategieAgents {
         }
         return false;
     }
-
 
 
 }
