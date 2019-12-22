@@ -1,20 +1,19 @@
-package bomberman.model.engine;
+package bomberman.model.engine.info;
 
-import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.ColorAgent;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.enums.ColorAgent;
 
 /**
  * La classe représentant un InfoAgent (Caractéristiques communes à tous les agents du jeu)
  */
 public class InfoAgent {
 
+    protected int rangeView;
     private int x;
     private int y;
     private AgentAction agentAction;
     private ColorAgent color;
     private char type;
-    protected int rangeView;
-
     private boolean isInvincible;
     private boolean isSick;
 

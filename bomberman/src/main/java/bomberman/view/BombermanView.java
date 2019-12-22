@@ -2,7 +2,7 @@ package bomberman.view;
 
 import bomberman.controller.BombermanController;
 import bomberman.model.BombermanGame;
-import bomberman.model.repo.AgentAction;
+import bomberman.model.engine.enums.AgentAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -161,7 +161,6 @@ public class BombermanView implements Observer, WindowListener {
                     break;
                     case KeyEvent.VK_DOWN: {
                         controller.updatePlayerAction(AgentAction.MOVE_DOWN);
-
                     }
                     break;
                     case KeyEvent.VK_SPACE: {
@@ -169,7 +168,7 @@ public class BombermanView implements Observer, WindowListener {
                     }
                     default:
                         controller.updatePlayerAction(AgentAction.STOP);
-                    break;
+                        break;
                 }
             }
 

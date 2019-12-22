@@ -1,20 +1,18 @@
-package bomberman.model.engine;
+package bomberman.model.engine.system;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.BombermanAgent;
-import bomberman.model.repo.AgentAction;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.info.InfoAgent;
+import bomberman.model.engine.info.InfoBomb;
+
+import java.util.ArrayList;
 
 /**
  * Classe de gestion des actions du jeu
  */
-public class ActionSystem {
-
-    final static Logger log = (Logger) LogManager.getLogger(ActionSystem.class);
-
-    BombermanGame bombermanGame;
+public class ActionSystem extends AbstractSystem {
 
     /**
      * Constructeur
@@ -22,11 +20,25 @@ public class ActionSystem {
      * @param bombermanGame Le jeu
      */
     public ActionSystem(BombermanGame bombermanGame) {
-        this.bombermanGame = bombermanGame;
+        super(bombermanGame);
     }
 
     /**
-     * Méthode de vérification da possibilité d'effectuer une action
+     * Méthode effectuant les actions de chacunes des entités du jeu pour un tour de jeu
+     */
+    @Override
+    public void run() {
+        ArrayList<InfoAgent> infoAgents = bombermanGame.getInfoAgents();
+        for (InfoAgent infoAgent : infoAgents) {
+            AbstractAgent agent = (AbstractAgent) infoAgent;
+            AgentAction agentAction = agent.getAgentAction();
+            if (isLegalAction(agent, agentAction))
+                doAction(agent, agentAction);
+        }
+    }
+
+    /**
+     * Méthode de vérification de la possibilité d'effectuer une action
      *
      * @param agent  Un ajent du jeu
      * @param action Une action
@@ -53,12 +65,11 @@ public class ActionSystem {
 
             case STOP:
                 return true;
-            case PUT_BOMB: {
+            case PUT_BOMB:
                 if (agent.getClass() == BombermanAgent.class) {
                     BombermanAgent agentBomberman = (BombermanAgent) agent;
                     if (agentBomberman.canPlaceBomb()) return true;
                 } else return false;
-            }
             default:
                 log.error(agent.toString() + " ==> Action: " + action.toString() + " non reconnue");
                 return false;
@@ -66,7 +77,7 @@ public class ActionSystem {
     }
 
     /**
-     * Méthode de vérification da possibilité d'effectuer une mouvement
+     * Méthode de vérification de la possibilité d'effectuer une mouvement
      *
      * @param agent  Un agent du jeu
      * @param action Une action (mouvement)
@@ -129,7 +140,7 @@ public class ActionSystem {
                     return true;
                 }
             case JUMP_DOWN:
-                if(posY + 2 < bombermanGame.getMap().getSizeY()) {
+                if (posY + 2 < bombermanGame.getMap().getSizeY()) {
                     if (bombermanGame.getMap().get_walls()[posX][posY + 2]
                             || bombermanGame.getBreakableWalls()[posX][posY + 2]) {
                         log.debug(cannotMoveMessage + AgentAction.JUMP_DOWN.toString());
@@ -138,7 +149,8 @@ public class ActionSystem {
                         log.debug(canMoveMessage + AgentAction.JUMP_DOWN.toString());
                         return true;
                     }
-                }return false;
+                }
+                return false;
             case JUMP_LEFT:
                 if ((posX - 2 < 0)
                         || bombermanGame.getMap().get_walls()[posX - 2][posY]
@@ -159,7 +171,8 @@ public class ActionSystem {
                         log.debug(canMoveMessage + AgentAction.JUMP_LEFT.toString());
                         return true;
                     }
-                } return false;
+                }
+                return false;
             default:
                 log.error(agent.toString() + " ==> Action: " + action.toString() + " non compatible");
                 return false;
@@ -226,6 +239,5 @@ public class ActionSystem {
         }
         agent.setAgentAction(action);
     }
-
 
 }

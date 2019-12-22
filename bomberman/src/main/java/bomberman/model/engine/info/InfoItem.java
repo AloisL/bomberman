@@ -1,13 +1,12 @@
-package bomberman.model.engine;
+package bomberman.model.engine.info;
 
-import bomberman.model.repo.ItemType;
+import bomberman.model.engine.enums.ItemType;
 
 public class InfoItem {
 
     private int x;
     private int y;
     private ItemType type;
-
 
     public InfoItem(int x, int y, ItemType type) {
         this.x = x;
@@ -32,16 +31,13 @@ public class InfoItem {
         this.y = y;
     }
 
-
     public ItemType getType() {
         return type;
     }
 
-
     public void setType(ItemType type) {
         this.type = type;
     }
-
 
 }
 	

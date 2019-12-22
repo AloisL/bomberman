@@ -1,6 +1,6 @@
 package bomberman.model.strategie;
 
-import bomberman.model.repo.AgentAction;
+import bomberman.model.engine.enums.AgentAction;
 
 public class StrategiePlayer extends StrategieAgents {
 

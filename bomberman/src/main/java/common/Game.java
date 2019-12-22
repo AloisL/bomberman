@@ -4,10 +4,10 @@ import java.util.Observable;
 
 public abstract class Game extends Observable implements Runnable {
 
-    private Integer currentTurn;
-    private Integer maxTurn;
-    private Boolean isRunning = Boolean.FALSE;
-    private Long sleepTime = 650L;
+    public Boolean isRunning = Boolean.FALSE;
+    public Integer currentTurn;
+    public Integer maxTurn;
+    public Long sleepTime = 650L;
 
     protected Game(Integer maxTurn) {
         this.maxTurn = maxTurn;

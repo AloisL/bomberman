@@ -2,38 +2,41 @@ package bomberman.model.strategie;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
-import bomberman.model.engine.InfoBomb;
-import bomberman.model.repo.AgentAction;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.info.InfoBomb;
+import bomberman.model.strategie.utils.Coordonnee;
 
 public class StrategieSafe extends StrategieAgents {
 
 
+    public StrategieSafe() {
+    }
 
-    public StrategieSafe(){};
-    public StrategieSafe(BombermanGame bombermanGame, AbstractAgent agent){
-        super(bombermanGame,agent);
+    ;
+
+    public StrategieSafe(BombermanGame bombermanGame, AbstractAgent agent) {
+        super(bombermanGame, agent);
     }
 
     @Override
     public AgentAction doStrategie() {
+        Coordonnee c = zoneSafe(checkSiBesoinSafe());
 
-        Coordonnee c=zoneSafe(checkSiBesoinSafe());
-
-        if(c.x!=0){
+        if (c.x != 0) {
             return doMouvement(c);
         }
         return AgentAction.STOP;
     }
 
 
-
     //methode qui cherche une zone safe adjacente au rayon de la bombe
-    public Coordonnee zoneSafe(InfoBomb b){
-        if (b!=null) {
+    public Coordonnee zoneSafe(InfoBomb b) {
+        if (b != null) {
             int diffX = agentCalling.getX() - b.getX();
             int diffY = agentCalling.getY() - b.getY();
             if (diffX != 0) diffX = Math.abs(diffX) / diffX;
             if (diffY != 0) diffY = Math.abs(diffY) / diffY;
+
             Coordonnee c1 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY());
             Coordonnee c2 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY());
             Coordonnee c3 = new Coordonnee(agentCalling.getX(), agentCalling.getY() + 1);
@@ -60,56 +63,47 @@ public class StrategieSafe extends StrategieAgents {
                         }
                     }
 
-                    if (bombermanGame.isFree(c1) && (!isInRange(b, c1))){
-                        if (doMouvement(c4)!=AgentAction.STOP)
+                    if (bombermanGame.isFree(c1) && (!isInRange(b, c1))) {
+                        if (doMouvement(c4) != AgentAction.STOP)
                             return c1;
                     }
-                    if (bombermanGame.isFree(c2) && (!isInRange(b, c2))){
-                        if (doMouvement(c4)!=AgentAction.STOP)
+                    if (bombermanGame.isFree(c2) && (!isInRange(b, c2))) {
+                        if (doMouvement(c4) != AgentAction.STOP)
                             return c2;
                     }
                     if (bombermanGame.isFree(c3) && (!isInRange(b, c3))) {
-                        if (doMouvement(c4)!=AgentAction.STOP)
+                        if (doMouvement(c4) != AgentAction.STOP)
                             return c3;
                     }
                     if (bombermanGame.isFree(c4) && (!isInRange(b, c4))) {
-                        if (doMouvement(c4)!=AgentAction.STOP)
+                        if (doMouvement(c4) != AgentAction.STOP)
                             return c4;
                     }
                 }
 
                 //la coordonnée de l'extrimité de la range
-                Coordonnee c = new Coordonnee(b.getX() + (b.getRange() * diffX) + (diffY), b.getY() + (b.getRange() * diffY) + diffX);
+                Coordonnee c = new Coordonnee(b.getX() + (b.getRange() * diffX) + (diffY),
+                        b.getY() + (b.getRange() * diffY) + diffX);
                 if (bombermanGame.isFree(c) && (isInRange(b, c))) {
-                    if (doMouvement(c4)!=AgentAction.STOP)
+                    if (doMouvement(c4) != AgentAction.STOP)
                         return c;
                 }
             }
         }
 
-       Coordonnee c=new Coordonnee(0,0);
+        Coordonnee c = new Coordonnee(0, 0);
         return c;
     }
 
 
-    public boolean isInRange(InfoBomb b,Coordonnee newCoord){
-        if ( ( ( newCoord.x<=b.getX()+b.getRange() ) && ( newCoord.x>=b.getX()-b.getRange() ) ) && (newCoord.y==b.getY()) ){
+    public boolean isInRange(InfoBomb b, Coordonnee newCoord) {
+        if (((newCoord.x <= b.getX() + b.getRange()) && (newCoord.x >= b.getX() - b.getRange())) && (newCoord.y == b.getY())) {
             return true;
         }
-        if ( ( ( newCoord.y<=b.getY()+b.getRange() ) && ( newCoord.y>=b.getY()-b.getRange() ) ) && (newCoord.x==b.getX()) ){
+        if (((newCoord.y <= b.getY() + b.getRange()) && (newCoord.y >= b.getY() - b.getRange())) && (newCoord.x == b.getX())) {
             return true;
         }
         return false;
     }
-
-
-//int x = 10, y = 20;
-//int max = (x < y) ? y : x ; //Maintenant, max vaut 20
-//$number, ': ', $number ? abs($number) / $number : 0
-
-
-
-
-
 
 }

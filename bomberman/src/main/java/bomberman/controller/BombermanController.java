@@ -1,9 +1,9 @@
 package bomberman.controller;
 
 import bomberman.model.BombermanGame;
-import bomberman.model.engine.ActionSystem;
 import bomberman.model.engine.Map;
-import bomberman.model.repo.AgentAction;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.system.ActionSystem;
 import bomberman.view.BombermanView;
 import bomberman.view.PanelBomberman;
 import common.Controller;
@@ -58,6 +58,7 @@ public class BombermanController implements Controller {
     }
 
     public void updatePlayerAction(AgentAction action) {
+        // Le placage de la bombe doit être instantané
         if (action == AgentAction.PUT_BOMB) {
             ActionSystem actionSystem = new ActionSystem(bombermanGame);
             if (actionSystem.isLegalAction(bombermanGame.getPlayers().get(0), action)) {

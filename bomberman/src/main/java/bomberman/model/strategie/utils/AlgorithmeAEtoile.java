@@ -1,4 +1,4 @@
-package bomberman.model.strategie;
+package bomberman.model.strategie.utils;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;

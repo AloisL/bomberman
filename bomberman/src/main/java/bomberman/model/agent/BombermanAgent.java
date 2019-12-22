@@ -1,13 +1,11 @@
 package bomberman.model.agent;
 
 import bomberman.model.BombermanGame;
-import bomberman.model.engine.InfoBomb;
-import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.ColorAgent;
-import bomberman.model.repo.StateBomb;
-import bomberman.model.strategie.Coordonnee;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.enums.ColorAgent;
+import bomberman.model.engine.enums.StateBomb;
+import bomberman.model.engine.info.InfoBomb;
 import bomberman.model.strategie.StrategieAttaque;
-import bomberman.model.strategie.StrategieBasic;
 import bomberman.model.strategie.StrategieSafe;
 
 public class BombermanAgent extends AbstractAgent {
@@ -15,6 +13,9 @@ public class BombermanAgent extends AbstractAgent {
     private int nbMaxBomb;
     private int nbBombPlaced;
     private int bombRange;
+    private int nbLifes = 3;
+    private int nbTurnInvinsible;
+    private int nbTurnSick;
 
     public BombermanAgent(int x, int y, AgentAction agentAction, ColorAgent color, boolean isInvincible,
                           boolean isSick) {
@@ -22,11 +23,15 @@ public class BombermanAgent extends AbstractAgent {
         nbMaxBomb = 1;
         bombRange = 1;
         nbBombPlaced = 0;
-        rangeView= 5;
-
-
+        rangeView = 5;
     }
 
+    public boolean canPlaceBomb() {
+        if (!isSick() && (nbBombPlaced < nbMaxBomb)) return true;
+        else return false;
+    }
+
+    @Override
     public void setStrategie(BombermanGame bombermanGame) {
         /*
         StrategieAttaque attaque = new StrategieAttaque(bombermanGame,this);
@@ -45,24 +50,19 @@ public class BombermanAgent extends AbstractAgent {
         setStrategieAgents(strategieSafe);
 
  */
-    //    if(strategieSafe.checkSiBesoinSafe()==null) {
-            StrategieAttaque attaque = new StrategieAttaque(bombermanGame, this);
-            setStrategieAgents(attaque);
-     //   }
+        //    if(strategieSafe.checkSiBesoinSafe()==null) {
+        StrategieAttaque attaque = new StrategieAttaque(bombermanGame, this);
+        setStrategieAgents(attaque);
+        //   }
 
 
     }
 
-        public boolean canPlaceBomb() {
-        if (nbBombPlaced < nbMaxBomb) return true;
-        else return false;
-    }
-
-    public boolean isSafeSibombe(BombermanGame bombermanGame){
-        StrategieSafe strat=new StrategieSafe(bombermanGame,this);
-        InfoBomb bomb=new InfoBomb(this,this.getX(),this.getY(),this.getBombRange(),StateBomb.Step1);
-        System.out.println(strat.zoneSafe(bomb).x+" : "+strat.zoneSafe(bomb).y);
-        if (strat.zoneSafe(bomb).x==0) return false;
+    public boolean isSafeSibombe(BombermanGame bombermanGame) {
+        StrategieSafe strat = new StrategieSafe(bombermanGame, this);
+        InfoBomb bomb = new InfoBomb(this, getX(), getY(), getBombRange(), StateBomb.Step1);
+        System.out.println(strat.zoneSafe(bomb).x + " : " + strat.zoneSafe(bomb).y);
+        if (strat.zoneSafe(bomb).x == 0) return false;
         return true;
     }
 
@@ -76,17 +76,58 @@ public class BombermanAgent extends AbstractAgent {
         nbBombPlaced--;
     }
 
-    public void setNbMaxBomb(int nbMaxBomb) {
-        this.nbMaxBomb = nbMaxBomb;
+    public void removeLife() {
+        nbLifes--;
     }
 
-    public void setBombRange(int bombRange) {
-        this.bombRange = bombRange;
+    /**
+     * Retourne le statut de mort l'agent (true == mort, false == vivant)
+     *
+     * @return boolean
+     */
+    public boolean isDead() {
+        if (nbLifes < 1) return true;
+        else return false;
     }
 
-    public int getBombRange(){
-        return this.bombRange;
+    public void addMaxBomb() {
+        nbMaxBomb++;
     }
 
+    public void reduceMaxBomb() {
+        if (nbMaxBomb > 1) nbMaxBomb--;
+    }
+
+    public void addBombRange() {
+        bombRange++;
+    }
+
+    public void reduceBombRange() {
+        if (bombRange > 1) bombRange--;
+    }
+
+    public void makeInvinsible() {
+        setInvincible(true);
+        nbTurnInvinsible = 20;
+    }
+
+    public void reduceInvinsibleTurn() {
+        nbTurnInvinsible--;
+        if (nbTurnInvinsible <= 0) setInvincible(false);
+    }
+
+    public void makeSick() {
+        setSick(true);
+        nbTurnSick = 10;
+    }
+
+    public void reduceSickTurn() {
+        nbTurnSick--;
+        if (nbTurnSick <= 0) setSick(false);
+    }
+
+    public int getBombRange() {
+        return bombRange;
+    }
 
 }

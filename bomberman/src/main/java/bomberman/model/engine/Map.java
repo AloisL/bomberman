@@ -1,7 +1,8 @@
 package bomberman.model.engine;
 
-import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.ColorAgent;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.enums.ColorAgent;
+import bomberman.model.engine.info.InfoAgent;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -84,7 +85,8 @@ public class Map implements Serializable {
                     else start_brokable_walls[x][y] = false;
 
                     if (ligne.charAt(x) == 'E' || ligne.charAt(x) == 'V' || ligne.charAt(x) == 'R') {
-                        start_agents.add(new InfoAgent(x, y, AgentAction.STOP, ligne.charAt(x), ColorAgent.DEFAULT, false, false));
+                        start_agents.add(new InfoAgent(x, y, AgentAction.STOP, ligne.charAt(x), ColorAgent.DEFAULT,
+                                false, false));
                     }
 
                     if (ligne.charAt(x) == 'B') {
