@@ -6,8 +6,6 @@ import bomberman.model.agent.BombermanAgent;
 import bomberman.model.engine.info.InfoAgent;
 import bomberman.model.engine.info.InfoBomb;
 import bomberman.model.repo.AgentAction;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
 
 import java.util.ArrayList;
 
@@ -15,11 +13,6 @@ import java.util.ArrayList;
  * Classe de gestion des actions du jeu
  */
 public class ActionSystem extends AbstractSystem {
-
-    final static Logger log = (Logger) LogManager.getLogger(ActionSystem.class);
-
-    BombermanGame bombermanGame;
-    private ArrayList<InfoAgent> infoAgents;
 
     /**
      * Constructeur
@@ -33,7 +26,9 @@ public class ActionSystem extends AbstractSystem {
     /**
      * Méthode effectuant les actions de chacunes des entités du jeu pour un tour de jeu
      */
+    @Override
     public void run() {
+        ArrayList<InfoAgent> infoAgents = bombermanGame.getInfoAgents();
         for (InfoAgent infoAgent : infoAgents) {
             AbstractAgent agent = (AbstractAgent) infoAgent;
             AgentAction agentAction = agent.getAgentAction();
@@ -61,12 +56,11 @@ public class ActionSystem extends AbstractSystem {
                 return canMove(agent, AgentAction.MOVE_RIGHT);
             case STOP:
                 return true;
-            case PUT_BOMB: {
+            case PUT_BOMB:
                 if (agent.getClass() == BombermanAgent.class) {
                     BombermanAgent agentBomberman = (BombermanAgent) agent;
                     if (agentBomberman.canPlaceBomb()) return true;
                 } else return false;
-            }
             default:
                 log.error(agent.toString() + " ==> Action: " + action.toString() + " non reconnue");
                 return false;

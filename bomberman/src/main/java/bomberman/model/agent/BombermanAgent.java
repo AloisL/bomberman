@@ -11,6 +11,8 @@ public class BombermanAgent extends AbstractAgent {
     private int nbBombPlaced;
     private int bombRange;
     private int nbLifes = 3;
+    private int nbTurnInvinsible;
+    private int nbTurnSick;
 
     public BombermanAgent(int x, int y, AgentAction agentAction, ColorAgent color, boolean isInvincible,
                           boolean isSick) {
@@ -21,7 +23,7 @@ public class BombermanAgent extends AbstractAgent {
     }
 
     public boolean canPlaceBomb() {
-        if (nbBombPlaced < nbMaxBomb) return true;
+        if (!isSick() && (nbBombPlaced < nbMaxBomb)) return true;
         else return false;
     }
 
@@ -49,12 +51,40 @@ public class BombermanAgent extends AbstractAgent {
         else return false;
     }
 
-    public void setNbMaxBomb(int nbMaxBomb) {
-        this.nbMaxBomb = nbMaxBomb;
+    public void addMaxBomb() {
+        nbMaxBomb++;
     }
 
-    public void setBombRange(int bombRange) {
-        this.bombRange = bombRange;
+    public void reduceMaxBomb() {
+        if (nbMaxBomb > 1) nbMaxBomb--;
+    }
+
+    public void addBombRange() {
+        bombRange++;
+    }
+
+    public void reduceBombRange() {
+        if (bombRange > 1) bombRange--;
+    }
+
+    public void makeInvinsible() {
+        setInvincible(true);
+        nbTurnInvinsible = 20;
+    }
+
+    public void reduceInvinsibleTurn() {
+        nbTurnInvinsible--;
+        if (nbTurnInvinsible <= 0) setInvincible(false);
+    }
+
+    public void makeSick() {
+        setSick(true);
+        nbTurnSick = 10;
+    }
+
+    public void reduceSickTurn() {
+        nbTurnSick--;
+        if (nbTurnSick <= 0) setSick(false);
     }
 
 

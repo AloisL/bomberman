@@ -4,6 +4,7 @@ import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.AgentFactory;
 import bomberman.model.engine.ActionSystem;
 import bomberman.model.engine.BombSystem;
+import bomberman.model.engine.ItemSystem;
 import bomberman.model.engine.Map;
 import bomberman.model.engine.info.InfoAgent;
 import bomberman.model.engine.info.InfoBomb;
@@ -21,11 +22,12 @@ import java.util.ArrayList;
 public class BombermanGame extends Game {
 
     final static Logger log = (Logger) LogManager.getLogger(BombermanGame.class);
+
     private Map map;
     private ActionSystem actionSystem;
     private BombSystem bombSystem;
+    private ItemSystem itemSystem;
     private ArrayList<AbstractAgent> agents;
-
     private boolean[][] breakableWalls;
     private ArrayList<InfoItem> items;
     private ArrayList<InfoBomb> bombs;
@@ -56,6 +58,7 @@ public class BombermanGame extends Game {
 
         actionSystem = new ActionSystem(this);
         bombSystem = new BombSystem(this);
+        itemSystem = new ItemSystem(this);
 
         log.debug("Jeu initialisé");
     }
@@ -71,11 +74,12 @@ public class BombermanGame extends Game {
 
         actionSystem.run();
         bombSystem.run();
-
-        log.debug("Tour " + getCurrentTurn() + " du jeu terminé");
+        itemSystem.run();
 
         setChanged();
         notifyObservers();
+
+        log.debug("Tour " + getCurrentTurn() + " du jeu terminé");
     }
 
     /**
@@ -143,6 +147,21 @@ public class BombermanGame extends Game {
         return infoAgents;
     }
 
+    public boolean isFree(Coordonnee c) {
+        if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
+            return false;
+        }
+        for (InfoBomb b : bombs) {
+            if (b.getX() == c.x && b.getY() == c.y) return false;
+        }
+        return true;
+    }
+
+    public void update() {
+        setChanged();
+        notifyObservers();
+    }
+
     public Map getMap() {
         return map;
     }
@@ -161,21 +180,6 @@ public class BombermanGame extends Game {
 
     public ArrayList<AbstractAgent> getAgents() {
         return agents;
-    }
-
-    public void update() {
-        setChanged();
-        notifyObservers();
-    }
-
-    public boolean isFree(Coordonnee c) {
-        if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
-            return false;
-        }
-        for (InfoBomb b : bombs) {
-            if (b.getX() == c.x && b.getY() == c.y) return false;
-        }
-        return true;
     }
 
     public ArrayList<AbstractAgent> getPlayers() {

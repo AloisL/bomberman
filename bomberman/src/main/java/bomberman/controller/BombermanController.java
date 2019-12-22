@@ -58,6 +58,7 @@ public class BombermanController implements Controller {
     }
 
     public void updatePlayerAction(AgentAction action) {
+        // Le placage de la bombe doit être instantané
         if (action == AgentAction.PUT_BOMB) {
             ActionSystem actionSystem = new ActionSystem(bombermanGame);
             if (actionSystem.isLegalAction(bombermanGame.getPlayers().get(0), action)) {

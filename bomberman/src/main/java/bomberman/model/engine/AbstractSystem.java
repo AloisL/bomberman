@@ -2,17 +2,20 @@ package bomberman.model.engine;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
-import bomberman.model.engine.info.InfoAgent;
 import bomberman.model.engine.info.InfoBomb;
 import bomberman.model.engine.info.InfoItem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 
 import java.util.ArrayList;
 
 public abstract class AbstractSystem {
 
+    final static Logger log = (Logger) LogManager.getLogger(AbstractSystem.class);
+
     BombermanGame bombermanGame;
     ArrayList<AbstractAgent> agents;
-    ArrayList<InfoAgent> infoAgents;
+    ArrayList<AbstractAgent> players;
     ArrayList<InfoBomb> bombs;
     ArrayList<InfoItem> items;
     boolean[][] breakableWalls;
@@ -20,7 +23,7 @@ public abstract class AbstractSystem {
     public AbstractSystem(BombermanGame bombermanGame) {
         this.bombermanGame = bombermanGame;
         agents = bombermanGame.getAgents();
-        infoAgents = bombermanGame.getInfoAgents();
+        players = bombermanGame.getPlayers();
         bombs = bombermanGame.getBombs();
         items = bombermanGame.getItems();
         breakableWalls = bombermanGame.getBreakableWalls();

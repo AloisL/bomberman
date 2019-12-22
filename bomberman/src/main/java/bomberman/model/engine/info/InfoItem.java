@@ -8,7 +8,6 @@ public class InfoItem {
     private int y;
     private ItemType type;
 
-
     public InfoItem(int x, int y, ItemType type) {
         this.x = x;
         this.y = y;
@@ -32,16 +31,13 @@ public class InfoItem {
         this.y = y;
     }
 
-
     public ItemType getType() {
         return type;
     }
 
-
     public void setType(ItemType type) {
         this.type = type;
     }
-
 
 }
 	

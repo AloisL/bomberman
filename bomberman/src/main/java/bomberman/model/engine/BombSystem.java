@@ -23,6 +23,7 @@ public class BombSystem extends AbstractSystem {
     /**
      * Méthode de gestion des bombes pour un tour de jeu
      */
+    @Override
     public void run() {
         ArrayList<InfoBomb> bombToBeRemoved = new ArrayList<>();
 
@@ -68,8 +69,9 @@ public class BombSystem extends AbstractSystem {
                     if ((posYagent == (posYbomb + i)) || (posYagent == (posYbomb - i))) {
                         if (agent.getClass() == BombermanAgent.class) {
                             BombermanAgent bombermanAgent = (BombermanAgent) agent;
-                            bombermanAgent.removeLife();
-                            if (bombermanAgent.isDead()) agentsToBeRemoved.add(bombermanAgent);
+                            if (!bombermanAgent.isInvincible()) bombermanAgent.removeLife();
+                            if (bombermanAgent.isDead())
+                                agentsToBeRemoved.add(bombermanAgent);
                         } else {
                             agentsToBeRemoved.add(agent);
                         }
@@ -78,8 +80,9 @@ public class BombSystem extends AbstractSystem {
                     if ((posXagent == (posXbomb + i)) || (posXagent == (posXbomb - i))) {
                         if (agent.getClass() == BombermanAgent.class) {
                             BombermanAgent bombermanAgent = (BombermanAgent) agent;
-                            bombermanAgent.removeLife();
-                            if (bombermanAgent.isDead()) agentsToBeRemoved.add(bombermanAgent);
+                            if (!bombermanAgent.isInvincible()) bombermanAgent.removeLife();
+                            if (bombermanAgent.isDead())
+                                agentsToBeRemoved.add(bombermanAgent);
                         } else {
                             agentsToBeRemoved.add(agent);
                         }
@@ -87,7 +90,10 @@ public class BombSystem extends AbstractSystem {
                 }
             }
         }
-        for (AbstractAgent agent : agentsToBeRemoved) agents.remove(agent);
+        for (AbstractAgent agent : agentsToBeRemoved) {
+            agents.remove(agent);
+            players.remove(agent);
+        }
 
         // Détruit les murs dans la range de la bombe
         for (int i = 0; i <= range; i++) {
