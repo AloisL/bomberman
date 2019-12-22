@@ -1,14 +1,12 @@
 package bomberman.model.agent;
 
 import bomberman.model.BombermanGame;
-import bomberman.model.engine.InfoAgent;
-import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.ColorAgent;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.enums.ColorAgent;
+import bomberman.model.engine.info.InfoAgent;
 import bomberman.model.strategie.StrategieAgents;
 import bomberman.model.strategie.StrategieSafe;
 
-
-import java.util.Observer;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class AbstractAgent extends InfoAgent {
