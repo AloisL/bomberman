@@ -1,4 +1,4 @@
-package bomberman.model.repo;
+package bomberman.model.engine.enums;
 
 public enum EnumDirection {
     // HD=HAUT DROITE ; HG=HAUT GAUCHE ; BG=BAS GAUCHE; BD=BAS DROITE ;

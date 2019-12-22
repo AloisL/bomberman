@@ -1,12 +1,12 @@
 package bomberman.view;
 
 import bomberman.model.engine.Map;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.enums.ItemType;
+import bomberman.model.engine.enums.StateBomb;
 import bomberman.model.engine.info.InfoAgent;
 import bomberman.model.engine.info.InfoBomb;
 import bomberman.model.engine.info.InfoItem;
-import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.ItemType;
-import bomberman.model.repo.StateBomb;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

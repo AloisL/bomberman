@@ -1,19 +1,19 @@
 package bomberman.model.engine.info;
 
-import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.ColorAgent;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.enums.ColorAgent;
 
 /**
  * La classe représentant un InfoAgent (Caractéristiques communes à tous les agents du jeu)
  */
 public class InfoAgent {
 
+    protected int rangeView;
     private int x;
     private int y;
     private AgentAction agentAction;
     private ColorAgent color;
     private char type;
-
     private boolean isInvincible;
     private boolean isSick;
 
@@ -94,6 +94,70 @@ public class InfoAgent {
         this.agentAction = agentAction;
     }
 
-
+    public int getRangeView() {
+        return rangeView;
+    }
 }
+
+/*
+
+case JUMP_UP:
+                if ((posY - 2 < 0)
+                        || bombermanGame.getMap().get_walls()[posX][posY - 2]
+                        || bombermanGame.getBreakableWalls()[posX][posY - 2]) {
+                    log.debug(cannotMoveMessage + AgentAction.MOVE_UP.toString());
+                    return false;
+                } else {
+                    log.debug(canMoveMessage + AgentAction.JUMP_UP.toString());
+                    return true;
+                }
+            case JUMP_DOWN:
+                if ((posY + 2 > bombermanGame.getMap().getSizeY() + 2)
+                        || bombermanGame.getMap().get_walls()[posX][posY + 2]
+                        || bombermanGame.getBreakableWalls()[posX][posY + 2]) {
+                    log.debug(cannotMoveMessage + AgentAction.JUMP_DOWN.toString());
+                    return false;
+                } else {
+                    log.debug(canMoveMessage + AgentAction.JUMP_DOWN.toString());
+                    return true;
+                }
+            case JUMP_LEFT:
+                if ((posX - 2 < 0)
+                        || bombermanGame.getMap().get_walls()[posX - 2][posY]
+                        || bombermanGame.getBreakableWalls()[posX - 2][posY]) {
+                    log.debug(cannotMoveMessage + AgentAction.JUMP_LEFT.toString());
+                    return false;
+                } else {
+                    log.debug(canMoveMessage + AgentAction.JUMP_LEFT.toString());
+                    return true;
+                }
+            case JUMP_RIGHT:
+                if ((posX + 2 > bombermanGame.getMap().getSizeX() + 2)
+                        || bombermanGame.getMap().get_walls()[posX + 2][posY]
+                        || bombermanGame.getBreakableWalls()[posX + 2][posY]) {
+                    log.debug(cannotMoveMessage + AgentAction.JUMP_RIGHT.toString());
+                    return false;
+
+
+ */
+
+/*
+ case JUMP_UP:
+                agent.setY(posY - 2);
+                bombermanGame.getAgents().add(agent);
+                break;
+            case JUMP_DOWN:
+                agent.setY(posY + 2);
+                bombermanGame.getAgents().add(agent);
+                break;
+            case JUMP_LEFT:
+                agent.setX(posX - 2);
+                bombermanGame.getAgents().add(agent);
+                break;
+            case JUMP_RIGHT:
+                agent.setX(posX + 2);
+                bombermanGame.getAgents().add(agent);
+                break;
+
+ */
 	

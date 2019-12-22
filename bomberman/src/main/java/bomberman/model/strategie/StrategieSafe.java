@@ -2,8 +2,9 @@ package bomberman.model.strategie;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
+import bomberman.model.engine.enums.AgentAction;
 import bomberman.model.engine.info.InfoBomb;
-import bomberman.model.repo.AgentAction;
+import bomberman.model.strategie.utils.Coordonnee;
 
 public class StrategieSafe extends StrategieAgents {
 
@@ -19,10 +20,9 @@ public class StrategieSafe extends StrategieAgents {
 
     @Override
     public AgentAction doStrategie() {
-
         Coordonnee c = zoneSafe(checkSiBesoinSafe());
+
         if (c.x != 0) {
-            //System.out.println("Pourquoi tu bouge pas!");
             return doMouvement(c);
         }
         return AgentAction.STOP;
@@ -37,39 +37,73 @@ public class StrategieSafe extends StrategieAgents {
             if (diffX != 0) diffX = Math.abs(diffX) / diffX;
             if (diffY != 0) diffY = Math.abs(diffY) / diffY;
 
-            for (int i = 1; i <= b.getRange(); i++) {
-                //permet de virifier chaque case adjacente au rayon de la bombe pour trouvée une case "safe"
-                Coordonnee c1 = new Coordonnee(b.getX() + (i * diffX) + (diffY), b.getY() + (i * diffY) + diffX);
-                Coordonnee c2 = new Coordonnee(b.getX() + (i * diffX) - diffY, b.getY() + (i * diffY) - diffX);
-                if (bombermanGame.isFree(c1)) return c1;
-                if (bombermanGame.isFree(c2)) return c2;
-            }
-            //la coordonnée de l'extrimité de la range
-            Coordonnee c = new Coordonnee(b.getX() + (b.getRange() * diffX) + (diffY),
-                    b.getY() + (b.getRange() * diffY) + diffX);
-            if (bombermanGame.isFree(c)) {
-                return c;
+            Coordonnee c1 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY());
+            Coordonnee c2 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY());
+            Coordonnee c3 = new Coordonnee(agentCalling.getX(), agentCalling.getY() + 1);
+            Coordonnee c4 = new Coordonnee(agentCalling.getX(), agentCalling.getY() - 1);
+            if (bombermanGame.isFree(c1) || bombermanGame.isFree(c2) || bombermanGame.isFree(c3) || bombermanGame.isFree(c4)) {
+                for (int i = 0; i <= b.getRange(); i++) {
+
+                    if (diffX == 0 && diffY == 0) {
+                        c1 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY() + 1);
+                        c2 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY() + 1);
+                        c3 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY() - 1);
+                        c4 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY() - 1);
+                    } else {
+                        if (diffX == 0) {
+                            c1 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY() + i);
+                            c2 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY() + i);
+                            c3 = new Coordonnee(agentCalling.getX() + 1, agentCalling.getY() - i);
+                            c4 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY() - i);
+                        } else if (diffY == 0) {
+                            c1 = new Coordonnee(agentCalling.getX() + i, agentCalling.getY() + 1);
+                            c2 = new Coordonnee(agentCalling.getX() + i, agentCalling.getY() - 1);
+                            c3 = new Coordonnee(agentCalling.getX() - i, agentCalling.getY() + 1);
+                            c4 = new Coordonnee(agentCalling.getX() - i, agentCalling.getY() - 1);
+                        }
+                    }
+
+                    if (bombermanGame.isFree(c1) && (!isInRange(b, c1))) {
+                        if (doMouvement(c4) != AgentAction.STOP)
+                            return c1;
+                    }
+                    if (bombermanGame.isFree(c2) && (!isInRange(b, c2))) {
+                        if (doMouvement(c4) != AgentAction.STOP)
+                            return c2;
+                    }
+                    if (bombermanGame.isFree(c3) && (!isInRange(b, c3))) {
+                        if (doMouvement(c4) != AgentAction.STOP)
+                            return c3;
+                    }
+                    if (bombermanGame.isFree(c4) && (!isInRange(b, c4))) {
+                        if (doMouvement(c4) != AgentAction.STOP)
+                            return c4;
+                    }
+                }
+
+                //la coordonnée de l'extrimité de la range
+                Coordonnee c = new Coordonnee(b.getX() + (b.getRange() * diffX) + (diffY),
+                        b.getY() + (b.getRange() * diffY) + diffX);
+                if (bombermanGame.isFree(c) && (isInRange(b, c))) {
+                    if (doMouvement(c4) != AgentAction.STOP)
+                        return c;
+                }
             }
         }
 
         Coordonnee c = new Coordonnee(0, 0);
         return c;
     }
-//int x = 10, y = 20;
-//int max = (x < y) ? y : x ; //Maintenant, max vaut 20
-//$number, ': ', $number ? abs($number) / $number : 0
 
 
-    @Override
-    public boolean isInRange(InfoBomb b) {
-        if (((agentCalling.getX() < b.getX() + b.getRange()) && (agentCalling.getX() > b.getX() - b.getRange())) && (agentCalling.getY() == b.getY())) {
+    public boolean isInRange(InfoBomb b, Coordonnee newCoord) {
+        if (((newCoord.x <= b.getX() + b.getRange()) && (newCoord.x >= b.getX() - b.getRange())) && (newCoord.y == b.getY())) {
             return true;
         }
-        if (((agentCalling.getY() < b.getY() + b.getRange()) && (agentCalling.getX() > b.getY() - b.getRange())) && (agentCalling.getX() == b.getX())) {
+        if (((newCoord.y <= b.getY() + b.getRange()) && (newCoord.y >= b.getY() - b.getRange())) && (newCoord.x == b.getX())) {
             return true;
         }
         return false;
     }
-
 
 }

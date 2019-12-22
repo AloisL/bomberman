@@ -1,6 +1,6 @@
 package bomberman.model.engine.info;
 
-import bomberman.model.repo.ItemType;
+import bomberman.model.engine.enums.ItemType;
 
 public class InfoItem {
 

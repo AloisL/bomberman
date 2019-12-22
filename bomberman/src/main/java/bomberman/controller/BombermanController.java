@@ -1,9 +1,9 @@
 package bomberman.controller;
 
 import bomberman.model.BombermanGame;
-import bomberman.model.engine.ActionSystem;
 import bomberman.model.engine.Map;
-import bomberman.model.repo.AgentAction;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.system.ActionSystem;
 import bomberman.view.BombermanView;
 import bomberman.view.PanelBomberman;
 import common.Controller;

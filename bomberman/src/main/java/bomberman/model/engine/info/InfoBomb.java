@@ -1,10 +1,11 @@
 package bomberman.model.engine.info;
 
 import bomberman.model.agent.BombermanAgent;
-import bomberman.model.repo.StateBomb;
+import bomberman.model.engine.enums.StateBomb;
 
 public class InfoBomb {
 
+    public boolean alfStep; //fait en sorte que les bombe prenne 2X plus de temps pour exploser
     StateBomb stateBomb;
     BombermanAgent owner;
     private int x;
@@ -17,6 +18,7 @@ public class InfoBomb {
         this.y = y;
         this.range = range;
         this.stateBomb = stateBomb;
+        alfStep = false;
     }
 
     public int getX() {

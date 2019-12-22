@@ -1,4 +1,4 @@
-package bomberman.model.engine;
+package bomberman.model.engine.system;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;

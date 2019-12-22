@@ -1,12 +1,12 @@
-package bomberman.model.engine;
+package bomberman.model.engine.system;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.BombermanAgent;
+import bomberman.model.engine.enums.ItemType;
+import bomberman.model.engine.enums.StateBomb;
 import bomberman.model.engine.info.InfoBomb;
 import bomberman.model.engine.info.InfoItem;
-import bomberman.model.repo.ItemType;
-import bomberman.model.repo.StateBomb;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 
@@ -70,8 +70,7 @@ public class BombSystem extends AbstractSystem {
                         if (agent.getClass() == BombermanAgent.class) {
                             BombermanAgent bombermanAgent = (BombermanAgent) agent;
                             if (!bombermanAgent.isInvincible()) bombermanAgent.removeLife();
-                            if (bombermanAgent.isDead())
-                                agentsToBeRemoved.add(bombermanAgent);
+                            if (bombermanAgent.isDead()) agentsToBeRemoved.add(bombermanAgent);
                         } else {
                             agentsToBeRemoved.add(agent);
                         }
@@ -81,8 +80,7 @@ public class BombSystem extends AbstractSystem {
                         if (agent.getClass() == BombermanAgent.class) {
                             BombermanAgent bombermanAgent = (BombermanAgent) agent;
                             if (!bombermanAgent.isInvincible()) bombermanAgent.removeLife();
-                            if (bombermanAgent.isDead())
-                                agentsToBeRemoved.add(bombermanAgent);
+                            if (bombermanAgent.isDead()) agentsToBeRemoved.add(bombermanAgent);
                         } else {
                             agentsToBeRemoved.add(agent);
                         }
@@ -93,6 +91,7 @@ public class BombSystem extends AbstractSystem {
         for (AbstractAgent agent : agentsToBeRemoved) {
             agents.remove(agent);
             players.remove(agent);
+            if (players.size() == 0) bombermanGame.gameOver();
         }
 
         // Détruit les murs dans la range de la bombe

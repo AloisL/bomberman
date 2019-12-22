@@ -1,9 +1,9 @@
 package bomberman.model.agent;
 
 import bomberman.model.BombermanGame;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.enums.ColorAgent;
 import bomberman.model.engine.info.InfoAgent;
-import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.ColorAgent;
 import bomberman.model.strategie.StrategieAgents;
 import bomberman.model.strategie.StrategieSafe;
 
@@ -14,6 +14,7 @@ public abstract class AbstractAgent extends InfoAgent {
     private static AtomicInteger count = new AtomicInteger(0);
     private StrategieAgents strategie;
     private int id;
+
 
     protected AbstractAgent(int x, int y, AgentAction agentAction, char type, ColorAgent color, boolean isInvincible,
                             boolean isSick) {
@@ -51,4 +52,6 @@ public abstract class AbstractAgent extends InfoAgent {
         this.strategie = strategie;
 
     }
+
+
 }

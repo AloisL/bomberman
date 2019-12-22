@@ -1,4 +1,4 @@
-package bomberman.model.strategie;
+package bomberman.model.strategie.utils;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
@@ -58,21 +58,10 @@ public class AlgorithmeAEtoile {
                 Noeud nTmp = depart;
                 if (nTmp.getHcost() != 0) {
                     nTmp.creerVoisin(objectif, mapMur);
-                   /* if (nTmp.voisin != null) {
-                        if (nTmp.voisin.size() != 0) {
-                            System.out.println("PAS VIDE");
-                        } else System.out.println("PAS VIDE");
-                    } else System.out.println("NULL");
-                    */
                     Noeud nSuivant = compareVoisin(depart);
-                    if (nSuivant != null) { /*
-                        System.out.println("objectif => " + objectif.x + " : " + objectif.y);
-                        System.out.println("depart => " + depart.getCoordonnee().x + " : " + depart.getCoordonnee().y);
-                        System.out.println("depart heuri => "+depart.getHcost());
-                        afficherCloseList();*/
+                    if (nSuivant != null) {
                         return chemin(objectif, nSuivant);
                     } else {
-                        System.out.println(depart.getCoordonnee().x + " : " + depart.getCoordonnee().y);
                         closeList.add(depiler(openList));
                     }
                 }

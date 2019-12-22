@@ -1,7 +1,7 @@
 package bomberman.model.agent;
 
-import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.ColorAgent;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.enums.ColorAgent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 

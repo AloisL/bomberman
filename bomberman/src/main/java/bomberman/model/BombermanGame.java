@@ -2,14 +2,16 @@ package bomberman.model;
 
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.AgentFactory;
-import bomberman.model.engine.ActionSystem;
-import bomberman.model.engine.BombSystem;
-import bomberman.model.engine.ItemSystem;
 import bomberman.model.engine.Map;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.enums.ColorAgent;
 import bomberman.model.engine.info.InfoAgent;
 import bomberman.model.engine.info.InfoBomb;
 import bomberman.model.engine.info.InfoItem;
-import bomberman.model.strategie.Coordonnee;
+import bomberman.model.engine.system.ActionSystem;
+import bomberman.model.engine.system.BombSystem;
+import bomberman.model.engine.system.ItemSystem;
+import bomberman.model.strategie.utils.Coordonnee;
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -28,6 +30,7 @@ public class BombermanGame extends Game {
     private BombSystem bombSystem;
     private ItemSystem itemSystem;
     private ArrayList<AbstractAgent> agents;
+    private ArrayList<AbstractAgent> agentsIa;
     private boolean[][] breakableWalls;
     private ArrayList<InfoItem> items;
     private ArrayList<InfoBomb> bombs;
@@ -49,12 +52,19 @@ public class BombermanGame extends Game {
         AbstractAgent.resetId();
         items = new ArrayList<>();
         bombs = new ArrayList<>();
+        agentsIa = new ArrayList<>();
 
         log.debug("Initialisation des broken_walls");
         breakableWalls = map.getStart_brokable_walls();
 
         log.debug("Initialisation des agents");
         initAgents();
+
+        for (AbstractAgent agent : agents) {
+            if (agent.getColor() != ColorAgent.BLEU) {
+                agentsIa.add(agent);
+            }
+        }
 
         actionSystem = new ActionSystem(this);
         bombSystem = new BombSystem(this);
@@ -76,6 +86,17 @@ public class BombermanGame extends Game {
         bombSystem.run();
         itemSystem.run();
 
+        for (AbstractAgent agent : agentsIa) {
+            if (agent.getColor() != ColorAgent.BLEU) {
+                agent.setStrategie(this);
+
+                AgentAction action = agent.getStrategie().doStrategie();
+                if (actionSystem.isLegalAction(agent, action)) {
+                    agent.setAgentAction(action);
+                } else actionSystem.doAction(agent, AgentAction.STOP);
+            }
+        }
+
         setChanged();
         notifyObservers();
 
@@ -87,6 +108,7 @@ public class BombermanGame extends Game {
      */
     @Override
     public void gameOver() {
+        isRunning = false;
         log.debug("Le jeu est fini");
     }
 
@@ -126,7 +148,7 @@ public class BombermanGame extends Game {
                         agent.getAgentAction(), agent.getColor(), false, false);
                 // ajout des joueurs
                 agents.add(abstractAgent);
-                if ((agent.getType() == 'B') && (i < nbPlayers)) {
+                if ((agent.getColor() == ColorAgent.BLEU) && (i < nbPlayers)) {
                     players.add(abstractAgent);
                     i++;
                 }
@@ -147,21 +169,6 @@ public class BombermanGame extends Game {
         return infoAgents;
     }
 
-    public boolean isFree(Coordonnee c) {
-        if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
-            return false;
-        }
-        for (InfoBomb b : bombs) {
-            if (b.getX() == c.x && b.getY() == c.y) return false;
-        }
-        return true;
-    }
-
-    public void update() {
-        setChanged();
-        notifyObservers();
-    }
-
     public Map getMap() {
         return map;
     }
@@ -180,6 +187,26 @@ public class BombermanGame extends Game {
 
     public ArrayList<AbstractAgent> getAgents() {
         return agents;
+    }
+
+    public ActionSystem getActionSystem() {
+        return actionSystem;
+    }
+
+    public boolean isFree(Coordonnee c) {
+        if (c.x > 0 && c.y > 0 && c.x < map.getSizeX() && c.y < map.getSizeY()) {
+            if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
+                return false;
+            }
+            for (InfoBomb b : bombs) {
+                if (b.getX() == c.x && b.getY() == c.y) {
+
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public ArrayList<AbstractAgent> getPlayers() {
