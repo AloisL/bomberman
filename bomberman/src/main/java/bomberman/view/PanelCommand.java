@@ -12,11 +12,10 @@ import java.util.Arrays;
  */
 public class PanelCommand extends JPanel {
 
+    private boolean gameOver = false;
     private BombermanView bombermanView;
-
     private JPanel topCommandPanel;
     private JPanel botCommandPanel;
-
     private JButton initButton;
     private JButton runButton;
     private JButton stepButton;
@@ -145,4 +144,16 @@ public class PanelCommand extends JPanel {
         return layoutChooser;
     }
 
+    public void gameOver(BombermanController controller) {
+        gameOver = true;
+        controller.pause();
+        initButton.setEnabled(Boolean.TRUE);
+        pauseButton.setEnabled(Boolean.FALSE);
+        runButton.setEnabled(Boolean.TRUE);
+        bombermanView.getBombermanPanel().grabFocus();
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
 }
