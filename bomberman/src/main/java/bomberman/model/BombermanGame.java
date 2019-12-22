@@ -4,9 +4,16 @@ import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.AgentFactory;
 import bomberman.model.engine.*;
 import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.ItemType;
+
+import bomberman.model.repo.ColorAgent;
 import bomberman.model.repo.StateBomb;
+
 import bomberman.model.strategie.Coordonnee;
+import bomberman.model.strategie.StrategieAgents;
+import bomberman.model.strategie.StrategieSafe;
+
+import bomberman.model.repo.ItemType;
+
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -22,6 +29,7 @@ public class BombermanGame extends Game {
     private Map map;
     private ActionSystem actionSystem;
     private ArrayList<AbstractAgent> agents;
+    private ArrayList<AbstractAgent> agentsIa;
 
 
     private boolean[][] breakableWalls;
@@ -43,15 +51,25 @@ public class BombermanGame extends Game {
         log.debug("Initialisation du jeu");
 
 
+
         AbstractAgent.resetId();
         items = new ArrayList<>();
         bombs = new ArrayList<>();
+        agentsIa=new ArrayList<>();
+
 
         log.debug("Initialisation des broken_walls");
         breakableWalls = map.getStart_brokable_walls();
 
         log.debug("Initialisation des agents");
         initAgents();
+
+        for (AbstractAgent agent: agents) {
+            if (agent.getColor()!= ColorAgent.BLEU){
+                agentsIa.add(agent);
+            }
+        }
+
 
         actionSystem = new ActionSystem(this);
 
@@ -77,10 +95,16 @@ public class BombermanGame extends Game {
         for (InfoBomb bomb : bombs) {
             switch (bomb.getStateBomb()) {
                 case Step1:
-                    bomb.setStateBomb(StateBomb.Step2);
+                    if (bomb.alfStep) {
+                        bomb.setStateBomb(StateBomb.Step2);
+                        bomb.alfStep = false;
+                    } else bomb.alfStep = true;
                     break;
                 case Step2:
-                    bomb.setStateBomb(StateBomb.Step3);
+                    if(bomb.alfStep) {
+                        bomb.setStateBomb(StateBomb.Step3);
+                        bomb.alfStep = false;
+                    } else bomb.alfStep=true;
                     break;
                 case Step3:
                     bomb.setStateBomb(StateBomb.Boom);
@@ -99,14 +123,18 @@ public class BombermanGame extends Game {
             bombs.remove(bomb);
         }
 
-        /*
-        for (AbstractAgent agent: agents) {
+        for (AbstractAgent agent: agentsIa) {
             if (agent.getColor()!= ColorAgent.BLEU){
-                StrategieAgents strat=new StrategieSafe(this,agent);
-                takeTurnIa(agent,strat.doStrategie());
+                agent.setStrategie(this);
+
+                AgentAction action = agent.getStrategie().doStrategie();
+                if(actionSystem.isLegalAction(agent,action)) {
+
+                    actionSystem.doAction(agent, action);
+                }
+                else  actionSystem.doAction(agent,AgentAction.STOP);
             }
         }
-        */
 
         setChanged();
         notifyObservers();
@@ -157,7 +185,7 @@ public class BombermanGame extends Game {
                         agent.getAgentAction(), agent.getColor(), false, false);
                 // ajout des joueurs
                 agents.add(abstractAgent);
-                if ((agent.getType() == 'B') && (i < nbPlayers)) {
+                if ((agent.getColor() == ColorAgent.BLEU ) && (i < nbPlayers)) {
                     players.add(abstractAgent);
                     i++;
                 }
@@ -197,6 +225,7 @@ public class BombermanGame extends Game {
     public ArrayList<AbstractAgent> getAgents() {
         return agents;
     }
+
 
 
     public void bombHit(InfoBomb bomb) {
@@ -283,19 +312,30 @@ public class BombermanGame extends Game {
         }
     }
 
+    public ActionSystem getActionSystem(){
+        return this.actionSystem;
+    }
+
     public void update() {
         setChanged();
         notifyObservers();
     }
 
     public boolean isFree(Coordonnee c) {
-        if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
-            return false;
+        if (c.x>0 && c.y>0 && c.x<map.getSizeX() && c.y<map.getSizeY()) {
+            if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
+                return false;
+            }
+            for (InfoBomb b : bombs) {
+                if (b.getX() == c.x && b.getY() == c.y) {
+
+                    return false;
+                }
+            }
+
+            return true;
         }
-        for (InfoBomb b : bombs) {
-            if (b.getX() == c.x && b.getY() == c.y) return false;
-        }
-        return true;
+        return false;
     }
 
     public ArrayList<AbstractAgent> getPlayers() {

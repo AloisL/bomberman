@@ -17,6 +17,7 @@ public abstract class AbstractAgent extends InfoAgent {
     private StrategieAgents strategie;
     private int id;
 
+
     protected AbstractAgent(int x, int y, AgentAction agentAction, char type, ColorAgent color, boolean isInvincible,
                             boolean isSick) {
         super(x, y, agentAction, type, color, isInvincible, isSick);
@@ -58,4 +59,8 @@ public abstract class AbstractAgent extends InfoAgent {
         this.strategie = strategie;
 
     }
+
+
+
+
 }

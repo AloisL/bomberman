@@ -16,45 +16,38 @@ public class StrategieBirdAgent extends StrategieAgents {
     }
 
     @Override
-    public AgentAction doStrategie() {
-        return AgentAction.MOVE_UP;
-    }
+    public AgentAction doStrategie(){
+        Coordonnee imSelf=new Coordonnee(agentCalling.getX(),agentCalling.getY());
+        Coordonnee ennemie = new Coordonnee(bombermanGame.getPlayers().get(0).getX(), bombermanGame.getPlayers().get(0).getY());
+        if (isInRange(imSelf,agentCalling.getRangeView(),ennemie)) {
+            AgentAction action = doMouvement(ennemie);
+            //System.out.println(!bombermanGame.getActionSystem().isLegalAction(this.agentCalling,action));
+            if(!bombermanGame.getActionSystem().isLegalAction(this.agentCalling,action) ) {
+                System.out.println(action.toString());
+                switch (action){
+                    case MOVE_UP:
+                        return AgentAction.JUMP_UP;
+                    case MOVE_DOWN:
+                        System.out.println(bombermanGame.getActionSystem().isLegalAction(agentCalling,AgentAction.JUMP_DOWN));
+                        return AgentAction.JUMP_DOWN;
+                    case MOVE_LEFT:
+                        return AgentAction.JUMP_LEFT;
+                    case MOVE_RIGHT:
+                        return AgentAction.JUMP_RIGHT;
+                    default:
+                        return action;
 
-    private void strategieBird(EnumDirection direction) {
-        switch (direction) {
-            case D:
-
-                break;
-
-            case B:
-                break;
-
-            case G:
-                break;
-
-            case H:
-                break;
-
-            case BG:
-                break;
-
-            case BH:
-                break;
-
-            case HD:
-                break;
-
-            case HG:
-                break;
-
-            case STOP:
-                break;
-
-            default:
-                break;
-
+                }
+            }
+            else return action;
         }
+        return strategieAleatoire();
     }
+
+
+
+
+
 
 
 }
