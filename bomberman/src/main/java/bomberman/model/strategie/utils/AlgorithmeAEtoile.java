@@ -1,4 +1,4 @@
-package bomberman.model.strategie.utils;
+package bomberman.model.strategie;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
@@ -12,6 +12,7 @@ public class AlgorithmeAEtoile {
     private boolean[][] mapMur;
     private Coordonnee objectif;
     private AbstractAgent perso;
+
 
     public AlgorithmeAEtoile() {
     }
