@@ -21,7 +21,6 @@ public class BombermanView implements Observer, WindowListener {
     private JPanel mainPanel;
     private PanelCommand panelCommand;
     private PanelBomberman bombermanPanel;
-    private boolean keyboardInputLocked = false;
 
     /**
      * Constructeur de la vue
