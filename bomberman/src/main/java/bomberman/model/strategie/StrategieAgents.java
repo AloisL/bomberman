@@ -2,9 +2,11 @@ package bomberman.model.strategie;
 
 import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
-import bomberman.model.engine.InfoBomb;
-import bomberman.model.repo.AgentAction;
-import bomberman.model.repo.EnumDirection;
+import bomberman.model.engine.enums.AgentAction;
+import bomberman.model.engine.info.InfoBomb;
+import bomberman.model.strategie.utils.AlgorithmeAEtoile;
+import bomberman.model.strategie.utils.Coordonnee;
+import bomberman.model.strategie.utils.Noeud;
 
 import java.util.ArrayList;
 
