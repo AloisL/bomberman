@@ -222,7 +222,6 @@ public class ActionSystem extends AbstractSystem {
                 agent.setX(posX + 2);
                 bombermanGame.getAgents().add(agent);
                 break;
-
             case STOP:
                 bombermanGame.getAgents().add(agent);
                 break;

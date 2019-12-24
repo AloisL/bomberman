@@ -32,7 +32,7 @@ public class ItemSystem extends AbstractSystem {
         for (InfoItem item : itemsToBeRemoved) items.remove(item);
     }
 
-    public void applyItem(BombermanAgent bombermanAgent, InfoItem item, ArrayList<InfoItem> itemsToBeRemoved) {
+    private void applyItem(BombermanAgent bombermanAgent, InfoItem item, ArrayList<InfoItem> itemsToBeRemoved) {
         ItemType itemType = item.getType();
 
         switch (itemType) {

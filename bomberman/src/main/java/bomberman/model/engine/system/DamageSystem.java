@@ -81,7 +81,7 @@ public class DamageSystem extends AbstractSystem {
         }
     }
 
-    public void bombHit(InfoBomb bomb) {
+    private void bombHit(InfoBomb bomb) {
         int range = bomb.getRange();
         int posXbomb = bomb.getX();
         int posYbomb = bomb.getY();
@@ -155,7 +155,7 @@ public class DamageSystem extends AbstractSystem {
         }
     }
 
-    public ItemType getInfoItemFromInt(int i) {
+    private ItemType getInfoItemFromInt(int i) {
         switch (i) {
             case 0:
                 return ItemType.FIRE_UP;
