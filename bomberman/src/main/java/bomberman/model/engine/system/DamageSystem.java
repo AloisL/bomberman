@@ -29,13 +29,16 @@ public class DamageSystem extends AbstractSystem {
     public void run() {
         agentsToBeRemoved = new ArrayList<>();
 
-        bombDamages();
+        if (bombermanGame.getCurrentTurn() % 2 == 0)
+            bombDamages();
         closeCombatDamages();
 
         for (AbstractAgent agent : agentsToBeRemoved) {
             agents.remove(agent);
             players.remove(agent);
+            bombermanGame.getInfoAgents().remove(agent);
             if (players.size() == 0) bombermanGame.gameOver();
+            if (agents.size() == 1) bombermanGame.gameOver();
         }
     }
 
@@ -117,6 +120,7 @@ public class DamageSystem extends AbstractSystem {
         }
 
         // Détruit les murs dans la range de la bombe
+        // TODO : ArrayIndexOutOfBoundsException
         for (int i = 0; i <= range; i++) {
             if (breakableWalls[posXbomb][posYbomb + i]) {
                 breakableWalls[posXbomb][posYbomb + i] = false;

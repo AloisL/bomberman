@@ -33,7 +33,10 @@ public class ActionSystem extends AbstractSystem {
             AbstractAgent agent = (AbstractAgent) infoAgent;
             AgentAction agentAction = agent.getAgentAction();
             if (isLegalAction(agent, agentAction))
-                doAction(agent, agentAction);
+                if (agent.getClass() != BombermanAgent.class) {
+                    if (bombermanGame.getCurrentTurn() % 2 == 0)
+                        doAction(agent, agentAction);
+                } else doAction(agent, agentAction);
         }
     }
 
@@ -62,7 +65,6 @@ public class ActionSystem extends AbstractSystem {
                 return canMove(agent, AgentAction.JUMP_RIGHT);
             case JUMP_UP:
                 return canMove(agent, AgentAction.JUMP_UP);
-
             case STOP:
                 return true;
             case PUT_BOMB:
