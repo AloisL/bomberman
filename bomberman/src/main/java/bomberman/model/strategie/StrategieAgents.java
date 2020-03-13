@@ -1,9 +1,9 @@
 package bomberman.model.strategie;
 
-import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
+import bomberman.model.engine.BombermanGame;
 import bomberman.model.engine.enums.AgentAction;
-import bomberman.model.engine.info.InfoBomb;
+import bomberman.model.engine.infotype.InfoBomb;
 import bomberman.model.strategie.utils.AlgorithmeAEtoile;
 import bomberman.model.strategie.utils.Coordonnee;
 import bomberman.model.strategie.utils.Noeud;
@@ -16,12 +16,8 @@ public abstract class StrategieAgents {
     protected int viewNbBlocks;
     protected AbstractAgent agentCalling;
 
-
-    //public AgentAction mouvStrategie(InfoAgent infoAgent,boolean agentInSight, ArrayList<Boolean> rockMap);
-    // effectue le mouvement choisie par la strategie
     public StrategieAgents() {
     }
-
 
     public StrategieAgents(BombermanGame bombermanGame, AbstractAgent agent) {
         agentCalling = agent;
@@ -30,7 +26,6 @@ public abstract class StrategieAgents {
     }
 
     public abstract AgentAction doStrategie();
-
 
     //utilisé pour eviter des bug qui non malheuresement pas reussi a etre corrigé a temps
     public AgentAction strategieAleatoire() {
@@ -51,13 +46,9 @@ public abstract class StrategieAgents {
                 break;
             default:
                 break;
-
         }
-
-
         return resultat;
     }
-
 
     public AgentAction doMouvement(Coordonnee objectif) {
         AgentAction resultat = AgentAction.STOP;
@@ -91,7 +82,6 @@ public abstract class StrategieAgents {
                 resultat = AgentAction.STOP;
             default:
                 break;
-
         }
         return resultat;
     }
@@ -107,9 +97,7 @@ public abstract class StrategieAgents {
             else if (diffX < 0) return 3;
         }
         return 8;
-
     }
-
 
     public Coordonnee chercherDirection(Coordonnee objectif) {
         AlgorithmeAEtoile algorithmeAEtoile = new AlgorithmeAEtoile(bombermanGame, agentCalling, objectif);
@@ -123,7 +111,6 @@ public abstract class StrategieAgents {
                 */
         return coordonnee;
     }
-
 
     public InfoBomb checkSiBesoinSafe() {
         for (InfoBomb b : bombermanGame.getBombs()) {
@@ -146,7 +133,6 @@ public abstract class StrategieAgents {
 
     }
 
-
     public boolean isInRange(InfoBomb b) {
         if (((agentCalling.getX() <= (b.getX() + b.getRange())) && (agentCalling.getX() >= (b.getX() - b.getRange()))) && (agentCalling.getY() == b.getY())) {
             return true;
@@ -168,9 +154,6 @@ public abstract class StrategieAgents {
         }
         return false;
     }
-
-
-
 
 /*
     private enumDirection isAxeDown(int y, int i){

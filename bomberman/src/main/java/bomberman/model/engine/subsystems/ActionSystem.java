@@ -1,11 +1,13 @@
-package bomberman.model.engine.system;
+package bomberman.model.engine.subsystems;
 
-import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.BombermanAgent;
+import bomberman.model.engine.BombermanGame;
 import bomberman.model.engine.enums.AgentAction;
-import bomberman.model.engine.info.InfoAgent;
-import bomberman.model.engine.info.InfoBomb;
+import bomberman.model.engine.infotype.InfoAgent;
+import bomberman.model.engine.infotype.InfoBomb;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 
 import java.util.ArrayList;
 
@@ -13,6 +15,8 @@ import java.util.ArrayList;
  * Classe de gestion des actions du jeu
  */
 public class ActionSystem extends AbstractSystem {
+
+    final static Logger log = (Logger) LogManager.getLogger(ActionSystem.class);
 
     /**
      * Constructeur
@@ -88,67 +92,54 @@ public class ActionSystem extends AbstractSystem {
     private boolean canMove(AbstractAgent agent, AgentAction action) {
         Integer posX = agent.getX();
         Integer posY = agent.getY();
-        final String cannotMoveMessage = agent.toString() + " ==> CANNOT ";
-        final String canMoveMessage = agent.toString() + " ==> CAN ";
+
         switch (action) {
             case MOVE_UP:
                 if ((posY - 1 < 0)
                         || bombermanGame.getMap().get_walls()[posX][posY - 1]
                         || bombermanGame.getBreakableWalls()[posX][posY - 1]) {
-                    log.debug(cannotMoveMessage + AgentAction.MOVE_UP.toString());
                     return false;
                 } else {
-                    log.debug(canMoveMessage + AgentAction.MOVE_UP.toString());
                     return true;
                 }
             case MOVE_DOWN:
                 if ((posY + 1 > bombermanGame.getMap().getSizeY() + 1)
                         || bombermanGame.getMap().get_walls()[posX][posY + 1]
                         || bombermanGame.getBreakableWalls()[posX][posY + 1]) {
-                    log.debug(cannotMoveMessage + AgentAction.MOVE_DOWN.toString());
                     return false;
                 } else {
-                    log.debug(canMoveMessage + AgentAction.MOVE_DOWN.toString());
                     return true;
                 }
             case MOVE_LEFT:
                 if ((posX - 1 < 0)
                         || bombermanGame.getMap().get_walls()[posX - 1][posY]
                         || bombermanGame.getBreakableWalls()[posX - 1][posY]) {
-                    log.debug(cannotMoveMessage + AgentAction.MOVE_LEFT.toString());
                     return false;
                 } else {
-                    log.debug(canMoveMessage + AgentAction.MOVE_LEFT.toString());
                     return true;
                 }
             case MOVE_RIGHT:
                 if ((posX + 1 > bombermanGame.getMap().getSizeX() + 1)
                         || bombermanGame.getMap().get_walls()[posX + 1][posY]
                         || bombermanGame.getBreakableWalls()[posX + 1][posY]) {
-                    log.debug(cannotMoveMessage + AgentAction.MOVE_RIGHT.toString());
                     return false;
                 } else {
-                    log.debug(canMoveMessage + AgentAction.MOVE_RIGHT.toString());
                     return true;
                 }
             case JUMP_UP:
                 if ((posY - 2 < 0)
                         || bombermanGame.getMap().get_walls()[posX][posY - 2]
                         || bombermanGame.getBreakableWalls()[posX][posY - 2]) {
-                    log.debug(cannotMoveMessage + AgentAction.MOVE_UP.toString());
                     return false;
                 } else {
-                    log.debug(canMoveMessage + AgentAction.JUMP_UP.toString());
                     return true;
                 }
             case JUMP_DOWN:
                 if (posY + 2 < bombermanGame.getMap().getSizeY()) {
                     if (bombermanGame.getMap().get_walls()[posX][posY + 2]
                             || bombermanGame.getBreakableWalls()[posX][posY + 2]) {
-                        log.debug(cannotMoveMessage + AgentAction.JUMP_DOWN.toString());
                         return false;
                     } else {
-                        log.debug(canMoveMessage + AgentAction.JUMP_DOWN.toString());
                         return true;
                     }
                 }
@@ -157,26 +148,22 @@ public class ActionSystem extends AbstractSystem {
                 if ((posX - 2 < 0)
                         || bombermanGame.getMap().get_walls()[posX - 2][posY]
                         || bombermanGame.getBreakableWalls()[posX - 2][posY]) {
-                    log.debug(cannotMoveMessage + AgentAction.JUMP_LEFT.toString());
                     return false;
                 } else {
-                    log.debug(canMoveMessage + AgentAction.JUMP_LEFT.toString());
                     return true;
                 }
             case JUMP_RIGHT:
                 if (posX + 2 < bombermanGame.getMap().getSizeX()) {
                     if (bombermanGame.getMap().get_walls()[posX + 2][posY]
                             || bombermanGame.getBreakableWalls()[posX + 2][posY]) {
-                        log.debug(cannotMoveMessage + AgentAction.JUMP_RIGHT.toString());
                         return false;
                     } else {
-                        log.debug(canMoveMessage + AgentAction.JUMP_LEFT.toString());
                         return true;
                     }
                 }
                 return false;
             default:
-                log.error(agent.toString() + " ==> Action: " + action.toString() + " non compatible");
+                log.error(agent.toString() + " ==> Action: " + action.toString() + " non reconnue");
                 return false;
         }
     }

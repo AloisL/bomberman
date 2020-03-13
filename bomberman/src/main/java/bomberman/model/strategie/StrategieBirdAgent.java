@@ -1,7 +1,7 @@
 package bomberman.model.strategie;
 
-import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
+import bomberman.model.engine.BombermanGame;
 import bomberman.model.engine.enums.AgentAction;
 import bomberman.model.strategie.utils.Coordonnee;
 
@@ -16,19 +16,20 @@ public class StrategieBirdAgent extends StrategieAgents {
     }
 
     @Override
-    public AgentAction doStrategie(){
-        Coordonnee imSelf=new Coordonnee(agentCalling.getX(),agentCalling.getY());
+    public AgentAction doStrategie() {
+        Coordonnee imSelf = new Coordonnee(agentCalling.getX(), agentCalling.getY());
         Coordonnee ennemie = new Coordonnee(bombermanGame.getPlayers().get(0).getX(), bombermanGame.getPlayers().get(0).getY());
-        if (isInRange(imSelf,agentCalling.getRangeView(),ennemie)) {
+
+        if (isInRange(imSelf, agentCalling.getRangeView(), ennemie)) {
             AgentAction action = doMouvement(ennemie);
             //System.out.println(!bombermanGame.getActionSystem().isLegalAction(this.agentCalling,action));
-            if(!bombermanGame.getActionSystem().isLegalAction(this.agentCalling,action) ) {
+            if (!bombermanGame.getActionSystem().isLegalAction(agentCalling, action)) {
                 System.out.println(action.toString());
-                switch (action){
+                switch (action) {
                     case MOVE_UP:
                         return AgentAction.JUMP_UP;
                     case MOVE_DOWN:
-                        System.out.println(bombermanGame.getActionSystem().isLegalAction(agentCalling,AgentAction.JUMP_DOWN));
+                        System.out.println(bombermanGame.getActionSystem().isLegalAction(agentCalling, AgentAction.JUMP_DOWN));
                         return AgentAction.JUMP_DOWN;
                     case MOVE_LEFT:
                         return AgentAction.JUMP_LEFT;
@@ -36,14 +37,13 @@ public class StrategieBirdAgent extends StrategieAgents {
                         return AgentAction.JUMP_RIGHT;
                     default:
                         return action;
-
                 }
-            }
-            else {
+            } else {
                 System.out.println(action.toString());
                 return action;
             }
         }
+
         return strategieAleatoire();
     }
 

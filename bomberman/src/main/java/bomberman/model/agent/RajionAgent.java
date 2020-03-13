@@ -1,6 +1,6 @@
 package bomberman.model.agent;
 
-import bomberman.model.BombermanGame;
+import bomberman.model.engine.BombermanGame;
 import bomberman.model.engine.enums.AgentAction;
 import bomberman.model.engine.enums.ColorAgent;
 import bomberman.model.strategie.StrategieBasic;
@@ -10,7 +10,7 @@ public class RajionAgent extends AbstractAgent {
     public RajionAgent(int x, int y, AgentAction agentAction, ColorAgent color, boolean isInvincible, boolean isSick) {
         super(x, y, agentAction, 'R', color, isInvincible, isSick);
 
-        rangeView = 5;
+        rangeView = 10;
     }
 
     @Override

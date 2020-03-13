@@ -1,7 +1,5 @@
 package bomberman.model.strategie.utils;
 
-import bomberman.model.BombermanGame;
-
 import java.util.ArrayList;
 
 public class Noeud {

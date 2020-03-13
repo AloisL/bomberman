@@ -1,18 +1,18 @@
-package bomberman.model;
+package bomberman.model.engine;
 
+import bomberman.controller.BombermanController;
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.AgentFactory;
-import bomberman.model.engine.Map;
+import bomberman.model.agent.BombermanAgent;
 import bomberman.model.engine.enums.AgentAction;
 import bomberman.model.engine.enums.ColorAgent;
-import bomberman.model.engine.info.InfoAgent;
-import bomberman.model.engine.info.InfoBomb;
-import bomberman.model.engine.info.InfoItem;
-import bomberman.model.engine.system.ActionSystem;
-import bomberman.model.engine.system.DamageSystem;
-import bomberman.model.engine.system.ItemSystem;
+import bomberman.model.engine.infotype.InfoAgent;
+import bomberman.model.engine.infotype.InfoBomb;
+import bomberman.model.engine.infotype.InfoItem;
+import bomberman.model.engine.subsystems.ActionSystem;
+import bomberman.model.engine.subsystems.DamageSystem;
+import bomberman.model.engine.subsystems.ItemSystem;
 import bomberman.model.strategie.utils.Coordonnee;
-import common.Controller;
 import common.Game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -26,7 +26,7 @@ public class BombermanGame extends Game {
 
     final static Logger log = (Logger) LogManager.getLogger(BombermanGame.class);
 
-    private Controller controller;
+    private BombermanController bombermanController;
     private Map map;
     private ActionSystem actionSystem;
     private DamageSystem damageSystem;
@@ -39,10 +39,10 @@ public class BombermanGame extends Game {
     private int nbPlayers;
     private ArrayList<AbstractAgent> players;
 
-    public BombermanGame(Controller controller, Integer maxTurn, int nbPlayers) {
+    public BombermanGame(BombermanController bombermanController, Integer maxTurn, int nbPlayers) {
         super(maxTurn);
         this.nbPlayers = nbPlayers;
-        this.controller = controller;
+        this.bombermanController = bombermanController;
     }
 
     /**
@@ -57,10 +57,7 @@ public class BombermanGame extends Game {
         bombs = new ArrayList<>();
         agentsIa = new ArrayList<>();
 
-        log.debug("Initialisation des broken_walls");
         breakableWalls = map.getStart_brokable_walls();
-
-        log.debug("Initialisation des agents");
         initAgents();
 
         for (AbstractAgent agent : agents) {
@@ -83,26 +80,29 @@ public class BombermanGame extends Game {
      */
     @Override
     public void takeTurn() {
-        log.debug("Tour " + getCurrentTurn() + " du jeu en cours");
-
+        log.debug("Début du tour " + getCurrentTurn());
         actionSystem.run();
         damageSystem.run();
         itemSystem.run();
 
-        for (AbstractAgent agent : agentsIa) {
-            if (agent.getColor() != ColorAgent.BLEU) {
-                agent.setStrategie(this);
-                AgentAction action = agent.getStrategie().doStrategie();
-                if (actionSystem.isLegalAction(agent, action)) {
-                    agent.setAgentAction(action);
-                } else actionSystem.doAction(agent, AgentAction.STOP);
+        if (players.size() == 0) gameOver();
+        else if (agents.size() == 1) gameWon();
+        else {
+            for (AbstractAgent agent : agentsIa) {
+                if (agent.getColor() != ColorAgent.BLEU) {
+                    agent.setStrategie(this);
+                    AgentAction action = agent.getStrategie().doStrategie();
+                    if (actionSystem.isLegalAction(agent, action)) {
+                        agent.setAgentAction(action);
+                    } else actionSystem.doAction(agent, AgentAction.STOP);
+                }
             }
         }
 
         setChanged();
         notifyObservers();
 
-        log.debug("Tour " + getCurrentTurn() + " du jeu terminé");
+        log.debug("Fin du tour " + getCurrentTurn());
     }
 
     /**
@@ -111,8 +111,12 @@ public class BombermanGame extends Game {
     @Override
     public void gameOver() {
         isRunning = false;
-        controller.gameOver();
-        log.debug("Le jeu est fini");
+        bombermanController.gameOver();
+    }
+
+    public void gameWon() {
+        isRunning = false;
+        bombermanController.gameWon();
     }
 
     /**
@@ -172,6 +176,21 @@ public class BombermanGame extends Game {
         return infoAgents;
     }
 
+    public boolean isFree(Coordonnee c) {
+        if (c.x > 0 && c.y > 0 && c.x < map.getSizeX() && c.y < map.getSizeY()) {
+            if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
+                return false;
+            }
+            for (InfoBomb b : bombs) {
+                if (b.getX() == c.x && b.getY() == c.y) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     public Map getMap() {
         return map;
     }
@@ -196,24 +215,19 @@ public class BombermanGame extends Game {
         return actionSystem;
     }
 
-    public boolean isFree(Coordonnee c) {
-        if (c.x > 0 && c.y > 0 && c.x < map.getSizeX() && c.y < map.getSizeY()) {
-            if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
-                return false;
-            }
-            for (InfoBomb b : bombs) {
-                if (b.getX() == c.x && b.getY() == c.y) {
-
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
     public ArrayList<AbstractAgent> getPlayers() {
         return players;
+    }
+
+    public ArrayList<AbstractAgent> getAgentsIa() {
+        return agentsIa;
+    }
+
+
+    public int getNblife() {
+        // TODO: Gestion des joueurs à revoir, ce code est douteux
+        BombermanAgent player = (BombermanAgent) players.get(0);
+        return player.getNbLifes();
     }
 
 }

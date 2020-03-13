@@ -1,6 +1,6 @@
 package bomberman.model.strategie.utils;
 
-import bomberman.model.BombermanGame;
+import bomberman.model.engine.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
 
 

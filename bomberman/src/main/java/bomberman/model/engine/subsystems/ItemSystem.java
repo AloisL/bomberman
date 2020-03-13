@@ -1,10 +1,10 @@
-package bomberman.model.engine.system;
+package bomberman.model.engine.subsystems;
 
-import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.BombermanAgent;
+import bomberman.model.engine.BombermanGame;
 import bomberman.model.engine.enums.ItemType;
-import bomberman.model.engine.info.InfoItem;
+import bomberman.model.engine.infotype.InfoItem;
 
 import java.util.ArrayList;
 

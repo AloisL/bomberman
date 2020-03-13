@@ -1,29 +1,27 @@
 package bomberman.model.strategie;
 
-import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.BombermanAgent;
+import bomberman.model.engine.BombermanGame;
 import bomberman.model.engine.enums.AgentAction;
 import bomberman.model.strategie.utils.Coordonnee;
 
 public class StrategieAttaque extends StrategieAgents {
 
-    public StrategieAttaque(BombermanGame bombermanGame, AbstractAgent agent){
-        super(bombermanGame,agent);
+    public StrategieAttaque(BombermanGame bombermanGame, AbstractAgent agent) {
+        super(bombermanGame, agent);
     }
 
     @Override
     public AgentAction doStrategie() {
-        BombermanAgent agent= (BombermanAgent)agentCalling;
-       Coordonnee imSelf=new Coordonnee(agent.getX(),agent.getY());
-       Coordonnee ennemie=new Coordonnee(bombermanGame.getPlayers().get(0).getX(),bombermanGame.getPlayers().get(0).getY());
+        BombermanAgent agent = (BombermanAgent) agentCalling;
+        Coordonnee imSelf = new Coordonnee(agent.getX(), agent.getY());
+        Coordonnee ennemie = new Coordonnee(bombermanGame.getPlayers().get(0).getX(), bombermanGame.getPlayers().get(0).getY());
 
-        if (isInRange(imSelf,agent.getBombRange(),ennemie)) {
-            System.out.println("1");
+        if (isInRange(imSelf, agent.getBombRange(), ennemie)) {
             return AgentAction.PUT_BOMB;
         }
-        if(isInRange(imSelf,agentCalling.getRangeView(),ennemie)) {
-            System.out.println("2");
+        if (isInRange(imSelf, agentCalling.getRangeView(), ennemie)) {
             return doMouvement(ennemie);
         }
 /*
@@ -31,10 +29,7 @@ public class StrategieAttaque extends StrategieAgents {
             System.out.println(3);
             return AgentAction.PUT_BOMB;
         }
-
  */
-
-        System.out.println("4");
         return strategieAleatoire();
     }
 }

@@ -1,9 +1,9 @@
 package bomberman.model.agent;
 
-import bomberman.model.BombermanGame;
+import bomberman.model.engine.BombermanGame;
 import bomberman.model.engine.enums.AgentAction;
 import bomberman.model.engine.enums.ColorAgent;
-import bomberman.model.engine.info.InfoAgent;
+import bomberman.model.engine.infotype.InfoAgent;
 import bomberman.model.strategie.StrategieAgents;
 import bomberman.model.strategie.StrategieSafe;
 
@@ -33,7 +33,7 @@ public abstract class AbstractAgent extends InfoAgent {
 
     @Override
     public String toString() {
-        return "Agent ::: ID=" + id + " Type=" + super.getType() + " x=" + super.getX() + " y=" + super.getY();
+        return "id=" + id + " type=" + super.getType() + " pos=(" + super.getX() + "," + super.getY() + ")";
     }
 
 
@@ -43,22 +43,22 @@ public abstract class AbstractAgent extends InfoAgent {
     }
 */
 
-    public  StrategieAgents getStrategie(){
-       return this.strategie;
+    public StrategieAgents getStrategie() {
+        return strategie;
     }
-    public void setStrategie(BombermanGame bombermanGame){
-        this.strategie = new StrategieSafe(bombermanGame,this);
+
+    public void setStrategie(BombermanGame bombermanGame) {
+        strategie = new StrategieSafe(bombermanGame, this);
     }
 
     public AgentAction retourneAction() {
         return strategie.doStrategie();
     }
+
     public void setStrategieAgents(StrategieAgents strategie) {
         this.strategie = strategie;
 
     }
-
-
 
 
 }

@@ -1,4 +1,4 @@
-package bomberman.model.engine.info;
+package bomberman.model.engine.infotype;
 
 import bomberman.model.agent.BombermanAgent;
 import bomberman.model.engine.enums.StateBomb;

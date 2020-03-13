@@ -1,12 +1,12 @@
-package bomberman.model.engine.system;
+package bomberman.model.engine.subsystems;
 
-import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
 import bomberman.model.agent.BombermanAgent;
+import bomberman.model.engine.BombermanGame;
 import bomberman.model.engine.enums.ItemType;
 import bomberman.model.engine.enums.StateBomb;
-import bomberman.model.engine.info.InfoBomb;
-import bomberman.model.engine.info.InfoItem;
+import bomberman.model.engine.infotype.InfoBomb;
+import bomberman.model.engine.infotype.InfoItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 
@@ -27,24 +27,29 @@ public class DamageSystem extends AbstractSystem {
      */
     @Override
     public void run() {
+        // Vidange de la liste des agents à supprimer
         agentsToBeRemoved = new ArrayList<>();
 
+        // Explosion des bombes un tour sur deux
         if (bombermanGame.getCurrentTurn() % 2 == 0)
-            bombDamages();
+            explodeBombs();
+
+        // Dégats au corps à corps
         closeCombatDamages();
 
-        for (AbstractAgent agent : agentsToBeRemoved) {
-            agents.remove(agent);
-            players.remove(agent);
-            bombermanGame.getInfoAgents().remove(agent);
-            if (players.size() == 0) bombermanGame.gameOver();
-            if (agents.size() == 1) bombermanGame.gameOver();
-        }
+        // Suppression des agents morts pendant le tour de jeu
+        removeDeadAgents();
     }
 
-    private void bombDamages() {
-        ArrayList<InfoBomb> bombToBeRemoved = new ArrayList<>();
+    /**
+     * Méthode de gestion de l'explosion des bombes
+     */
+    private void explodeBombs() {
+        // Vidange de la liste des bombes à supprimer
+        ArrayList<InfoBomb> bombsToExplode = new ArrayList<>();
 
+        /* On fait avance la liste des états des bombes, on place les bombes dans la liste des
+            bombes à exploser si elles atteingnent le StateBomb Boom */
         for (InfoBomb bomb : bombs) {
             switch (bomb.getStateBomb()) {
                 case Step1:
@@ -57,34 +62,43 @@ public class DamageSystem extends AbstractSystem {
                     bomb.setStateBomb(StateBomb.Boom);
                     break;
                 case Boom:
-                    bombToBeRemoved.add(bomb);
+                    bombsToExplode.add(bomb);
                 default:
                     bomb.setStateBomb(StateBomb.Step1);
                     break;
             }
         }
 
-        for (InfoBomb bomb : bombToBeRemoved) {
+        // Pour chacunes des bombes allant exploser, on redonne une bombe à son lanceur
+        for (InfoBomb bomb : bombsToExplode) {
             bomb.getOwner().freeBombSlot();
             bombs.remove(bomb);
         }
 
-        for (InfoBomb bomb : bombs) if (bomb.getStateBomb() == StateBomb.Boom) bombHit(bomb);
+        // On fait exploser toutes les bombes devant exploser à ce tour
+        for (InfoBomb bomb : bombs) if (bomb.getStateBomb() == StateBomb.Boom) explode(bomb);
     }
 
+    /**
+     * Méthode de gestion des dommages corps à corps subis par les joueurs (BombermanAgents)
+     */
     private void closeCombatDamages() {
         for (AbstractAgent agent : agents) {
             for (AbstractAgent player : players) {
                 BombermanAgent bombermanAgent = (BombermanAgent) player;
                 if ((bombermanAgent != agent) && (agent.getX() == bombermanAgent.getX()) && (agent.getY() == bombermanAgent.getY())) {
-                    bombermanAgent.removeLife();
-                    if (bombermanAgent.isDead()) agentsToBeRemoved.add(bombermanAgent);
+                    hit(bombermanAgent, false);
                 }
             }
         }
     }
 
-    private void bombHit(InfoBomb bomb) {
+    /**
+     * Méthode permettant de faire exploser une bombe
+     *
+     * @param bomb
+     */
+    private void explode(InfoBomb bomb) {
         int range = bomb.getRange();
         int posXbomb = bomb.getX();
         int posYbomb = bomb.getY();
@@ -97,85 +111,84 @@ public class DamageSystem extends AbstractSystem {
             for (int i = 0; i <= range; i++) {
                 if (posXagent == posXbomb) {
                     if ((posYagent == (posYbomb + i)) || (posYagent == (posYbomb - i))) {
-                        if (agent.getClass() == BombermanAgent.class) {
-                            BombermanAgent bombermanAgent = (BombermanAgent) agent;
-                            if (!bombermanAgent.isInvincible()) bombermanAgent.removeLife();
-                            if (bombermanAgent.isDead()) agentsToBeRemoved.add(bombermanAgent);
-                        } else {
-                            agentsToBeRemoved.add(agent);
-                        }
+                        hit(agent, true);
                     }
                 } else if (posYagent == posYbomb) {
                     if ((posXagent == (posXbomb + i)) || (posXagent == (posXbomb - i))) {
-                        if (agent.getClass() == BombermanAgent.class) {
-                            BombermanAgent bombermanAgent = (BombermanAgent) agent;
-                            if (!bombermanAgent.isInvincible()) bombermanAgent.removeLife();
-                            if (bombermanAgent.isDead()) agentsToBeRemoved.add(bombermanAgent);
-                        } else {
-                            agentsToBeRemoved.add(agent);
-                        }
+                        hit(agent, true);
                     }
                 }
             }
         }
 
         // Détruit les murs dans la range de la bombe
-        // TODO : ArrayIndexOutOfBoundsException
         for (int i = 0; i <= range; i++) {
-            if (breakableWalls[posXbomb][posYbomb + i]) {
+            if (posYbomb + i < breakableWalls[posXbomb].length && breakableWalls[posXbomb][posYbomb + i]) {
                 breakableWalls[posXbomb][posYbomb + i] = false;
                 int randomItem = (int) (Math.random() * 2);
                 if (randomItem == 0) {
                     randomItem = (int) (Math.random() * 5);
-                    items.add(new InfoItem(posXbomb, posYbomb + i, getInfoItemFromInt(randomItem)));
+                    items.add(new InfoItem(posXbomb, posYbomb + i, ItemType.values()[randomItem]));
                 }
             }
-            if (breakableWalls[posXbomb][posYbomb - i]) {
+            if (posYbomb - i > 0 && breakableWalls[posXbomb][posYbomb - i]) {
                 breakableWalls[posXbomb][posYbomb - i] = false;
                 int randomItem = (int) (Math.random() * 2);
                 if (randomItem == 0) {
                     randomItem = (int) (Math.random() * 5);
-                    items.add(new InfoItem(posXbomb, posYbomb - i, getInfoItemFromInt(randomItem)));
+                    items.add(new InfoItem(posXbomb, posYbomb - i, ItemType.values()[randomItem]));
                 }
             }
         }
         for (int i = 0; i <= range; i++) {
-            if (breakableWalls[posXbomb + i][posYbomb]) {
+            if (posXbomb + i < breakableWalls.length && breakableWalls[posXbomb + i][posYbomb]) {
                 breakableWalls[posXbomb + i][posYbomb] = false;
                 int randomItem = (int) (Math.random() * 2);
                 if (randomItem == 0) {
                     randomItem = (int) (Math.random() * 5);
-                    items.add(new InfoItem(posXbomb + i, posYbomb, getInfoItemFromInt(randomItem)));
+                    items.add(new InfoItem(posXbomb + i, posYbomb, ItemType.values()[randomItem]));
                 }
             }
-            if (breakableWalls[posXbomb - i][posYbomb]) {
+            if (posXbomb - i > 0 && breakableWalls[posXbomb - i][posYbomb]) {
                 breakableWalls[posXbomb - i][posYbomb] = false;
                 int randomItem = (int) (Math.random() * 2);
                 if (randomItem == 0) {
                     randomItem = (int) (Math.random() * 5);
-                    items.add(new InfoItem(posXbomb - i, posYbomb, getInfoItemFromInt(randomItem)));
+                    items.add(new InfoItem(posXbomb - i, posYbomb, ItemType.values()[randomItem]));
                 }
             }
         }
     }
 
-    private ItemType getInfoItemFromInt(int i) {
-        switch (i) {
-            case 0:
-                return ItemType.FIRE_UP;
-            case 1:
-                return ItemType.FIRE_DOWN;
-            case 2:
-                return ItemType.BOMB_UP;
-            case 3:
-                return ItemType.BOMB_DOWN;
-            case 4:
-                return ItemType.FIRE_SUIT;
-            case 5:
-                return ItemType.SKULL;
-            default:
-                log.error("Item inconnu ==> " + i);
-                return null;
+    /**
+     * Méthode permettant d'infliger un dégat à un énnemi
+     * Dans le cas d'un BombermanAgent, on enlève une vide avant de vérifier si l'agent est mort
+     * On ajoute ensuite éventuellemnt l'Agent à la liste des Agents à tuer
+     *
+     * @param agent
+     * @param bombHit
+     */
+    private void hit(AbstractAgent agent, boolean bombHit) {
+        if (agent.getClass() == BombermanAgent.class) {
+            BombermanAgent bombermanAgent = (BombermanAgent) agent;
+            if (bombHit) {
+                if (!bombermanAgent.isInvincible()) bombermanAgent.removeLife();
+            } else bombermanAgent.removeLife();
+            if (bombermanAgent.isDead()) agentsToBeRemoved.add(bombermanAgent);
+        } else {
+            agentsToBeRemoved.add(agent);
+        }
+    }
+
+    /**
+     * Tue les agents de la liste des agents à tuer.
+     */
+    private void removeDeadAgents() {
+        for (AbstractAgent agent : agentsToBeRemoved) {
+            agents.remove(agent);
+            bombermanGame.getInfoAgents().remove(agent);
+            if (agent.getClass() == BombermanAgent.class) players.remove(agent);
+            else bombermanGame.getAgentsIa().remove(agent);
         }
     }
 

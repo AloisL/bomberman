@@ -1,9 +1,9 @@
-package bomberman.model.engine.system;
+package bomberman.model.engine.subsystems;
 
-import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
-import bomberman.model.engine.info.InfoBomb;
-import bomberman.model.engine.info.InfoItem;
+import bomberman.model.engine.BombermanGame;
+import bomberman.model.engine.infotype.InfoBomb;
+import bomberman.model.engine.infotype.InfoItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 

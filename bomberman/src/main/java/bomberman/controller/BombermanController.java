@@ -1,14 +1,18 @@
 package bomberman.controller;
 
-import bomberman.model.BombermanGame;
+import bomberman.model.agent.AbstractAgent;
+import bomberman.model.engine.BombermanGame;
 import bomberman.model.engine.Map;
 import bomberman.model.engine.enums.AgentAction;
-import bomberman.model.engine.system.ActionSystem;
+import bomberman.model.engine.enums.GameState;
+import bomberman.model.engine.subsystems.ActionSystem;
+import bomberman.view.BombermanPanel;
 import bomberman.view.BombermanView;
-import bomberman.view.PanelBomberman;
 import common.Controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
+
+import java.util.ArrayList;
 
 /**
  * Classe du controleur du jeu
@@ -17,9 +21,11 @@ public class BombermanController implements Controller {
 
     final static org.apache.logging.log4j.core.Logger log = (Logger) LogManager.getLogger(BombermanController.class);
 
-    private BombermanGame bombermanGame;
-    private PanelBomberman bombermanPanel;
-    private BombermanView bombermanView;
+    public GameState gameState = GameState.WAITING;
+    public int nbLife;
+    BombermanGame bombermanGame;
+    BombermanPanel bombermanPanel;
+    BombermanView bombermanView;
 
     /**
      * Constructeur
@@ -46,6 +52,7 @@ public class BombermanController implements Controller {
      */
     @Override
     public void run() {
+        gameState = GameState.GAME_RUNNING;
         bombermanGame.launch();
     }
 
@@ -57,15 +64,25 @@ public class BombermanController implements Controller {
         bombermanGame.step();
     }
 
+    /**
+     * Méthode permettant de communiquer une action utilisateur au personnage du jeu
+     *
+     * @param action
+     */
     public void updatePlayerAction(AgentAction action) {
-        // Le placage de la bombe doit être instantané
-        if (action == AgentAction.PUT_BOMB) {
-            ActionSystem actionSystem = new ActionSystem(bombermanGame);
-            if (actionSystem.isLegalAction(bombermanGame.getPlayers().get(0), action)) {
-                actionSystem.doAction(bombermanGame.getPlayers().get(0), action);
+        ArrayList<AbstractAgent> players = bombermanGame.getPlayers();
+        if (!players.isEmpty()) {
+            AbstractAgent player = players.get(0);
+            // Le placement de la bombe doit être instantané, on byepasse donc la cadence du jeu.
+            if (action == AgentAction.PUT_BOMB) {
+                ActionSystem actionSystem = new ActionSystem(bombermanGame);
+                if (actionSystem.isLegalAction(player, action)) {
+                    actionSystem.doAction(player, action);
+                }
             }
-        }
-        bombermanGame.getPlayers().get(0).setAgentAction(action);
+            if (player != null) player.setAgentAction(action);
+        } else log.debug("updatePlayerAction: Liste des joueurs vide");
+
     }
 
     /**
@@ -73,6 +90,7 @@ public class BombermanController implements Controller {
      */
     @Override
     public void pause() {
+        gameState = GameState.GAME_PAUSED;
         bombermanGame.stop();
     }
 
@@ -87,9 +105,21 @@ public class BombermanController implements Controller {
         bombermanGame.setSleepTime(sleepTime);
     }
 
+    /**
+     * Méthode appelée lorsque la partie est terminée
+     */
     @Override
     public void gameOver() {
+        gameState = GameState.GAME_OVER;
         bombermanView.gameOver();
+    }
+
+    /**
+     * Méthode appelée lorsque la partie est gagnée
+     */
+    public void gameWon() {
+        gameState = GameState.GAME_WON;
+        bombermanView.gameWon();
     }
 
     /**
@@ -97,8 +127,9 @@ public class BombermanController implements Controller {
      */
     public void changeLayout() {
         String layout = "res/layouts/" + bombermanView.getLayout();
+        bombermanView.init();
         bombermanGame.setMapFromLayoutPath(layout);
-        bombermanPanel = new PanelBomberman(getMap());
+        bombermanPanel = new BombermanPanel(getMap());
         bombermanView.addPanelBomberman(bombermanPanel);
     }
 

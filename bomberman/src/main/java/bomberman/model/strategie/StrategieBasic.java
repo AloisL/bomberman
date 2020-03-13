@@ -1,7 +1,7 @@
 package bomberman.model.strategie;
 
-import bomberman.model.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
+import bomberman.model.engine.BombermanGame;
 import bomberman.model.engine.enums.AgentAction;
 import bomberman.model.strategie.utils.Coordonnee;
 
@@ -24,7 +24,7 @@ public class StrategieBasic extends StrategieAgents {
                 if (isInRange(imSelf, agentCalling.getRangeView(), ennemie))
                     return doMouvement(ennemie);
             }
-        return strategieAleatoire();
 
+        return strategieAleatoire();
     }
 }

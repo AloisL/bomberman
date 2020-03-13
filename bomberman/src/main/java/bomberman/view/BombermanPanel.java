@@ -4,9 +4,9 @@ import bomberman.model.engine.Map;
 import bomberman.model.engine.enums.AgentAction;
 import bomberman.model.engine.enums.ItemType;
 import bomberman.model.engine.enums.StateBomb;
-import bomberman.model.engine.info.InfoAgent;
-import bomberman.model.engine.info.InfoBomb;
-import bomberman.model.engine.info.InfoItem;
+import bomberman.model.engine.infotype.InfoAgent;
+import bomberman.model.engine.infotype.InfoBomb;
+import bomberman.model.engine.infotype.InfoItem;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 
 
-public class PanelBomberman extends JPanel {
+public class BombermanPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     protected Color wallColor = Color.GRAY;
@@ -42,22 +42,16 @@ public class PanelBomberman extends JPanel {
     private Map map;
     private boolean breakable_walls[][];
 
-    public PanelBomberman(Map map) {
-
+    public BombermanPanel(Map map) {
         this.map = map;
-
         breakable_walls = map.getStart_brokable_walls();
-
         listInfoAgents = map.getStart_agents();
         listInfoItems = new ArrayList<InfoItem>();
         listInfoBombs = new ArrayList<InfoBomb>();
-
     }
 
     @Override
     public void paint(Graphics g) {
-
-
         int fen_x = getSize().width;
         int fen_y = getSize().height;
 
@@ -126,9 +120,7 @@ public class PanelBomberman extends JPanel {
         cpt++;
     }
 
-
     public void dessine_Agent(Graphics g, InfoAgent infoAgent) {
-
         int fen_x = getSize().width;
         int fen_y = getSize().height;
 
@@ -168,7 +160,6 @@ public class PanelBomberman extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         float[] scales = new float[]{1, 1, 1, 1.0f};
 
@@ -211,9 +202,7 @@ public class PanelBomberman extends JPanel {
             g.drawImage(img, (int) pos_x, (int) pos_y, (int) stepx, (int) stepy, this);
         }
 
-
     }
-
 
     void dessine_Items(Graphics g, InfoItem item) {
 
@@ -278,7 +267,6 @@ public class PanelBomberman extends JPanel {
             }
         }
     }
-
 
     void dessine_Bomb(Graphics g, InfoBomb bomb) {
         int fen_x = getSize().width;
@@ -414,15 +402,12 @@ public class PanelBomberman extends JPanel {
 
     }
 
-
     public void setInfoGame(boolean[][] breakable_walls, ArrayList<InfoAgent> listInfoAgents,
                             ArrayList<InfoItem> listInfoItems, ArrayList<InfoBomb> listInfoBombs) {
-
         this.listInfoAgents = listInfoAgents;
         this.listInfoItems = listInfoItems;
         this.listInfoBombs = listInfoBombs;
         this.breakable_walls = breakable_walls;
-
     }
 
 

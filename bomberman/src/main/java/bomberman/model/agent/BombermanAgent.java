@@ -1,10 +1,10 @@
 package bomberman.model.agent;
 
-import bomberman.model.BombermanGame;
+import bomberman.model.engine.BombermanGame;
 import bomberman.model.engine.enums.AgentAction;
 import bomberman.model.engine.enums.ColorAgent;
 import bomberman.model.engine.enums.StateBomb;
-import bomberman.model.engine.info.InfoBomb;
+import bomberman.model.engine.infotype.InfoBomb;
 import bomberman.model.strategie.StrategieAttaque;
 import bomberman.model.strategie.StrategieSafe;
 
@@ -130,4 +130,7 @@ public class BombermanAgent extends AbstractAgent {
         return bombRange;
     }
 
+    public int getNbLifes() {
+        return nbLifes;
+    }
 }
