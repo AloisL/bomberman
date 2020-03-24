@@ -15,14 +15,14 @@ public class StrategieAttaque extends StrategieAgents {
     @Override
     public AgentAction doStrategie() {
         BombermanAgent agent = (BombermanAgent) agentCalling;
-        Coordonnee imSelf = new Coordonnee(agent.getX(), agent.getY());
-        Coordonnee ennemie = new Coordonnee(bombermanGame.getPlayers().get(0).getX(), bombermanGame.getPlayers().get(0).getY());
+        Coordonnee imself = new Coordonnee(agent.getX(), agent.getY());
+        Coordonnee enemy = new Coordonnee(bombermanGame.getPlayers().get(0).getX(), bombermanGame.getPlayers().get(0).getY());
 
-        if (isInRange(imSelf, agent.getBombRange(), ennemie)) {
+        if (isInRange(imself, agent.getBombRange(), enemy)) {
             return AgentAction.PUT_BOMB;
         }
-        if (isInRange(imSelf, agentCalling.getRangeView(), ennemie)) {
-            return doMouvement(ennemie);
+        if (isInRange(imself, agentCalling.getRangeView(), enemy)) {
+            return doMouvement(enemy);
         }
 /*
         if (agent.isSafeSibombe(bombermanGame)) {

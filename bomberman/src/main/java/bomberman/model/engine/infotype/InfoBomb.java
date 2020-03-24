@@ -56,5 +56,6 @@ public class InfoBomb {
     public BombermanAgent getOwner() {
         return owner;
     }
+
 }
 	

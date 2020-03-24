@@ -8,12 +8,6 @@ import bomberman.model.strategie.utils.Coordonnee;
 
 public class StrategieSafe extends StrategieAgents {
 
-
-    public StrategieSafe() {
-    }
-
-    ;
-
     public StrategieSafe(BombermanGame bombermanGame, AbstractAgent agent) {
         super(bombermanGame, agent);
     }
@@ -28,7 +22,6 @@ public class StrategieSafe extends StrategieAgents {
         }
         return AgentAction.STOP;
     }
-
 
     //methode qui cherche une zone safe adjacente au rayon de la bombe
     public Coordonnee zoneSafe(InfoBomb b) {
@@ -93,7 +86,6 @@ public class StrategieSafe extends StrategieAgents {
         Coordonnee c = new Coordonnee(0, 0);
         return c;
     }
-
 
     public boolean isInRange(InfoBomb b, Coordonnee newCoord) {
         if (((newCoord.x <= b.getX() + b.getRange()) && (newCoord.x >= b.getX() - b.getRange())) && (newCoord.y == b.getY())) {

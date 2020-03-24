@@ -17,11 +17,11 @@ public class StrategieBirdAgent extends StrategieAgents {
 
     @Override
     public AgentAction doStrategie() {
-        Coordonnee imSelf = new Coordonnee(agentCalling.getX(), agentCalling.getY());
-        Coordonnee ennemie = new Coordonnee(bombermanGame.getPlayers().get(0).getX(), bombermanGame.getPlayers().get(0).getY());
-
-        if (isInRange(imSelf, agentCalling.getRangeView(), ennemie)) {
-            AgentAction action = doMouvement(ennemie);
+        Coordonnee imself = new Coordonnee(agentCalling.getX(), agentCalling.getY());
+        Coordonnee enemy = new Coordonnee(bombermanGame.getPlayers().get(0).getX(), bombermanGame.getPlayers().get(0).getY());
+        
+        if (isInRange(imself, agentCalling.getRangeView(), enemy)) {
+            AgentAction action = doMouvement(enemy);
             //System.out.println(!bombermanGame.getActionSystem().isLegalAction(this.agentCalling,action));
             if (!bombermanGame.getActionSystem().isLegalAction(agentCalling, action)) {
                 System.out.println(action.toString());
@@ -43,7 +43,6 @@ public class StrategieBirdAgent extends StrategieAgents {
                 return action;
             }
         }
-
         return strategieAleatoire();
     }
 

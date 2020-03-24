@@ -1,8 +1,7 @@
 package bomberman.model.strategie.utils;
 
-import bomberman.model.engine.BombermanGame;
 import bomberman.model.agent.AbstractAgent;
-
+import bomberman.model.engine.BombermanGame;
 
 import java.util.ArrayList;
 
@@ -13,10 +12,6 @@ public class AlgorithmeAEtoile {
     private boolean[][] mapMur;
     private Coordonnee objectif;
     private AbstractAgent perso;
-
-
-    public AlgorithmeAEtoile() {
-    }
 
     public AlgorithmeAEtoile(BombermanGame bombermanGame, AbstractAgent agent, Coordonnee objectif) {
         mapMur = bombermanGame.getMap().get_walls();
@@ -45,7 +40,6 @@ public class AlgorithmeAEtoile {
             for (Noeud v : n.voisin) {
                 if (!existe(v)) {
                     if (nCompare == null) nCompare = v;
-
                     else nCompare = nCompare.compareHeuri(v);
                 }
             }
@@ -76,7 +70,6 @@ public class AlgorithmeAEtoile {
         }
         return null;
     }
-
 
     public boolean existe(Noeud n) {
         if (closeList != null) {

@@ -27,7 +27,7 @@ public abstract class StrategieAgents {
 
     public abstract AgentAction doStrategie();
 
-    //utilisé pour eviter des bug qui non malheuresement pas reussi a etre corrigé a temps
+    //utilisé pour eviter des bugs qui non malheuresements pas reussi a être corrigés à temps
     public AgentAction strategieAleatoire() {
         AgentAction resultat = AgentAction.MOVE_UP;
         int aleatoire = (int) (Math.random() * 4);
@@ -106,9 +106,6 @@ public abstract class StrategieAgents {
         if (noeud != null) {
             coordonnee = noeud.getCoordonnee();
         }
-               /*
-        System.out.print(coordonnee.x+" : "+coordonnee.y);
-                */
         return coordonnee;
     }
 
@@ -130,7 +127,6 @@ public abstract class StrategieAgents {
             c.y = agentP.getY();
         }
         return c;
-
     }
 
     public boolean isInRange(InfoBomb b) {
@@ -154,68 +150,5 @@ public abstract class StrategieAgents {
         }
         return false;
     }
-
-/*
-    private enumDirection isAxeDown(int y, int i){
-        if (y == agentCalling.getY() - i) return enumDirection.B;
-        return enumDirection.STOP;
-    }
-    private enumDirection isAxeUp(int y, int i){
-        if (y == agentCalling.getY() + i) return enumDirection.H;
-        return enumDirection.STOP;
-    }
-    private enumDirection isAxeLeft(int x, int i){
-        if ( x == agentCalling.getX() - i) return enumDirection.G;
-        return  enumDirection.STOP;
-    }
-    private enumDirection isAxeRight(int x, int i){
-        if (x == agentCalling.getX() + i) return enumDirection.D ;
-        return enumDirection.STOP;
-    }
-
-    private enumDirection isDiagonal(int x,int y,int i,int z){
-        enumDirection res=isDiagonalBottom(x, y, i, z);
-        if (res!=enumDirection.STOP) return res;
-        res = isDiagonalTop(x, y, i, z);
-        return res;
-    }
-
-    private enumDirection isLigne(int x,int y,int i){
-        if (enumDirection.STOP!=isAxeDown(y, i)) return isAxeDown(y, i);
-        if (enumDirection.STOP!=isAxeLeft(x, i)) return isAxeLeft(x, i);
-        if (enumDirection.STOP!=isAxeUp(y, i)) return isAxeUp(y, i);
-        return (isAxeRight(x, i));
-    }
-
-
-
-
-    public enumDirection schearchObjectif(int x,int y){
-
-        if(checkEnnemie()) {
-            for (AbstractAgent agent : this.bombermanGame.getAgents()) {
-                if(agent.getType() == 'B'){
-                    for (int i = 0; i <= this.viewNbBlocks; i++) {
-                        for (int z=0;z<=this.viewNbBlocks; z++ ) {
-                            enumDirection direction = isLigne(x,y,i);
-                            if (direction==enumDirection.STOP){
-                                direction = isDiagonal(x,y,i,z);
-                                if(direction!=enumDirection.STOP){
-                                    return direction;
-                                }
-                            }
-                            else return direction;
-                        }
-                    }
-                }
-            }
-        }
-
-
-        return enumDirection.STOP;
-    }
-
- */
-
 
 }

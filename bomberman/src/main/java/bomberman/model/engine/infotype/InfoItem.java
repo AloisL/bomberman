@@ -12,7 +12,6 @@ public class InfoItem {
         this.x = x;
         this.y = y;
         this.type = type;
-
     }
 
     public int getX() {

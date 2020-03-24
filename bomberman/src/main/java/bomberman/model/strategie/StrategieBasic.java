@@ -24,7 +24,7 @@ public class StrategieBasic extends StrategieAgents {
                 if (isInRange(imSelf, agentCalling.getRangeView(), ennemie))
                     return doMouvement(ennemie);
             }
-
+        
         return strategieAleatoire();
     }
 }
