@@ -1,8 +1,8 @@
 package client;
 
 import controller.ClientController;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import res.Map;
 import res.enums.AgentAction;
 
@@ -22,7 +22,7 @@ public class ClientView implements Observer, WindowListener {
     ClientController clientController;
     JFrame window;
     JPanel mainPanel;
-    PanelCommand panelCommand;
+    PanelInput panelInput;
     PanelBomberman panelBomberman;
     String title;
 
@@ -34,6 +34,7 @@ public class ClientView implements Observer, WindowListener {
      */
     public ClientView(ClientController clientController, String title) {
         this.clientController = clientController;
+        clientController.setClientView(this);
         this.title = title;
         window = new JFrame();
         init();
@@ -55,12 +56,13 @@ public class ClientView implements Observer, WindowListener {
      * @param title Le titre du jeu
      */
     public void initFrame(String title) {
+        window.setResizable(false);
 
         /* Permet de fermer l'application après avoir quitter la vue */
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         window.setTitle(title);
-        if (panelCommand == null) window.setSize(new Dimension(500, 200));
+        if (panelInput == null) window.setSize(new Dimension(500, 200));
         window.setLocationRelativeTo(null);
 
         /* Permet la gestion du comportement lorsque l'on modifie la taille de la fenêtre */
@@ -84,9 +86,9 @@ public class ClientView implements Observer, WindowListener {
     public void setPanels() {
         if (mainPanel == null) {
             mainPanel = new JPanel(new BorderLayout());
-            if (panelCommand == null) {
-                panelCommand = new PanelCommand(clientController, this);
-                mainPanel.add(panelCommand, BorderLayout.NORTH);
+            if (panelInput == null) {
+                panelInput = new PanelInput(clientController, this);
+                mainPanel.add(panelInput, BorderLayout.NORTH);
             }
             window.add(mainPanel);
         }
@@ -115,26 +117,26 @@ public class ClientView implements Observer, WindowListener {
     private void displayUpdate() {
         switch (clientController.gameState) {
             case GAME_WON:
-                panelCommand.infoLabel.setText(" GAME WON ");
+                panelInput.panelControl.infoLabel.setText(" GAME WON ");
                 break;
             case GAME_OVER:
-                panelCommand.infoLabel.setText(" GAME OVER ");
+                panelInput.panelControl.infoLabel.setText(" GAME OVER ");
                 break;
             case GAME_RUNNING:
                 String currentTurnStr = " Nombre de vie: " + clientController.getLifes();
-                panelCommand.infoLabel.setText(currentTurnStr);
+                panelInput.panelControl.infoLabel.setText(currentTurnStr);
                 break;
         }
     }
 
     public void gameOver() {
         displayUpdate();
-        panelCommand.gameOver();
+        panelInput.panelControl.gameOver();
     }
 
     public void gameWon() {
         displayUpdate();
-        panelCommand.gameWon();
+        panelInput.panelControl.gameWon();
     }
 
     /**
@@ -160,7 +162,7 @@ public class ClientView implements Observer, WindowListener {
         initKeyListener();
 
         // Taille et position de la fenêtre
-        window.setSize(sizeX, sizeY + panelCommand.getHeight() + 40);
+        window.setSize(sizeX, sizeY + panelInput.getHeight() + 40);
         window.setLocationRelativeTo(null);
         panelBomberman.repaint();
         window.setVisible(true);
@@ -168,7 +170,7 @@ public class ClientView implements Observer, WindowListener {
     }
 
     public String getLayout() {
-        return (String) panelCommand.layoutChooser.getSelectedItem();
+        return (String) panelInput.panelControl.layoutChooser.getSelectedItem();
     }
 
     public void initKeyListener() {
@@ -251,5 +253,8 @@ public class ClientView implements Observer, WindowListener {
         return panelBomberman;
     }
 
+    public void setInfo(String message) {
+        panelInput.panelControl.infoLabel.setText(message);
+    }
 
 }

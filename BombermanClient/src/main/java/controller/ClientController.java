@@ -1,28 +1,87 @@
 package controller;
 
+import client.ClientView;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import res.Map;
 import res.enums.AgentAction;
 import res.enums.GameState;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Observable;
 
 public class ClientController extends Observable implements Runnable {
 
+    final static Logger log = (Logger) LogManager.getLogger(ClientController.class);
+
+    Thread instance;
     boolean isRunning;
     long sleepTime = 100;
 
+    ClientView clientView;
     public GameState gameState;
-    private Map map;
-    private int lifes;
+    Map map;
+    int lifes;
+    String layout;
+
+    private String token;
+
+    Socket so;
+    DataInputStream entree;
+    PrintWriter sortie;
+    String s; // le serveur
+    int p; // le port de connexion
+
+    public ClientController() {
+
+        Socket so;
+        DataInputStream entree;
+        PrintWriter sortie;
+        s = "127.0.0.1";
+        p = 80;
+
+        log.debug("Server --> " + s);
+        log.debug("Port --> " + p);
+    }
+
+    public void run(String layout) {
+        this.layout = layout;
+        instance = new Thread(this);
+        instance.start();
+    }
 
     /**
-     * Méthode daemon permettant de faire des appels REST au serveur permettant d'obtenir toutes les infos du jeu.
+     * Méthode daemon de communcation avec le serveur permettant d'obtenir toutes les infos du jeu.
      */
     @Override
     public void run() {
         isRunning = true;
         while (isRunning) {
-            // 1 : update la map via appels REST au serveur de jeu
+            try {
+                so = new Socket(s, p); // on connecte un socket
+                sortie = new PrintWriter(so.getOutputStream(), true);
+                entree = new DataInputStream(so.getInputStream());
+
+                log.debug("init() --> " + layout);
+
+                setInfo("Waiting for the server to find or create a new game.");
+
+                log.debug("Server connected");
+
+                so.close(); // on ferme la connexion
+            } catch (UnknownHostException e) {
+                log.debug(e.getMessage());
+            } catch (IOException e) {
+                log.debug(e.getMessage());
+            }
+            // 1 : update la map communication avec le serveur de jeu
             // 2 : update la vue via le pattern observateur
             setChanged();
             notifyObservers();
@@ -34,16 +93,6 @@ public class ClientController extends Observable implements Runnable {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void init() {
-        // Initilisation de la partie
-        // Sera utilisé pour l'authentification
-
-        /**
-         * if (bombermanGame.getIsRunning()) bombermanGame.stop();
-         * bombermanGame.init();
-         */
     }
 
     public void start() {
@@ -71,15 +120,6 @@ public class ClientController extends Observable implements Runnable {
         // méthode censée effectuer un tour de jeu
         /**
          * bombermanGame.step();
-         */
-    }
-
-    public void changeLayout() {
-        // useless ?
-        // méthode censée changer la carte du jeu
-        /**
-         * gameState = GameState.GAME_PAUSED;
-         * bombermanGame.stop();
          */
     }
 
@@ -116,6 +156,42 @@ public class ClientController extends Observable implements Runnable {
 
     public int getLifes() {
         return lifes;
+    }
+
+    /**
+     * @param login
+     * @param password
+     * @return token de connexion
+     */
+    public String login(String login, String password) {
+        String url = "http://localhost:8080/bomberman/login?login=" + login + "&password=" + password;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            token = response.body().string();
+            log.debug("token --> " + token);
+        } catch (IOException e) {
+            log.debug("login --> " + e.getMessage());
+        }
+
+        if (!token.equals("")) {
+            setInfo("Connection successful. Choose a map and press READY.");
+            return "token";
+        } else {
+            setInfo("Connection failed. Try again.");
+            return "";
+        }
+
+    }
+
+    private void setInfo(String message) {
+        clientView.setInfo(message);
+    }
+
+    public void setClientView(ClientView clientView) {
+        this.clientView = clientView;
     }
 
 
