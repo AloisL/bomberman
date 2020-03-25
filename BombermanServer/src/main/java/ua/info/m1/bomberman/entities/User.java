@@ -1,10 +1,9 @@
 package ua.info.m1.bomberman.entities;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.hibernate.validator.constraints.UniqueElements;
+
+import javax.persistence.*;
 
 @Entity
 public class User {
@@ -12,17 +11,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String login;
+    @Column(unique = true)
+    private String username;
     private String password;
     private String currentToken;
     private String email;
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String login) {
+        this.username = login;
     }
 
     public String getPassword() {
