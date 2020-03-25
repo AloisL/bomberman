@@ -1,7 +1,7 @@
 /*
 package ua.info.m1.bomberman.server;
 
-import ua.info.m1.bomberman.game.engine.BombermanGame;
+import ua.info.m1.bomberman.engine.BombermanGame;
 
 import java.io.IOException;
 import java.net.ServerSocket;
