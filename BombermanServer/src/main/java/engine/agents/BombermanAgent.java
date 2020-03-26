@@ -1,10 +1,10 @@
 package engine.agents;
 
+import common.enums.AgentAction;
+import common.enums.ColorAgent;
+import common.enums.StateBomb;
+import common.infotypes.InfoBomb;
 import engine.BombermanGame;
-import engine.enums.AgentAction;
-import engine.enums.ColorAgent;
-import engine.enums.StateBomb;
-import engine.infotypes.InfoBomb;
 import engine.strategies.StrategieAttaque;
 import engine.strategies.StrategieSafe;
 
@@ -33,41 +33,20 @@ public class BombermanAgent extends AbstractAgent {
 
     @Override
     public void setStrategie(BombermanGame bombermanGame) {
-        /*
-        StrategieAttaque attaque = new StrategieAttaque(bombermanGame,this);
-        setStrategieAgents(attaque);
-
-        if (this.getStrategie().checkSiBesoinSafe()!=null){
-            StrategieSafe safeStrat=new StrategieSafe(bombermanGame,this);
-            setStrategieAgents(safeStrat);
-        }else {
-            this.setStrategieAgents(attaque);
-        }
-
-         */
-/*
-        StrategieSafe strategieSafe=new StrategieSafe(bombermanGame,this);
-        setStrategieAgents(strategieSafe);
-
- */
-        //    if(strategieSafe.checkSiBesoinSafe()==null) {
         StrategieAttaque attaque = new StrategieAttaque(bombermanGame, this);
         setStrategieAgents(attaque);
-        //   }
-
-
     }
 
     public boolean isSafeSibombe(BombermanGame bombermanGame) {
         StrategieSafe strat = new StrategieSafe(bombermanGame, this);
-        InfoBomb bomb = new InfoBomb(this, getX(), getY(), getBombRange(), StateBomb.Step1);
+        InfoBomb bomb = new InfoBomb(id, getX(), getY(), getBombRange(), StateBomb.Step1);
         System.out.println(strat.zoneSafe(bomb).x + " : " + strat.zoneSafe(bomb).y);
         if (strat.zoneSafe(bomb).x == 0) return false;
         return true;
     }
 
     public InfoBomb addBomb() {
-        InfoBomb bomb = new InfoBomb(this, getX(), getY(), bombRange, StateBomb.Step1);
+        InfoBomb bomb = new InfoBomb(id, getX(), getY(), bombRange, StateBomb.Step1);
         nbBombPlaced++;
         return bomb;
     }

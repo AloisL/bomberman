@@ -1,19 +1,19 @@
 package engine;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import common.enums.AgentAction;
+import common.enums.ColorAgent;
+import common.infotypes.InfoAgent;
+import common.infotypes.InfoBomb;
+import common.infotypes.InfoItem;
 import engine.agents.AbstractAgent;
 import engine.agents.AgentFactory;
 import engine.agents.BombermanAgent;
-import engine.enums.AgentAction;
-import engine.enums.ColorAgent;
-import engine.infotypes.InfoAgent;
-import engine.infotypes.InfoBomb;
-import engine.infotypes.InfoItem;
 import engine.strategies.utils.Coordonnee;
 import engine.subsystems.ActionSystem;
 import engine.subsystems.DamageSystem;
 import engine.subsystems.ItemSystem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
@@ -59,7 +59,7 @@ public class BombermanGame extends Game {
         bombs = new ArrayList<>();
         agentsIa = new ArrayList<>();
 
-        breakableWalls = map.getStart_brokable_walls();
+        breakableWalls = map.getBreakableWalls();
         initAgents();
 
         for (AbstractAgent agent : agents) {
@@ -138,7 +138,7 @@ public class BombermanGame extends Game {
     private void initAgents() {
         agents = new ArrayList<>();
         players = new ArrayList<>();
-        for (InfoAgent agent : map.getStart_agents()) {
+        for (InfoAgent agent : map.getInfoAgents()) {
             int i = 0;
             try {
                 AbstractAgent abstractAgent = AgentFactory.newAgent(agent.getType(), agent.getX(), agent.getY(),
@@ -162,7 +162,12 @@ public class BombermanGame extends Game {
      * @return La liste des infosAgents
      */
     public ArrayList<InfoAgent> getInfoAgents() {
-        ArrayList<InfoAgent> infoAgents = new ArrayList<>(agents);
+        ArrayList<InfoAgent> infoAgents = new ArrayList<>();
+        for (AbstractAgent agent : getAgents()) {
+            InfoAgent tmp = new InfoAgent(agent.getX(), agent.getY(), agent.getAgentAction(), agent.getType(),
+                    agent.getColor(), agent.isInvincible(), agent.isSick());
+            infoAgents.add(tmp);
+        }
         return infoAgents;
     }
 
@@ -197,8 +202,13 @@ public class BombermanGame extends Game {
         return bombs;
     }
 
+    /**
+     * Getter retournant une copie permettant d'éviter la concurrence d'accès.
+     * Synchoniser les threads auraient pu être possible mais cela compliquait énormément le code pour un
+     * résultat équivalent.
+     */
     public ArrayList<AbstractAgent> getAgents() {
-        return agents;
+        return new ArrayList<>(agents);
     }
 
     public ActionSystem getActionSystem() {

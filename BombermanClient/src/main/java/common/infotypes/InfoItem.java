@@ -1,8 +1,10 @@
-package res.infotype;
+package common.infotypes;
 
-import res.enums.ItemType;
+import common.enums.ItemType;
 
-public class InfoItem {
+import java.io.Serializable;
+
+public class InfoItem implements Serializable {
 
     private int x;
     private int y;
@@ -39,4 +41,3 @@ public class InfoItem {
     }
 
 }
-	

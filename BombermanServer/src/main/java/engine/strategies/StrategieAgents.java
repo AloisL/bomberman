@@ -1,9 +1,9 @@
 package engine.strategies;
 
-import engine.agents.AbstractAgent;
+import common.enums.AgentAction;
+import common.infotypes.InfoBomb;
 import engine.BombermanGame;
-import engine.enums.AgentAction;
-import engine.infotypes.InfoBomb;
+import engine.agents.AbstractAgent;
 import engine.strategies.utils.AlgorithmeAEtoile;
 import engine.strategies.utils.Coordonnee;
 import engine.strategies.utils.Noeud;

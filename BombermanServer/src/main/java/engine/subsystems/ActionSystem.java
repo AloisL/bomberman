@@ -1,13 +1,12 @@
 package engine.subsystems;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import common.enums.AgentAction;
+import common.infotypes.InfoBomb;
+import engine.BombermanGame;
 import engine.agents.AbstractAgent;
 import engine.agents.BombermanAgent;
-import engine.BombermanGame;
-import engine.enums.AgentAction;
-import engine.infotypes.InfoAgent;
-import engine.infotypes.InfoBomb;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
@@ -32,9 +31,8 @@ public class ActionSystem extends AbstractSystem {
      */
     @Override
     public void run() {
-        ArrayList<InfoAgent> infoAgents = bombermanGame.getInfoAgents();
-        for (InfoAgent infoAgent : infoAgents) {
-            AbstractAgent agent = (AbstractAgent) infoAgent;
+        ArrayList<AbstractAgent> agents = bombermanGame.getAgents();
+        for (AbstractAgent agent : agents) {
             AgentAction agentAction = agent.getAgentAction();
             if (isLegalAction(agent, agentAction))
                 if (agent.getClass() != BombermanAgent.class) {

@@ -1,8 +1,8 @@
 package engine.strategies;
 
-import engine.agents.AbstractAgent;
+import common.enums.AgentAction;
 import engine.BombermanGame;
-import engine.enums.AgentAction;
+import engine.agents.AbstractAgent;
 import engine.strategies.utils.Coordonnee;
 
 public class StrategieBirdAgent extends StrategieAgents {

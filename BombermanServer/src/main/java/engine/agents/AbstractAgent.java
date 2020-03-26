@@ -1,9 +1,9 @@
 package engine.agents;
 
+import common.enums.AgentAction;
+import common.enums.ColorAgent;
+import common.infotypes.InfoAgent;
 import engine.BombermanGame;
-import engine.enums.AgentAction;
-import engine.enums.ColorAgent;
-import engine.infotypes.InfoAgent;
 import engine.strategies.StrategieAgents;
 import engine.strategies.StrategieSafe;
 
@@ -12,9 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class AbstractAgent extends InfoAgent {
 
     private static AtomicInteger count = new AtomicInteger(0);
+    int id;
     private StrategieAgents strategie;
-    private int id;
-
 
     protected AbstractAgent(int x, int y, AgentAction agentAction, char type, ColorAgent color, boolean isInvincible,
                             boolean isSick) {
@@ -27,21 +26,10 @@ public abstract class AbstractAgent extends InfoAgent {
         count = new AtomicInteger(0);
     }
 
-    public int getId() {
-        return id;
-    }
-
     @Override
     public String toString() {
         return "id=" + id + " type=" + super.getType() + " pos=(" + super.getX() + "," + super.getY() + ")";
     }
-
-
-/*
-    public InfoBomb isSafe(){
-        if (etat.getStrategieAgents().isInRange())
-    }
-*/
 
     public StrategieAgents getStrategie() {
         return strategie;
@@ -59,6 +47,5 @@ public abstract class AbstractAgent extends InfoAgent {
         this.strategie = strategie;
 
     }
-
 
 }

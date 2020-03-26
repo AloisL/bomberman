@@ -1,6 +1,6 @@
 package engine.strategies;
 
-import engine.enums.AgentAction;
+import common.enums.AgentAction;
 
 public class StrategiePlayer extends StrategieAgents {
 

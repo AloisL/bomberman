@@ -1,12 +1,12 @@
 package client;
 
-import res.enums.AgentAction;
-import res.enums.ItemType;
-import res.enums.StateBomb;
-import res.Map;
-import res.infotype.InfoAgent;
-import res.infotype.InfoBomb;
-import res.infotype.InfoItem;
+import common.BombermanDTO;
+import common.enums.AgentAction;
+import common.enums.ItemType;
+import common.enums.StateBomb;
+import common.infotypes.InfoAgent;
+import common.infotypes.InfoBomb;
+import common.infotypes.InfoItem;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -37,13 +37,13 @@ public class PanelBomberman extends JPanel {
     int cpt;
     private int taille_x;
     private int taille_y;
-    private Map map;
+    private BombermanDTO bombermanDTO;
     private boolean breakable_walls[][];
 
-    public PanelBomberman(Map map) {
-        this.map = map;
-        breakable_walls = map.getBreakableWalls();
-        listInfoAgents = map.getInfoAgents();
+    public PanelBomberman(BombermanDTO bombermanDTO) {
+        this.bombermanDTO = bombermanDTO;
+        breakable_walls = bombermanDTO.getBreakableWalls();
+        listInfoAgents = bombermanDTO.getInfoAgents();
         listInfoItems = new ArrayList<InfoItem>();
         listInfoBombs = new ArrayList<InfoBomb>();
     }
@@ -60,10 +60,10 @@ public class PanelBomberman extends JPanel {
         double stepy = fen_y / (double) taille_y;
         double position_x = 0;
 
-        taille_x = map.getSizeX();
-        taille_y = map.getSizeY();
+        taille_x = bombermanDTO.getSizeX();
+        taille_y = bombermanDTO.getSizeY();
 
-        boolean[][] walls = map.get_walls();
+        boolean[][] walls = bombermanDTO.get_walls();
 
         for (int x = 0; x < taille_x; x++) {
             double position_y = 0;
@@ -317,7 +317,7 @@ public class PanelBomberman extends JPanel {
 
             for (int i = 1; i <= range; i++) {
 
-                if (py + i < map.getSizeY()) {
+                if (py + i < bombermanDTO.getSizeY()) {
                     if (i == range) {
                         try {
                             Image img = ImageIO.read(new File("./image/Range_SOUTH_Fin.png"));
@@ -353,7 +353,7 @@ public class PanelBomberman extends JPanel {
                     }
                 }
 
-                if (px + i < map.getSizeX()) {
+                if (px + i < bombermanDTO.getSizeX()) {
                     if (i == range) {
                         try {
                             Image img = ImageIO.read(new File("./image/Range_EAST_Fin.png"));

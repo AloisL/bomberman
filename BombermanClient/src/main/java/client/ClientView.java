@@ -1,21 +1,19 @@
 package client;
 
+import common.enums.AgentAction;
 import controller.ClientController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import res.Map;
-import res.enums.AgentAction;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Observable;
-import java.util.Observer;
+import java.io.IOException;
 
 /**
  * Classe de gestion de la vue du jeu
  */
-public class ClientView extends JFrame implements Observer, WindowListener {
+public class ClientView extends JFrame implements WindowListener {
 
     final static Logger log = (Logger) LogManager.getLogger(ClientView.class);
 
@@ -66,9 +64,9 @@ public class ClientView extends JFrame implements Observer, WindowListener {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent componentEvent) {
-                if (clientController.getMap() != null) {
-                    Integer sizeX = clientController.getMap().getSizeX() * 50;
-                    Integer sizeY = clientController.getMap().getSizeY() * 50;
+                if (clientController.getBombermanDTO() != null) {
+                    Integer sizeX = clientController.getBombermanDTO().getSizeX() * 50;
+                    Integer sizeY = clientController.getBombermanDTO().getSizeY() * 50;
                     if (panelBomberman != null) panelBomberman.setSize(new Dimension(sizeX, sizeY));
                 }
                 repaint();
@@ -94,21 +92,25 @@ public class ClientView extends JFrame implements Observer, WindowListener {
         }
     }
 
-    /**
-     * Méthode appelée lorsque le jeu est mis à jour (uniquement appelée par le controller)
-     *
-     * @param observable Le jeu
-     * @param o
+    /*
      */
+/**
+ * Méthode appelée lorsque le jeu est mis à jour (uniquement appelée par le controller)
+ *
+ * @param observable Le jeu
+ * @param o
+ *//*
+
     @Override
     public void update(Observable observable, Object o) {
         ClientController clientController = (ClientController) observable;
-        Map map = clientController.getMap();
-        panelBomberman.setInfoGame(map.getBreakableWalls(), map.getInfoAgents(),
-                map.getInfoItems(), map.getInfoBombs());
+        BombermanDTO bombermanDTO = clientController.getBombermanDTO();
+        panelBomberman.setInfoGame(bombermanDTO.getBreakableWalls(), bombermanDTO.getInfoAgents(),
+                bombermanDTO.getInfoItems(), bombermanDTO.getInfoBombs());
         displayUpdate();
         repaint();
     }
+*/
 
     /**
      * Méthode de mise à jour de l'affichage
@@ -150,8 +152,8 @@ public class ClientView extends JFrame implements Observer, WindowListener {
         this.panelBomberman = panelBomberman;
 
         // Taille du panel relative à la taille de la map
-        int sizeX = clientController.getMap().getSizeX() * 50;
-        int sizeY = clientController.getMap().getSizeY() * 50;
+        int sizeX = clientController.getBombermanDTO().getSizeX() * 50;
+        int sizeY = clientController.getBombermanDTO().getSizeY() * 50;
 
         // Ajout du panel bomberman
         panelBomberman.setSize(new Dimension(sizeX, sizeY));
@@ -174,36 +176,49 @@ public class ClientView extends JFrame implements Observer, WindowListener {
             public void keyReleased(KeyEvent keyEvent) {
                 int key = keyEvent.getKeyCode();
                 if (key != KeyEvent.VK_SPACE) {
-                    clientController.updatePlayerAction(AgentAction.STOP);
+                    try {
+                        clientController.updatePlayerAction(AgentAction.STOP);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             @Override
             public void keyPressed(KeyEvent keyEvent) {
                 int key = keyEvent.getKeyCode();
-                switch (key) {
-                    case KeyEvent.VK_LEFT: {
-                        clientController.updatePlayerAction(AgentAction.MOVE_LEFT);
-                    }
-                    break;
-                    case KeyEvent.VK_RIGHT: {
-                        clientController.updatePlayerAction(AgentAction.MOVE_RIGHT);
-                    }
-                    break;
-                    case KeyEvent.VK_UP: {
-                        clientController.updatePlayerAction(AgentAction.MOVE_UP);
-                    }
-                    break;
-                    case KeyEvent.VK_DOWN: {
-                        clientController.updatePlayerAction(AgentAction.MOVE_DOWN);
-                    }
-                    break;
-                    case KeyEvent.VK_SPACE: {
-                        clientController.updatePlayerAction(AgentAction.PUT_BOMB);
-                    }
-                    default:
-                        clientController.updatePlayerAction(AgentAction.STOP);
+                try {
+
+                    switch (key) {
+                        case KeyEvent.VK_LEFT: {
+                            try {
+                                clientController.updatePlayerAction(AgentAction.MOVE_LEFT);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         break;
+                        case KeyEvent.VK_RIGHT: {
+                            clientController.updatePlayerAction(AgentAction.MOVE_RIGHT);
+                        }
+                        break;
+                        case KeyEvent.VK_UP: {
+                            clientController.updatePlayerAction(AgentAction.MOVE_UP);
+                        }
+                        break;
+                        case KeyEvent.VK_DOWN: {
+                            clientController.updatePlayerAction(AgentAction.MOVE_DOWN);
+                        }
+                        break;
+                        case KeyEvent.VK_SPACE: {
+                            clientController.updatePlayerAction(AgentAction.PUT_BOMB);
+                        }
+                        default:
+                            clientController.updatePlayerAction(AgentAction.STOP);
+                            break;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
 

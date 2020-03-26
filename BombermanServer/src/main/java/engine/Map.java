@@ -1,8 +1,8 @@
 package engine;
 
-import engine.enums.AgentAction;
-import engine.enums.ColorAgent;
-import engine.infotypes.InfoAgent;
+import common.enums.AgentAction;
+import common.enums.ColorAgent;
+import common.infotypes.InfoAgent;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,24 +17,16 @@ import java.util.ArrayList;
 public class Map implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-
     private String filename;
     private int size_x;
     private int size_y;
-
     private boolean walls[][];
-    private boolean start_brokable_walls[][];
+    private boolean breakableWalls[][];
+    private ArrayList<InfoAgent> infoAgents;
 
-    private ArrayList<InfoAgent> start_agents;
-
-
-    public Map(String filename) throws Exception {
-
+    public Map(String filename) {
         this.filename = filename;
-
         try {
-
             InputStream flux = new FileInputStream(filename);
             InputStreamReader lecture = new InputStreamReader(flux);
             BufferedReader tampon = new BufferedReader(lecture);
@@ -58,7 +50,7 @@ public class Map implements Serializable {
             size_y = nbY;
 
             walls = new boolean[size_x][size_y];
-            start_brokable_walls = new boolean[size_x][size_y];
+            breakableWalls = new boolean[size_x][size_y];
 
             flux = new FileInputStream(filename);
             lecture = new InputStreamReader(flux);
@@ -68,7 +60,7 @@ public class Map implements Serializable {
             ColorAgent[] color = ColorAgent.values();
             int cpt_col = 0;
 
-            start_agents = new ArrayList<InfoAgent>();
+            infoAgents = new ArrayList<InfoAgent>();
 
             while ((ligne = tampon.readLine()) != null) {
                 ligne = ligne.trim();
@@ -81,11 +73,11 @@ public class Map implements Serializable {
                     else walls[x][y] = false;
 
                     if (ligne.charAt(x) == '$')
-                        start_brokable_walls[x][y] = true;
-                    else start_brokable_walls[x][y] = false;
+                        breakableWalls[x][y] = true;
+                    else breakableWalls[x][y] = false;
 
                     if (ligne.charAt(x) == 'E' || ligne.charAt(x) == 'V' || ligne.charAt(x) == 'R') {
-                        start_agents.add(new InfoAgent(x, y, AgentAction.STOP, ligne.charAt(x), ColorAgent.DEFAULT,
+                        infoAgents.add(new InfoAgent(x, y, AgentAction.STOP, ligne.charAt(x), ColorAgent.DEFAULT,
                                 false, false));
                     }
 
@@ -93,7 +85,7 @@ public class Map implements Serializable {
                         ColorAgent col;
                         if (cpt_col < color.length) col = color[cpt_col];
                         else col = ColorAgent.DEFAULT;
-                        start_agents.add(new InfoAgent(x, y, AgentAction.STOP, ligne.charAt(x), col, false, false));
+                        infoAgents.add(new InfoAgent(x, y, AgentAction.STOP, ligne.charAt(x), col, false, false));
                         cpt_col++;
                     }
 
@@ -115,10 +107,7 @@ public class Map implements Serializable {
         } catch (Exception e) {
             System.out.println("Erreur : " + e.getMessage());
         }
-
-
     }
-
 
     public int getSizeX() {
         return (size_x);
@@ -128,23 +117,20 @@ public class Map implements Serializable {
         return (size_y);
     }
 
-
     public String getFilename() {
         return filename;
     }
 
-    public boolean[][] getStart_brokable_walls() {
-        return start_brokable_walls;
+    public boolean[][] getBreakableWalls() {
+        return breakableWalls;
     }
 
     public boolean[][] get_walls() {
         return walls;
     }
 
-
-    public ArrayList<InfoAgent> getStart_agents() {
-        return start_agents;
+    public ArrayList<InfoAgent> getInfoAgents() {
+        return infoAgents;
     }
-
 
 }

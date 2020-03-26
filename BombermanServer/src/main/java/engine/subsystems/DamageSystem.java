@@ -1,14 +1,14 @@
 package engine.subsystems;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import common.enums.ItemType;
+import common.enums.StateBomb;
+import common.infotypes.InfoBomb;
+import common.infotypes.InfoItem;
+import engine.BombermanGame;
 import engine.agents.AbstractAgent;
 import engine.agents.BombermanAgent;
-import engine.BombermanGame;
-import engine.enums.ItemType;
-import engine.enums.StateBomb;
-import engine.infotypes.InfoBomb;
-import engine.infotypes.InfoItem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
@@ -71,7 +71,13 @@ public class DamageSystem extends AbstractSystem {
 
         // Pour chacunes des bombes allant exploser, on redonne une bombe à son lanceur
         for (InfoBomb bomb : bombsToExplode) {
-            bomb.getOwner().freeBombSlot();
+            int ownerId = bomb.getOwnerId();
+            for (AbstractAgent agent : agents) {
+                if (agent instanceof BombermanAgent) {
+                    BombermanAgent bombermanAgent = (BombermanAgent) agent;
+                    bombermanAgent.freeBombSlot();
+                }
+            }
             bombs.remove(bomb);
         }
 
@@ -186,7 +192,7 @@ public class DamageSystem extends AbstractSystem {
     private void removeDeadAgents() {
         for (AbstractAgent agent : agentsToBeRemoved) {
             agents.remove(agent);
-            bombermanGame.getInfoAgents().remove(agent);
+            bombermanGame.getAgents().remove(agent);
             if (agent.getClass() == BombermanAgent.class) players.remove(agent);
             else bombermanGame.getAgentsIa().remove(agent);
         }

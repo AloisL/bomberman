@@ -1,9 +1,9 @@
 package engine.agents;
 
+import common.enums.AgentAction;
+import common.enums.ColorAgent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import engine.enums.AgentAction;
-import engine.enums.ColorAgent;
 
 /**
  * Classe gérant l'instantiation des différents types d'Agents

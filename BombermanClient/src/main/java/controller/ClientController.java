@@ -1,34 +1,34 @@
 package controller;
 
 import client.ClientView;
+import client.PanelBomberman;
+import common.BombermanDTO;
+import common.enums.AgentAction;
+import common.enums.GameState;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import res.Map;
-import res.enums.AgentAction;
-import res.enums.GameState;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Observable;
 
-public class ClientController extends Observable implements Runnable {
+public class ClientController implements Runnable {
 
     final static Logger log = (Logger) LogManager.getLogger(ClientController.class);
 
     public GameState gameState;
     ClientView clientView;
-    Map map;
+    BombermanDTO bombermanDTO;
     int lifes;
     String layout;
 
     Thread instance;
-    long sleepTime = 100;
+    long sleepTime = 50;
 
     Socket socket;
     ObjectInputStream input;
@@ -38,13 +38,13 @@ public class ClientController extends Observable implements Runnable {
     String server;
     int gamePort = 8090;
     int apiPort = 8080;
-    String action;
+    AgentAction action;
     private String token;
 
     public ClientController() {
     }
 
-    public void run(String layout) {
+    public void initConnection(String layout) {
         this.layout = layout;
         instance = new Thread(this);
         instance.start();
@@ -56,44 +56,37 @@ public class ClientController extends Observable implements Runnable {
     @Override
     public void run() {
         try {
-            socket = new Socket(server, gamePort); // on connecte un socket
+            socket = new Socket(server, gamePort);
             output = new ObjectOutputStream(socket.getOutputStream());
+            input = new ObjectInputStream(socket.getInputStream());
+
             output.writeObject(layout);
-            output.close();
+
+            bombermanDTO = (BombermanDTO) input.readObject();
+            PanelBomberman panelBomberman = new PanelBomberman(bombermanDTO);
+            clientView.addPanelBomberman(panelBomberman);
+            log.debug(bombermanDTO.toString());
+            clientView.repaint();
 
             while (isRunning) {
-                input = new ObjectInputStream(socket.getInputStream());
-                Map updatedMap = (Map) input.readObject();
-                log.debug(updatedMap.toString());
-                input.close();
-                wait(sleepTime);
+                bombermanDTO = (BombermanDTO) input.readObject();
+                clientView.getPanelBomberman().setInfoGame(bombermanDTO.getBreakableWalls(), bombermanDTO.getInfoAgents(),
+                        bombermanDTO.getInfoItems(), bombermanDTO.getInfoBombs());
+                clientView.setInfo(bombermanDTO.toString());
+                clientView.setVisible(true);
+                clientView.repaint();
+                log.debug(bombermanDTO.toString());
             }
 
+            socket.close();
         } catch (UnknownHostException e) {
             log.debug(e);
         } catch (IOException e) {
             log.debug(e);
         } catch (ClassNotFoundException e) {
-            log.debug(e);
-        } catch (InterruptedException e) {
-            log.debug(e);
-        }
-        // 1 : update la map communication avec le serveur de jeu
-        // 2 : update la vue via le pattern observateur
-        setChanged();
-        notifyObservers();
-        try {
-            if (!Thread.currentThread().isInterrupted())
-                Thread.sleep(sleepTime);
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
-    private void closeSocket(Socket socket) throws IOException {
-        socket.close();
-    }
-
 
     public void start() {
         // useless
@@ -115,23 +108,9 @@ public class ClientController extends Observable implements Runnable {
          */
     }
 
-    public void updatePlayerAction(AgentAction action) {
-        // envoi de la prochaine action souhaitée au serveur.
-
-        /**
-         * ArrayList<AbstractAgent> players = bombermanGame.getPlayers();
-         *         if (!players.isEmpty()) {
-         *             AbstractAgent player = players.get(0);
-         *             // Le placement de la bombe doit être instantané, on byepasse donc la cadence du jeu.
-         *             if (action == AgentAction.PUT_BOMB) {
-         *                 ActionSystem actionSystem = new ActionSystem(bombermanGame);
-         *                 if (actionSystem.isLegalAction(player, action)) {
-         *                     actionSystem.doAction(player, action);
-         *                 }
-         *             }
-         *             if (player != null) player.setAgentAction(action);
-         *         } else log.debug("updatePlayerAction: Liste des joueurs vide");
-         */
+    public void updatePlayerAction(AgentAction action) throws IOException {
+        this.action = action;
+        output.writeObject(action);
     }
 
     /**
@@ -165,8 +144,8 @@ public class ClientController extends Observable implements Runnable {
         this.clientView = clientView;
     }
 
-    public Map getMap() {
-        return map;
+    public BombermanDTO getBombermanDTO() {
+        return bombermanDTO;
     }
 
     public int getLifes() {

@@ -45,7 +45,7 @@ public class PanelControl extends JPanel {
      */
     public void initListeners() {
         initButton.addActionListener(event -> {
-            clientController.run((String) layoutChooser.getSelectedItem());
+            clientController.initConnection((String) layoutChooser.getSelectedItem());
             //clientView.panelBomberman.grabFocus();
         });
 

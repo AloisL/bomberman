@@ -1,24 +1,23 @@
-package engine.infotypes;
+package common.infotypes;
 
-import engine.agents.BombermanAgent;
-import engine.enums.StateBomb;
+import common.enums.StateBomb;
 
-public class InfoBomb {
+import java.io.Serializable;
 
-    public boolean alfStep; //fait en sorte que les bombe prenne 2X plus de temps pour exploser
+public class InfoBomb implements Serializable {
+
     StateBomb stateBomb;
-    BombermanAgent owner;
+    private int ownerId;
     private int x;
     private int y;
     private int range;
 
-    public InfoBomb(BombermanAgent owner, int x, int y, int range, StateBomb stateBomb) {
-        this.owner = owner;
+    public InfoBomb(int ownerId, int x, int y, int range, StateBomb stateBomb) {
+        this.ownerId = ownerId;
         this.x = x;
         this.y = y;
         this.range = range;
         this.stateBomb = stateBomb;
-        alfStep = false;
     }
 
     public int getX() {
@@ -53,9 +52,8 @@ public class InfoBomb {
         this.range = range;
     }
 
-    public BombermanAgent getOwner() {
-        return owner;
+    public int getOwnerId() {
+        return ownerId;
     }
 
 }
-	

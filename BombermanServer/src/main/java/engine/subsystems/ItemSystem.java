@@ -1,10 +1,10 @@
 package engine.subsystems;
 
+import common.enums.ItemType;
+import common.infotypes.InfoItem;
+import engine.BombermanGame;
 import engine.agents.AbstractAgent;
 import engine.agents.BombermanAgent;
-import engine.BombermanGame;
-import engine.enums.ItemType;
-import engine.infotypes.InfoItem;
 
 import java.util.ArrayList;
 

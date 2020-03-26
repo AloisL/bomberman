@@ -1,4 +1,4 @@
-package engine.enums;
+package common.enums;
 
 public enum ItemType {
     FIRE_UP, FIRE_DOWN,

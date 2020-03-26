@@ -1,10 +1,10 @@
 package engine.strategies;
 
 
+import common.enums.AgentAction;
+import engine.BombermanGame;
 import engine.agents.AbstractAgent;
 import engine.agents.BombermanAgent;
-import engine.BombermanGame;
-import engine.enums.AgentAction;
 import engine.strategies.utils.Coordonnee;
 
 public class StrategieAttaque extends StrategieAgents {

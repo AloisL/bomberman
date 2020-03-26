@@ -31,7 +31,6 @@ public class GameServer {
 
                 GameServerInstance gameServerInstance = new GameServerInstance(this, socket);
                 gameServerInstances.add(gameServerInstance);
-                //    bombermanGame.addObserver(gameServerInstance);
 
                 Thread instance = new Thread(gameServerInstance);
                 instance.start();

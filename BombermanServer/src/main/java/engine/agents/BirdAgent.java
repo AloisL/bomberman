@@ -1,8 +1,8 @@
 package engine.agents;
 
+import common.enums.AgentAction;
+import common.enums.ColorAgent;
 import engine.BombermanGame;
-import engine.enums.AgentAction;
-import engine.enums.ColorAgent;
 import engine.strategies.StrategieBirdAgent;
 
 public class BirdAgent extends AbstractAgent {

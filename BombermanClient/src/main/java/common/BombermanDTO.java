@@ -1,8 +1,8 @@
-package res;
+package common;
 
-import res.infotype.InfoAgent;
-import res.infotype.InfoBomb;
-import res.infotype.InfoItem;
+import common.infotypes.InfoAgent;
+import common.infotypes.InfoBomb;
+import common.infotypes.InfoItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Objet mis à jour à chaque passage dans la méthode run du Controller via appels REST
  */
 
-public class Map implements Serializable {
+public class BombermanDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String filename;
@@ -24,8 +24,8 @@ public class Map implements Serializable {
     private ArrayList<InfoBomb> infoBombs;
     private ArrayList<InfoItem> infoItems;
 
-    public Map(String filename, int size_x, int size_y, boolean walls[][], boolean breakableWalls[][],
-               ArrayList<InfoAgent> infoAgents, ArrayList<InfoBomb> infoBombs, ArrayList<InfoItem> infoItems) {
+    public BombermanDTO(String filename, int size_x, int size_y, boolean walls[][], boolean breakableWalls[][],
+                        ArrayList<InfoAgent> infoAgents, ArrayList<InfoBomb> infoBombs, ArrayList<InfoItem> infoItems) {
         this.filename = filename;
         this.size_x = size_x;
         this.size_y = size_y;
@@ -34,7 +34,6 @@ public class Map implements Serializable {
         this.infoAgents = infoAgents;
         this.infoBombs = infoBombs;
         this.infoItems = infoItems;
-
     }
 
     public int getSizeX() {
