@@ -16,36 +16,59 @@ public class PanelLogin extends JPanel {
     ClientController clientController;
     ClientView clientView;
 
-    JTextField loginField;
+    JTextField serverField;
+    JTextField usernameField;
     JPasswordField passwordField;
     JCheckBox showPasswordCheckBox;
     JButton loginButton;
 
-    boolean loginClicked = false;
+    boolean serverClicked = false;
+    boolean usernameClicked = false;
     boolean passwordClicked = false;
 
     public PanelLogin(ClientController clientController, ClientView clientView) {
         this.clientController = clientController;
         this.clientView = clientView;
-
         setLayout(new GridBagLayout());
-
-        loginField = new JTextField("Username");
-        passwordField = new JPasswordField("Password");
-        showPasswordCheckBox = new JCheckBox("Show");
-        loginButton = new JButton("Login");
-
+        initField();
+        clientView.setInfo("Choose a server and login:");
         initListeners();
         placeWigdgets();
     }
 
+    private void initField() {
+        serverField = new JTextField("127.0.0.1");
+        serverField.setHorizontalAlignment(JTextField.CENTER);
+        usernameField = new JTextField("Username");
+        usernameField.setHorizontalAlignment(JTextField.CENTER);
+        passwordField = new JPasswordField("Password");
+        passwordField.setHorizontalAlignment(JTextField.CENTER);
+        showPasswordCheckBox = new JCheckBox("Show");
+        loginButton = new JButton("Login");
+    }
+
     private void initListeners() {
-        loginField.addFocusListener(new FocusListener() {
+        serverField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent focusEven) {
-                if (!loginClicked) {
-                    loginField.setText("");
-                    loginClicked = true;
+                if (!usernameClicked) {
+                    serverField.setText("");
+                    serverClicked = true;
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent focusEvent) {
+
+            }
+        });
+
+        usernameField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent focusEven) {
+                if (!usernameClicked) {
+                    usernameField.setText("");
+                    usernameClicked = true;
                 }
             }
 
@@ -76,7 +99,7 @@ public class PanelLogin extends JPanel {
             public void stateChanged(ChangeEvent changeEvent) {
                 if (showPasswordCheckBox.isSelected())
                     passwordField.setEchoChar((char) 0);
-                else if (passwordClicked) passwordField.setEchoChar('*');
+                else passwordField.setEchoChar('*');
             }
         });
 
@@ -84,44 +107,44 @@ public class PanelLogin extends JPanel {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 // Si le token de connexion n'est pas vide, alors la connexion a été approuvée
-                if (!clientController.login(loginField.getText(), passwordField.getText()).isEmpty()) {
-                    clientView.panelInput.remove(0);
-                    clientView.panelInput.add(clientView.panelInput.panelControl);
-                    clientView.window.setVisible(true);
-                    clientView.window.repaint();
+                if (clientController.login(serverField.getText(), usernameField.getText(), passwordField.getText()) != null) {
+                    PanelInput panelInput = (PanelInput) getParent();
+                    panelInput.controlMode();
                 }
             }
         });
     }
 
     private void placeWigdgets() {
-        loginField.setPreferredSize(new Dimension(100, 10));
-        passwordField.setPreferredSize(new Dimension(100, 10));
-
         GridBagConstraints gc = new GridBagConstraints();
+        gc.insets = new Insets(5, 165, 5, 5);
 
-        int windowSizeY = clientView.window.getSize().height;
-        int spacer = windowSizeY / 2 - 55;
-
+        int spacer = 30;
         gc.fill = GridBagConstraints.BOTH;
-        gc.insets = new Insets(spacer, 5, 10, 5);
-
         gc.weightx = 5;
         gc.weighty = 4;
 
+        gc.gridwidth = 1;
+
+        gc.gridy = 0;
+        gc.gridx = 2;
+        add(serverField, gc);
+
         gc.gridy = 1;
+        gc.gridx = 2;
+        add(usernameField, gc);
 
-        gc.gridx = 1;
-        add(loginField, gc);
-
+        gc.gridy = 2;
         gc.gridx = 2;
         add(passwordField, gc);
 
+        gc.insets = new Insets(5, 5, 5, 5);
+        gc.gridy = 2;
         gc.gridx = 3;
         add(showPasswordCheckBox, gc);
 
-        gc.insets = new Insets(10, 5, spacer, 5);
-        gc.gridy = 2;
+        gc.insets = new Insets(5, 165, 5, 5);
+        gc.gridy = 3;
         gc.gridx = 2;
         add(loginButton, gc);
     }

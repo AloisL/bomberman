@@ -15,12 +15,12 @@ import java.util.Observer;
 /**
  * Classe de gestion de la vue du jeu
  */
-public class ClientView implements Observer, WindowListener {
+public class ClientView extends JFrame implements Observer, WindowListener {
 
     final static Logger log = (Logger) LogManager.getLogger(ClientView.class);
 
+    public JLabel infoLabel;
     ClientController clientController;
-    JFrame window;
     JPanel mainPanel;
     PanelInput panelInput;
     PanelBomberman panelBomberman;
@@ -33,10 +33,9 @@ public class ClientView implements Observer, WindowListener {
      * @param title            Le titre du jeu
      */
     public ClientView(ClientController clientController, String title) {
+        this.title = title;
         this.clientController = clientController;
         clientController.setClientView(this);
-        this.title = title;
-        window = new JFrame();
         init();
     }
 
@@ -46,8 +45,8 @@ public class ClientView implements Observer, WindowListener {
     public void init() {
         initFrame(title);
         setPanels();
-        window.setVisible(true);
-        window.setFocusable(true);
+        setVisible(true);
+        setFocusable(true);
     }
 
     /**
@@ -56,17 +55,15 @@ public class ClientView implements Observer, WindowListener {
      * @param title Le titre du jeu
      */
     public void initFrame(String title) {
-        window.setResizable(false);
+        setResizable(true);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setTitle(title);
 
-        /* Permet de fermer l'application après avoir quitter la vue */
-        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        window.setTitle(title);
-        if (panelInput == null) window.setSize(new Dimension(500, 200));
-        window.setLocationRelativeTo(null);
+        if (panelInput == null) setSize(new Dimension(500, 200));
+        setLocationRelativeTo(null);
 
         /* Permet la gestion du comportement lorsque l'on modifie la taille de la fenêtre */
-        window.addComponentListener(new ComponentAdapter() {
+        addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent componentEvent) {
                 if (clientController.getMap() != null) {
@@ -74,7 +71,7 @@ public class ClientView implements Observer, WindowListener {
                     Integer sizeY = clientController.getMap().getSizeY() * 50;
                     if (panelBomberman != null) panelBomberman.setSize(new Dimension(sizeX, sizeY));
                 }
-                window.repaint();
+                repaint();
             }
         });
 
@@ -84,13 +81,16 @@ public class ClientView implements Observer, WindowListener {
      * Méthode d'initialisation des Panel de la fenêtre
      */
     public void setPanels() {
+        infoLabel = new JLabel();
+        infoLabel.setHorizontalAlignment(JLabel.CENTER);
         if (mainPanel == null) {
             mainPanel = new JPanel(new BorderLayout());
             if (panelInput == null) {
                 panelInput = new PanelInput(clientController, this);
                 mainPanel.add(panelInput, BorderLayout.NORTH);
+                panelInput.loginMode();
             }
-            window.add(mainPanel);
+            add(mainPanel);
         }
     }
 
@@ -102,13 +102,12 @@ public class ClientView implements Observer, WindowListener {
      */
     @Override
     public void update(Observable observable, Object o) {
-
         ClientController clientController = (ClientController) observable;
         Map map = clientController.getMap();
         panelBomberman.setInfoGame(map.getBreakableWalls(), map.getInfoAgents(),
                 map.getInfoItems(), map.getInfoBombs());
         displayUpdate();
-        window.repaint();
+        repaint();
     }
 
     /**
@@ -117,14 +116,14 @@ public class ClientView implements Observer, WindowListener {
     private void displayUpdate() {
         switch (clientController.gameState) {
             case GAME_WON:
-                panelInput.panelControl.infoLabel.setText(" GAME WON ");
+                setInfo(" GAME WON ");
                 break;
             case GAME_OVER:
-                panelInput.panelControl.infoLabel.setText(" GAME OVER ");
+                setInfo(" GAME OVER ");
                 break;
             case GAME_RUNNING:
                 String currentTurnStr = " Nombre de vie: " + clientController.getLifes();
-                panelInput.panelControl.infoLabel.setText(currentTurnStr);
+                setInfo(currentTurnStr);
                 break;
         }
     }
@@ -162,15 +161,11 @@ public class ClientView implements Observer, WindowListener {
         initKeyListener();
 
         // Taille et position de la fenêtre
-        window.setSize(sizeX, sizeY + panelInput.getHeight() + 40);
-        window.setLocationRelativeTo(null);
+        setSize(sizeX, sizeY + panelInput.getHeight() + 40);
+        setLocationRelativeTo(null);
         panelBomberman.repaint();
-        window.setVisible(true);
+        setVisible(true);
 
-    }
-
-    public String getLayout() {
-        return (String) panelInput.panelControl.layoutChooser.getSelectedItem();
     }
 
     public void initKeyListener() {
@@ -254,7 +249,8 @@ public class ClientView implements Observer, WindowListener {
     }
 
     public void setInfo(String message) {
-        panelInput.panelControl.infoLabel.setText(message);
+        infoLabel.setText(message);
+        repaint();
     }
 
 }

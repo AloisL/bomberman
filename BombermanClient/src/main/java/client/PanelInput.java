@@ -31,28 +31,43 @@ public class PanelInput extends JPanel {
      */
     private void init() {
         setLayout(new GridBagLayout());
-
         panelLogin = new PanelLogin(clientController, clientView);
         panelControl = new PanelControl(clientController, clientView);
-
-        loginMode();
     }
 
     public void loginMode() {
-        if (getComponentCount() == 0)
-            add(panelLogin);
-        else {
+        if (getComponentCount() > 1)
             remove(1);
-            add(panelLogin);
-        }
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.fill = GridBagConstraints.BOTH;
+        gc.weightx = 1;
+        gc.weighty = 2;
+        gc.insets = new Insets(5, 5, 5, 5);
+        gc.gridy = 0;
+        gc.gridx = 0;
+        add(clientView.infoLabel, gc);
+        gc.gridy = 1;
+        add(panelLogin, gc);
+        clientView.setVisible(true);
+        clientView.repaint();
     }
 
     public void controlMode() {
-        if (getComponentCount() == 0)
-            add(panelControl);
-        else {
+        if (getComponentCount() > 1)
             remove(1);
-            add(panelControl);
-        }
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.fill = GridBagConstraints.BOTH;
+        gc.weightx = 1;
+        gc.weighty = 2;
+        gc.insets = new Insets(5, 5, 5, 5);
+        gc.gridy = 0;
+        gc.gridx = 0;
+        add(clientView.infoLabel, gc);
+        gc.gridy = 1;
+        add(panelControl, gc);
+        clientView.setVisible(true);
+        clientView.repaint();
     }
+
 }
+

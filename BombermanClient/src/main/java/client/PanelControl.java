@@ -13,20 +13,16 @@ public class PanelControl extends JPanel {
     ClientView clientView;
     JButton initButton;
     JButton pauseButton;
-    JLabel infoLabel;
     JComboBox layoutChooser;
-    JSlider turnSlider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
 
     boolean gamePaused = false;
 
     public PanelControl(ClientController clientController, ClientView clientView) {
         this.clientController = clientController;
         this.clientView = clientView;
-
         setLayout(new GridBagLayout());
         initInputs();
         initListeners();
-        initOutputs();
         placeWidgets();
     }
 
@@ -36,14 +32,7 @@ public class PanelControl extends JPanel {
     private void initInputs() {
         initButton = new JButton(new ImageIcon("res/icones/icon_restart.png"));
         pauseButton = new JButton(new ImageIcon("res/icones/icon_pause.png"));
-
-        turnSlider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
-        turnSlider.setMajorTickSpacing(1);
-        turnSlider.setPaintTicks(true);
-        turnSlider.setPaintLabels(true);
-
         pauseButton.setEnabled(Boolean.FALSE);
-
         layoutChooser = new JComboBox<>();
         String[] layouts = new File("res/layouts").list();
         Arrays.sort(layouts);
@@ -70,21 +59,8 @@ public class PanelControl extends JPanel {
             }
             clientView.panelBomberman.grabFocus();
         });
-
-        turnSlider.addChangeListener(event -> {
-            JSlider turnSlider1 = (JSlider) event.getSource();
-            clientController.setTime(turnSlider1.getValue());
-            clientView.panelBomberman.grabFocus();
-        });
     }
 
-    /**
-     * Méthode d'initialisation des sorties
-     */
-    private void initOutputs() {
-        infoLabel = new JLabel();
-        infoLabel.setHorizontalAlignment(JLabel.CENTER);
-    }
 
     private void placeWidgets() {
         JPanel infoPanel = new JPanel(new GridBagLayout());
@@ -92,18 +68,11 @@ public class PanelControl extends JPanel {
 
         GridBagConstraints gc = new GridBagConstraints();
 
-        int windowSizeY = clientView.window.getSize().height;
-        int spacer = windowSizeY / 2 - 70;
-
-        gc.insets = new Insets(spacer, 5, 10, 5);
-
         gc.fill = GridBagConstraints.BOTH;
         gc.weightx = 4;
         gc.weighty = 2;
 
-        gc.insets = new Insets(5, 5, 5, 5);
-
-        infoPanel.add(infoLabel, gc);
+        gc.insets = new Insets(0, 5, 5, 5);
 
         gc.gridy = 0;
         gc.gridx = 1;

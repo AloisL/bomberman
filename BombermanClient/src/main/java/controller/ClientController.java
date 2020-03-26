@@ -10,9 +10,9 @@ import res.Map;
 import res.enums.AgentAction;
 import res.enums.GameState;
 
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Observable;
@@ -21,34 +21,27 @@ public class ClientController extends Observable implements Runnable {
 
     final static Logger log = (Logger) LogManager.getLogger(ClientController.class);
 
-    Thread instance;
-    boolean isRunning;
-    long sleepTime = 100;
-
-    ClientView clientView;
     public GameState gameState;
+    ClientView clientView;
     Map map;
     int lifes;
     String layout;
 
+    Thread instance;
+    long sleepTime = 100;
+
+    Socket socket;
+    ObjectInputStream input;
+    ObjectOutputStream output;
+    boolean isRunning = true;
+
+    String server;
+    int gamePort = 8090;
+    int apiPort = 8080;
+    String action;
     private String token;
 
-    Socket so;
-    DataInputStream entree;
-    PrintWriter sortie;
-    String s; // le serveur
-    int p; // le port de connexion
-
     public ClientController() {
-
-        Socket so;
-        DataInputStream entree;
-        PrintWriter sortie;
-        s = "127.0.0.1";
-        p = 80;
-
-        log.debug("Server --> " + s);
-        log.debug("Port --> " + p);
     }
 
     public void run(String layout) {
@@ -62,38 +55,45 @@ public class ClientController extends Observable implements Runnable {
      */
     @Override
     public void run() {
-        isRunning = true;
-        while (isRunning) {
-            try {
-                so = new Socket(s, p); // on connecte un socket
-                sortie = new PrintWriter(so.getOutputStream(), true);
-                entree = new DataInputStream(so.getInputStream());
+        try {
+            socket = new Socket(server, gamePort); // on connecte un socket
+            output = new ObjectOutputStream(socket.getOutputStream());
+            output.writeObject(layout);
+            output.close();
 
-                log.debug("init() --> " + layout);
-
-                setInfo("Waiting for the server to find or create a new game.");
-
-                log.debug("Server connected");
-
-                so.close(); // on ferme la connexion
-            } catch (UnknownHostException e) {
-                log.debug(e.getMessage());
-            } catch (IOException e) {
-                log.debug(e.getMessage());
+            while (isRunning) {
+                input = new ObjectInputStream(socket.getInputStream());
+                Map updatedMap = (Map) input.readObject();
+                log.debug(updatedMap.toString());
+                input.close();
+                wait(sleepTime);
             }
-            // 1 : update la map communication avec le serveur de jeu
-            // 2 : update la vue via le pattern observateur
-            setChanged();
-            notifyObservers();
-            try {
-                if (!Thread.currentThread().isInterrupted())
-                    Thread.sleep(sleepTime);
-            } catch (InterruptedException e) {
-                isRunning = false;
-                e.printStackTrace();
-            }
+
+        } catch (UnknownHostException e) {
+            log.debug(e);
+        } catch (IOException e) {
+            log.debug(e);
+        } catch (ClassNotFoundException e) {
+            log.debug(e);
+        } catch (InterruptedException e) {
+            log.debug(e);
+        }
+        // 1 : update la map communication avec le serveur de jeu
+        // 2 : update la vue via le pattern observateur
+        setChanged();
+        notifyObservers();
+        try {
+            if (!Thread.currentThread().isInterrupted())
+                Thread.sleep(sleepTime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
+
+    private void closeSocket(Socket socket) throws IOException {
+        socket.close();
+    }
+
 
     public void start() {
         // useless
@@ -112,22 +112,6 @@ public class ClientController extends Observable implements Runnable {
         /**
          * gameState = GameState.GAME_PAUSED;
          * bombermanGame.stop();
-         */
-    }
-
-    public void step() {
-        // useless
-        // méthode censée effectuer un tour de jeu
-        /**
-         * bombermanGame.step();
-         */
-    }
-
-    public void setTime(int value) {
-        // useless
-        /**
-         * Long sleepTime = (long) 1000 / turnPerSec;
-         * bombermanGame.setSleepTime(sleepTime);
          */
     }
 
@@ -150,6 +134,37 @@ public class ClientController extends Observable implements Runnable {
          */
     }
 
+    /**
+     * @param username
+     * @param password
+     * @return token de connexion
+     */
+    public String login(String server, String username, String password) {
+        this.server = server;
+        String url = "http://" + server + ":" + apiPort + "/bomberman/login?username=" + username + "&password=" + password;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(url.toString()).build();
+        try (Response response = client.newCall(request).execute()) {
+            int responseCode = response.code();
+            token = response.body().string();
+            log.debug("token --> " + token);
+            if (!token.equals("") && responseCode == 200) {
+                clientView.setInfo("Connection successful. Choose a map and press READY.");
+                return token;
+            }
+            clientView.setInfo("Connection failed. Try again.");
+            clientView.repaint();
+        } catch (IOException e) {
+            clientView.setInfo(e.getMessage());
+            log.debug(e);
+        }
+        return null;
+    }
+
+    public void setClientView(ClientView clientView) {
+        this.clientView = clientView;
+    }
+
     public Map getMap() {
         return map;
     }
@@ -157,42 +172,5 @@ public class ClientController extends Observable implements Runnable {
     public int getLifes() {
         return lifes;
     }
-
-    /**
-     * @param login
-     * @param password
-     * @return token de connexion
-     */
-    public String login(String login, String password) {
-        String url = "http://localhost:8080/bomberman/login?login=" + login + "&password=" + password;
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        try (Response response = client.newCall(request).execute()) {
-            token = response.body().string();
-            log.debug("token --> " + token);
-        } catch (IOException e) {
-            log.debug("login --> " + e.getMessage());
-        }
-
-        if (!token.equals("")) {
-            setInfo("Connection successful. Choose a map and press READY.");
-            return "token";
-        } else {
-            setInfo("Connection failed. Try again.");
-            return "";
-        }
-
-    }
-
-    private void setInfo(String message) {
-        clientView.setInfo(message);
-    }
-
-    public void setClientView(ClientView clientView) {
-        this.clientView = clientView;
-    }
-
 
 }
