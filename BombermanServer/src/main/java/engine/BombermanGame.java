@@ -8,7 +8,6 @@ import common.infotypes.InfoItem;
 import engine.agents.AbstractAgent;
 import engine.agents.AgentFactory;
 import engine.agents.BombermanAgent;
-import engine.strategies.utils.Coordonnee;
 import engine.subsystems.ActionSystem;
 import engine.subsystems.DamageSystem;
 import engine.subsystems.ItemSystem;
@@ -16,13 +15,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
 /**
- * La classe principale du jeu bomberman, hérite de la classe Game
+ * La classe principale du jeu bomberman, permet la gestion complète d'une partie
  */
-public class BombermanGame extends Game {
+public class BombermanGame extends Observable implements Runnable {
 
     final static Logger log = (Logger) LogManager.getLogger(BombermanGame.class);
+
+    public Boolean isRunning = false;
+    public Integer currentTurn;
+    public Integer maxTurn;
+    public Long sleepTime = 350L;
 
     private Map map;
     private ActionSystem actionSystem;
@@ -36,23 +41,42 @@ public class BombermanGame extends Game {
     private int nbPlayers;
     private ArrayList<AbstractAgent> players;
 
+    /**
+     * Constructor
+     *
+     * @param layout
+     * @param maxTurn
+     * @param nbPlayers
+     */
     public BombermanGame(String layout, Integer maxTurn, int nbPlayers) {
-        super(maxTurn);
+        this.maxTurn = maxTurn;
         this.nbPlayers = nbPlayers;
+        map = getMapFromLayout(layout);
+    }
+
+    /**
+     * Permet de générer la carte du jeu à partir du layout présent sur le disque
+     *
+     * @param layout
+     * @return
+     */
+    private Map getMapFromLayout(String layout) {
         String layoutPath = "src/main/resources/layouts/" + layout;
         try {
             map = new Map(layoutPath);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+        return map;
     }
 
     /**
      * Médode d'initialisation des éléments du jeu
      */
-    @Override
-    public void initializeGame() {
+    public void init() {
         log.debug("Initialisation du jeu");
+        currentTurn = 0;
+        isRunning = false;
 
         AbstractAgent.resetId();
         items = new ArrayList<>();
@@ -73,64 +97,9 @@ public class BombermanGame extends Game {
         itemSystem = new ItemSystem(this);
 
         log.debug("Jeu initialisé");
-    }
-
-    /**
-     * Méthode d'appel d'un tour de jeu complet.
-     * Cette méthode est appelée à chaque tour de jeu afin d'effectuer les actions globale d'un tour de jeu (état des
-     * bombes, déplacement des IA, apparition des items etc).
-     */
-    @Override
-    public void takeTurn() {
-        log.debug("Début du tour " + getCurrentTurn());
-        actionSystem.run();
-        damageSystem.run();
-        itemSystem.run();
-
-        if (players.size() == 0) gameOver();
-        else if (agents.size() == 1) gameWon();
-        else {
-            for (AbstractAgent agent : agentsIa) {
-                if (agent.getColor() != ColorAgent.BLEU) {
-                    agent.setStrategie(this);
-                    AgentAction action = agent.getStrategie().doStrategie();
-                    if (actionSystem.isLegalAction(agent, action)) {
-                        agent.setAgentAction(action);
-                    } else actionSystem.doAction(agent, AgentAction.STOP);
-                }
-            }
-        }
-
         setChanged();
         notifyObservers();
-
-        log.debug("Fin du tour " + getCurrentTurn());
     }
-
-    /**
-     * Méthode appelée en fin de jeu
-     */
-    @Override
-    public void gameOver() {
-        isRunning = false;
-        //bombermanController.gameOver();
-    }
-
-    public void gameWon() {
-        isRunning = false;
-        //bombermanController.gameWon();
-    }
-
-    /**
-     * TODO : ??
-     *
-     * @return booléen
-     */
-    @Override
-    public boolean gameContinue() {
-        return true;
-    }
-
 
     /**
      * Méthode d'initialisation des agents du jeu
@@ -157,13 +126,107 @@ public class BombermanGame extends Game {
     }
 
     /**
+     * Méthode de démarrage de la partie,
+     * Lance le jeu sur un Thread
+     */
+    public void launch() {
+        isRunning = true; // Permet le lancement du jeu après la mise en pause.
+        setChanged();
+        notifyObservers();
+        Thread thread = new Thread(this);
+        thread.start();
+    }
+
+    /**
+     * Méthode de "cadencage" du jeu bouclant sur un thread tant que le jeu continue
+     */
+    @Override
+    public void run() {
+        while (isRunning) {
+            step();
+            try {
+                if (!Thread.currentThread().isInterrupted())
+                    Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Méthode de gestion des tours de jeu
+     */
+    public void step() {
+        if (currentTurn < maxTurn) {
+            currentTurn += 1;
+            takeTurn();
+        } else {
+            isRunning = false;
+            gameOver();
+        }
+        setChanged();
+        notifyObservers();
+    }
+
+    /**
+     * Méthode d'appel d'un tour de jeu complet.
+     * Cette méthode est appelée à chaque tour de jeu afin d'effectuer les actions globale d'un tour de jeu (état des
+     * bombes, déplacement des IA, apparition des items etc).
+     */
+    public void takeTurn() {
+        log.debug("Début du tour " + currentTurn);
+        // Exécution des sous-systèmes pour le tour courant
+        actionSystem.run();
+        damageSystem.run();
+        itemSystem.run();
+        // Gestion de la fin de la partie
+        if (players.size() == 0) gameOver();
+        else if (agents.size() == 1) gameWon();
+        else {
+            for (AbstractAgent agent : agentsIa) {
+                if (agent.getColor() != ColorAgent.BLEU) {
+                    agent.setStrategie(this);
+                    AgentAction action = agent.getStrategie().doStrategie();
+                    if (actionSystem.isLegalAction(agent, action)) {
+                        agent.setAgentAction(action);
+                    } else actionSystem.doAction(agent, AgentAction.STOP);
+                }
+            }
+        }
+        setChanged();
+        notifyObservers();
+        log.debug("Fin du tour " + currentTurn);
+    }
+
+    public void stop() {
+        isRunning = false;
+        setChanged();
+        notifyObservers();
+    }
+
+    /**
+     * Méthode appelée en fin de jeu
+     */
+    public void gameOver() {
+        isRunning = false;
+        //bombermanController.gameOver();
+    }
+
+    public void gameWon() {
+        isRunning = false;
+        //bombermanController.gameWon();
+    }
+
+    /**
      * Méthode permettant de générer les InfoAgents des Agents du jeu courant
+     * Les infoAgents sont un type générique représentant un agent du jeu
+     * Utilisé nottament pour le BombermanDTO
      *
      * @return La liste des infosAgents
      */
     public ArrayList<InfoAgent> getInfoAgents() {
         ArrayList<InfoAgent> infoAgents = new ArrayList<>();
-        for (AbstractAgent agent : getAgents()) {
+        for (AbstractAgent agent : getAgentsCopy()) {
             InfoAgent tmp = new InfoAgent(agent.getX(), agent.getY(), agent.getAgentAction(), agent.getType(),
                     agent.getColor(), agent.isInvincible(), agent.isSick());
             infoAgents.add(tmp);
@@ -171,19 +234,13 @@ public class BombermanGame extends Game {
         return infoAgents;
     }
 
-    public boolean isFree(Coordonnee c) {
-        if (c.x > 0 && c.y > 0 && c.x < map.getSizeX() && c.y < map.getSizeY()) {
-            if (breakableWalls[c.x][c.y] || map.get_walls()[c.x][c.y]) {
-                return false;
-            }
-            for (InfoBomb b : bombs) {
-                if (b.getX() == c.x && b.getY() == c.y) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
+    /**
+     * Getter retournant une copie afin d'éviter la concurrence d'accès.
+     * Synchoniser les threads auraient pu être possible mais cela compliquait énormément le code pour un
+     * résultat équivalent.
+     */
+    public ArrayList<AbstractAgent> getAgentsCopy() {
+        return new ArrayList<>(agents);
     }
 
     public Map getMap() {
@@ -202,13 +259,8 @@ public class BombermanGame extends Game {
         return bombs;
     }
 
-    /**
-     * Getter retournant une copie permettant d'éviter la concurrence d'accès.
-     * Synchoniser les threads auraient pu être possible mais cela compliquait énormément le code pour un
-     * résultat équivalent.
-     */
     public ArrayList<AbstractAgent> getAgents() {
-        return new ArrayList<>(agents);
+        return agents;
     }
 
     public ActionSystem getActionSystem() {
@@ -222,7 +274,6 @@ public class BombermanGame extends Game {
     public ArrayList<AbstractAgent> getAgentsIa() {
         return agentsIa;
     }
-
 
     public int getNblife() {
         // TODO: Gestion des joueurs à revoir, ce code est douteux

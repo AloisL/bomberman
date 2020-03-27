@@ -14,9 +14,7 @@ public class StrategieSafe extends StrategieAgents {
 
     @Override
     public AgentAction doStrategie() {
-
         Coordonnee c = zoneSafe(checkSiBesoinSafe());
-
         if (c.x != 0) {
             return doMouvement(c);
         }
@@ -34,7 +32,7 @@ public class StrategieSafe extends StrategieAgents {
             Coordonnee c2 = new Coordonnee(agentCalling.getX() - 1, agentCalling.getY());
             Coordonnee c3 = new Coordonnee(agentCalling.getX(), agentCalling.getY() + 1);
             Coordonnee c4 = new Coordonnee(agentCalling.getX(), agentCalling.getY() - 1);
-            if (bombermanGame.isFree(c1) || bombermanGame.isFree(c2) || bombermanGame.isFree(c3) || bombermanGame.isFree(c4)) {
+            if (isFree(c1) || isFree(c2) || isFree(c3) || isFree(c4)) {
                 for (int i = 0; i <= b.getRange(); i++) {
 
                     if (diffX == 0 && diffY == 0) {
@@ -56,19 +54,19 @@ public class StrategieSafe extends StrategieAgents {
                         }
                     }
 
-                    if (bombermanGame.isFree(c1) && (!isInRange(b, c1))) {
+                    if (isFree(c1) && (!isInRange(b, c1))) {
                         if (doMouvement(c4) != AgentAction.STOP)
                             return c1;
                     }
-                    if (bombermanGame.isFree(c2) && (!isInRange(b, c2))) {
+                    if (isFree(c2) && (!isInRange(b, c2))) {
                         if (doMouvement(c4) != AgentAction.STOP)
                             return c2;
                     }
-                    if (bombermanGame.isFree(c3) && (!isInRange(b, c3))) {
+                    if (isFree(c3) && (!isInRange(b, c3))) {
                         if (doMouvement(c4) != AgentAction.STOP)
                             return c3;
                     }
-                    if (bombermanGame.isFree(c4) && (!isInRange(b, c4))) {
+                    if (isFree(c4) && (!isInRange(b, c4))) {
                         if (doMouvement(c4) != AgentAction.STOP)
                             return c4;
                     }
@@ -76,7 +74,7 @@ public class StrategieSafe extends StrategieAgents {
 
                 //la coordonnée de l'extrimité de la range
                 Coordonnee c = new Coordonnee(b.getX() + (b.getRange() * diffX) + (diffY), b.getY() + (b.getRange() * diffY) + diffX);
-                if (bombermanGame.isFree(c) && (isInRange(b, c))) {
+                if (isFree(c) && (isInRange(b, c))) {
                     if (doMouvement(c4) != AgentAction.STOP)
                         return c;
                 }
@@ -92,6 +90,21 @@ public class StrategieSafe extends StrategieAgents {
             return true;
         }
         if (((newCoord.y <= b.getY() + b.getRange()) && (newCoord.y >= b.getY() - b.getRange())) && (newCoord.x == b.getX())) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isFree(Coordonnee c) {
+        if (c.x > 0 && c.y > 0 && c.x < bombermanGame.getMap().getSizeX() && c.y < bombermanGame.getMap().getSizeY()) {
+            if (bombermanGame.getBreakableWalls()[c.x][c.y] || bombermanGame.getMap().get_walls()[c.x][c.y]) {
+                return false;
+            }
+            for (InfoBomb b : bombermanGame.getBombs()) {
+                if (b.getX() == c.x && b.getY() == c.y) {
+                    return false;
+                }
+            }
             return true;
         }
         return false;

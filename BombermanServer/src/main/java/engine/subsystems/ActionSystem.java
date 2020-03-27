@@ -31,7 +31,7 @@ public class ActionSystem extends AbstractSystem {
      */
     @Override
     public void run() {
-        ArrayList<AbstractAgent> agents = bombermanGame.getAgents();
+        ArrayList<AbstractAgent> agents = bombermanGame.getAgentsCopy();
         for (AbstractAgent agent : agents) {
             AgentAction agentAction = agent.getAgentAction();
             if (isLegalAction(agent, agentAction))
@@ -173,54 +173,54 @@ public class ActionSystem extends AbstractSystem {
      * @param action Une action
      */
     public void doAction(AbstractAgent agent, AgentAction action) {
-        bombermanGame.getAgents().remove(agent);
+        bombermanGame.getAgentsCopy().remove(agent);
         Integer posX = agent.getX();
         Integer posY = agent.getY();
         switch (action) {
             case MOVE_UP:
                 agent.setY(posY - 1);
-                bombermanGame.getAgents().add(agent);
+                bombermanGame.getAgentsCopy().add(agent);
                 break;
             case MOVE_DOWN:
                 agent.setY(posY + 1);
-                bombermanGame.getAgents().add(agent);
+                bombermanGame.getAgentsCopy().add(agent);
                 break;
             case MOVE_LEFT:
                 agent.setX(posX - 1);
-                bombermanGame.getAgents().add(agent);
+                bombermanGame.getAgentsCopy().add(agent);
                 break;
             case MOVE_RIGHT:
                 agent.setX(posX + 1);
-                bombermanGame.getAgents().add(agent);
+                bombermanGame.getAgentsCopy().add(agent);
                 break;
             case JUMP_UP:
                 agent.setY(posY - 2);
-                bombermanGame.getAgents().add(agent);
+                bombermanGame.getAgentsCopy().add(agent);
                 break;
             case JUMP_DOWN:
                 agent.setY(posY + 2);
-                bombermanGame.getAgents().add(agent);
+                bombermanGame.getAgentsCopy().add(agent);
                 break;
             case JUMP_LEFT:
                 agent.setX(posX - 2);
-                bombermanGame.getAgents().add(agent);
+                bombermanGame.getAgentsCopy().add(agent);
                 break;
             case JUMP_RIGHT:
                 agent.setX(posX + 2);
-                bombermanGame.getAgents().add(agent);
+                bombermanGame.getAgentsCopy().add(agent);
                 break;
             case STOP:
-                bombermanGame.getAgents().add(agent);
+                bombermanGame.getAgentsCopy().add(agent);
                 break;
             case PUT_BOMB:
                 BombermanAgent agentBomberman = (BombermanAgent) agent;
                 InfoBomb bomb = agentBomberman.addBomb();
                 bombermanGame.getBombs().add(bomb);
-                bombermanGame.getAgents().add(agent);
+                bombermanGame.getAgentsCopy().add(agent);
                 break;
             default:
                 log.debug("Action inconnue ==> " + action.toString());
-                bombermanGame.getAgents().add(agent);
+                bombermanGame.getAgentsCopy().add(agent);
                 break;
         }
         agent.setAgentAction(action);
