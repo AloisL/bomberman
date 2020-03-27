@@ -31,7 +31,7 @@ public class DamageSystem extends AbstractSystem {
         agentsToBeRemoved = new ArrayList<>();
 
         // Explosion des bombes un tour sur deux
-        if (bombermanGame.getCurrentTurn() % 2 == 0)
+        if (bombermanGame.currentTurn % 2 == 0)
             explodeBombs();
 
         // Dégats au corps à corps

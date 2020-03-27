@@ -36,7 +36,7 @@ public class ActionSystem extends AbstractSystem {
             AgentAction agentAction = agent.getAgentAction();
             if (isLegalAction(agent, agentAction))
                 if (agent.getClass() != BombermanAgent.class) {
-                    if (bombermanGame.getCurrentTurn() % 2 == 0)
+                    if (bombermanGame.currentTurn % 2 == 0)
                         doAction(agent, agentAction);
                 } else doAction(agent, agentAction);
         }
