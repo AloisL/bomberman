@@ -15,7 +15,7 @@ public class PanelControl extends JPanel {
     JButton pauseButton;
     JComboBox layoutChooser;
 
-    boolean gamePaused = false;
+    boolean ready = false;
 
     public PanelControl(ClientController clientController, ClientView clientView) {
         this.clientController = clientController;
@@ -31,8 +31,7 @@ public class PanelControl extends JPanel {
      */
     private void initInputs() {
         initButton = new JButton(new ImageIcon("res/icones/icon_restart.png"));
-        pauseButton = new JButton(new ImageIcon("res/icones/icon_pause.png"));
-        pauseButton.setEnabled(Boolean.FALSE);
+        pauseButton = new JButton(new ImageIcon("res/icones/icon_step.png"));
         layoutChooser = new JComboBox<>();
         String[] layouts = new File("res/layouts").list();
         Arrays.sort(layouts);
@@ -46,18 +45,17 @@ public class PanelControl extends JPanel {
     public void initListeners() {
         initButton.addActionListener(event -> {
             clientController.initConnection((String) layoutChooser.getSelectedItem());
-            //clientView.panelBomberman.grabFocus();
         });
 
         pauseButton.addActionListener(event -> {
-            if (gamePaused) {
+            if (ready) {
                 clientController.start();
                 pauseButton.setIcon(new ImageIcon("res/icones/icon_pause.png"));
             } else {
                 clientController.pause();
                 pauseButton.setIcon(new ImageIcon("res/icones/icon_step.png"));
             }
-            clientView.panelBomberman.grabFocus();
+            if (clientView.panelBomberman != null) clientView.panelBomberman.grabFocus();
         });
     }
 

@@ -44,7 +44,7 @@ public class GameServerInstance implements Runnable, Observer {
             String layout = (String) input.readObject();
             log.debug(layout);
 
-            bombermanGame = new BombermanGame(layout, 10000, 1);
+            bombermanGame = new BombermanGame(layout, 1);
             bombermanGame.addObserver(this);
             bombermanGame.init();
             bombermanGame.launch();

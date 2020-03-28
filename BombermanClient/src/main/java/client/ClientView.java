@@ -1,5 +1,6 @@
 package client;
 
+import common.BombermanDTO;
 import common.enums.AgentAction;
 import controller.ClientController;
 import org.apache.logging.log4j.LogManager;
@@ -9,11 +10,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Classe de gestion de la vue du jeu
  */
-public class ClientView extends JFrame implements WindowListener {
+public class ClientView extends JFrame implements Observer, WindowListener {
 
     final static Logger log = (Logger) LogManager.getLogger(ClientView.class);
 
@@ -53,11 +56,10 @@ public class ClientView extends JFrame implements WindowListener {
      * @param title Le titre du jeu
      */
     public void initFrame(String title) {
-        setResizable(true);
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle(title);
-
-        if (panelInput == null) setSize(new Dimension(500, 200));
+        setSize(new Dimension(500, 200));
         setLocationRelativeTo(null);
 
         /* Permet la gestion du comportement lorsque l'on modifie la taille de la fenêtre */
@@ -92,25 +94,22 @@ public class ClientView extends JFrame implements WindowListener {
         }
     }
 
-    /*
+    /**
+     * Méthode appelée lorsque le jeu est mis à jour (uniquement appelée par le controller)
+     *
+     * @param observable Le jeu
+     * @param o
      */
-/**
- * Méthode appelée lorsque le jeu est mis à jour (uniquement appelée par le controller)
- *
- * @param observable Le jeu
- * @param o
- *//*
-
     @Override
     public void update(Observable observable, Object o) {
         ClientController clientController = (ClientController) observable;
         BombermanDTO bombermanDTO = clientController.getBombermanDTO();
         panelBomberman.setInfoGame(bombermanDTO.getBreakableWalls(), bombermanDTO.getInfoAgents(),
                 bombermanDTO.getInfoItems(), bombermanDTO.getInfoBombs());
-        displayUpdate();
+        //displayUpdate();
         repaint();
     }
-*/
+
 
     /**
      * Méthode de mise à jour de l'affichage

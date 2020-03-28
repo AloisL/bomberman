@@ -16,8 +16,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Observable;
 
-public class ClientController implements Runnable {
+public class ClientController extends Observable implements Runnable {
 
     final static Logger log = (Logger) LogManager.getLogger(ClientController.class);
 
@@ -70,11 +71,8 @@ public class ClientController implements Runnable {
 
             while (isRunning) {
                 bombermanDTO = (BombermanDTO) input.readObject();
-                clientView.getPanelBomberman().setInfoGame(bombermanDTO.getBreakableWalls(), bombermanDTO.getInfoAgents(),
-                        bombermanDTO.getInfoItems(), bombermanDTO.getInfoBombs());
-                clientView.setInfo(bombermanDTO.toString());
-                clientView.setVisible(true);
-                clientView.repaint();
+                setChanged();
+                notifyObservers();
                 log.debug(bombermanDTO.toString());
             }
 
@@ -142,6 +140,7 @@ public class ClientController implements Runnable {
 
     public void setClientView(ClientView clientView) {
         this.clientView = clientView;
+        addObserver(clientView);
     }
 
     public BombermanDTO getBombermanDTO() {

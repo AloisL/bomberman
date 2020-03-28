@@ -26,8 +26,10 @@ public class BombermanGame extends Observable implements Runnable {
 
     public Boolean isRunning = false;
     public Integer currentTurn;
-    public Integer maxTurn;
     public Long sleepTime = 350L;
+    public int maxPlayers;
+    public int currentPlayers;
+    public String layout;
 
     private Map map;
     private ActionSystem actionSystem;
@@ -45,11 +47,10 @@ public class BombermanGame extends Observable implements Runnable {
      * Constructor
      *
      * @param layout
-     * @param maxTurn
      * @param nbPlayers
      */
-    public BombermanGame(String layout, Integer maxTurn, int nbPlayers) {
-        this.maxTurn = maxTurn;
+    public BombermanGame(String layout, int nbPlayers) {
+        this.layout = layout;
         this.nbPlayers = nbPlayers;
         map = getMapFromLayout(layout);
     }
@@ -157,13 +158,8 @@ public class BombermanGame extends Observable implements Runnable {
      * Méthode de gestion des tours de jeu
      */
     public void step() {
-        if (currentTurn < maxTurn) {
-            currentTurn += 1;
-            takeTurn();
-        } else {
-            isRunning = false;
-            gameOver();
-        }
+        currentTurn += 1;
+        takeTurn();
         setChanged();
         notifyObservers();
     }
