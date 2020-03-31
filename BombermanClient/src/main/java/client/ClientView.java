@@ -21,10 +21,10 @@ public class ClientView extends JFrame implements Observer, WindowListener {
     final static Logger log = (Logger) LogManager.getLogger(ClientView.class);
 
     public JLabel infoLabel;
+    public PanelBomberman panelBomberman;
     ClientController clientController;
     JPanel mainPanel;
     PanelInput panelInput;
-    PanelBomberman panelBomberman;
     String title;
 
     /**
@@ -57,7 +57,7 @@ public class ClientView extends JFrame implements Observer, WindowListener {
      */
     public void initFrame(String title) {
         setResizable(false);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle(title);
         setSize(new Dimension(500, 200));
         setLocationRelativeTo(null);
@@ -110,33 +110,16 @@ public class ClientView extends JFrame implements Observer, WindowListener {
         repaint();
     }
 
-
     /**
-     * Méthode de mise à jour de l'affichage
+     * Méthode appelée lorsque la game est quittée ou terminée
      */
-    private void displayUpdate() {
-        switch (clientController.gameState) {
-            case GAME_WON:
-                setInfo(" GAME WON ");
-                break;
-            case GAME_OVER:
-                setInfo(" GAME OVER ");
-                break;
-            case GAME_RUNNING:
-                String currentTurnStr = " Nombre de vie: " + clientController.getLifes();
-                setInfo(currentTurnStr);
-                break;
-        }
-    }
-
-    public void gameOver() {
-        displayUpdate();
-        panelInput.panelControl.gameOver();
-    }
-
-    public void gameWon() {
-        displayUpdate();
-        panelInput.panelControl.gameWon();
+    public void postGame() {
+        panelBomberman.setVisible(false);
+        panelBomberman = null;
+        panelInput.preGameMode();
+        setSize(new Dimension(500, 200));
+        setLocationRelativeTo(null);
+        repaint();
     }
 
     /**
@@ -164,8 +147,8 @@ public class ClientView extends JFrame implements Observer, WindowListener {
         // Taille et position de la fenêtre
         setSize(sizeX, sizeY + panelInput.getHeight() + 40);
         setLocationRelativeTo(null);
+        panelBomberman.setVisible(true);
         panelBomberman.repaint();
-        setVisible(true);
 
     }
 
@@ -234,12 +217,10 @@ public class ClientView extends JFrame implements Observer, WindowListener {
 
     @Override
     public void windowClosing(WindowEvent windowEvent) {
-        clientController.pause();
     }
 
     @Override
     public void windowClosed(WindowEvent windowEvent) {
-        clientController.pause();
     }
 
     @Override

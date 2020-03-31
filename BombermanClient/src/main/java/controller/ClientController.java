@@ -4,7 +4,6 @@ import client.ClientView;
 import client.PanelBomberman;
 import common.BombermanDTO;
 import common.enums.AgentAction;
-import common.enums.GameState;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -22,25 +21,21 @@ public class ClientController extends Observable implements Runnable {
 
     final static Logger log = (Logger) LogManager.getLogger(ClientController.class);
 
-    public GameState gameState;
     ClientView clientView;
     BombermanDTO bombermanDTO;
-    int lifes;
     String layout;
-
+    int lifes;
+    AgentAction action;
     Thread instance;
-    long sleepTime = 50;
-
-    Socket socket;
-    ObjectInputStream input;
-    ObjectOutputStream output;
-    boolean isRunning = true;
-
     String server;
     int gamePort = 8090;
     int apiPort = 8080;
-    AgentAction action;
+    volatile Socket socket;
+    ObjectInputStream input;
+    ObjectOutputStream output;
+    volatile boolean isRunning;
     private String token;
+
 
     public ClientController() {
     }
@@ -57,32 +52,49 @@ public class ClientController extends Observable implements Runnable {
     @Override
     public void run() {
         try {
+            isRunning = true;
             socket = new Socket(server, gamePort);
+            log.debug("Connection initialized");
             output = new ObjectOutputStream(socket.getOutputStream());
             input = new ObjectInputStream(socket.getInputStream());
 
             output.writeObject(layout);
 
-            bombermanDTO = (BombermanDTO) input.readObject();
-            PanelBomberman panelBomberman = new PanelBomberman(bombermanDTO);
-            clientView.addPanelBomberman(panelBomberman);
-            log.debug(bombermanDTO.toString());
-            clientView.repaint();
-
             while (isRunning) {
-                bombermanDTO = (BombermanDTO) input.readObject();
+                Object receivedObject = input.readObject();
+                if (receivedObject instanceof String) {
+                    String str = (String) receivedObject;
+                    if (str.startsWith("$end")) {
+                        stop();
+                        setInfo(str.substring(5));
+                    } else {
+                        setInfo((String) receivedObject);
+                    }
+                } else if (receivedObject instanceof BombermanDTO) {
+                    bombermanDTO = (BombermanDTO) receivedObject;
+                    if (clientView.getPanelBomberman() == null) {
+                        PanelBomberman panelBomberman = new PanelBomberman(bombermanDTO);
+                        clientView.addPanelBomberman(panelBomberman);
+                        log.debug(bombermanDTO.toString());
+                        clientView.repaint();
+                    }
+                }
                 setChanged();
                 notifyObservers();
                 log.debug(bombermanDTO.toString());
             }
-
+            log.debug("Connection closed");
             socket.close();
+            clientView.postGame();
         } catch (UnknownHostException e) {
             log.debug(e);
+            clientView.postGame();
         } catch (IOException e) {
             log.debug(e);
+            clientView.postGame();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            clientView.postGame();
         }
     }
 
@@ -97,18 +109,15 @@ public class ClientController extends Observable implements Runnable {
          */
     }
 
-    public void pause() {
-        // useless
-        // méthode censée effectuer mettre en pause le jeu
-        /**
-         * gameState = GameState.GAME_PAUSED;
-         * bombermanGame.stop();
-         */
+    public void stop() {
+        isRunning = false;
     }
 
     public void updatePlayerAction(AgentAction action) throws IOException {
-        this.action = action;
-        output.writeObject(action);
+        if (isRunning) {
+            this.action = action;
+            output.writeObject(action);
+        }
     }
 
     /**
@@ -120,19 +129,18 @@ public class ClientController extends Observable implements Runnable {
         this.server = server;
         String url = "http://" + server + ":" + apiPort + "/bomberman/login?username=" + username + "&password=" + password;
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(url.toString()).build();
+        Request request = new Request.Builder().url(url).build();
         try (Response response = client.newCall(request).execute()) {
             int responseCode = response.code();
             token = response.body().string();
             log.debug("token --> " + token);
             if (!token.equals("") && responseCode == 200) {
-                clientView.setInfo("Connection successful. Choose a map and press READY.");
+                setInfo("Connection successful. Choose a map and press READY.");
                 return token;
             }
-            clientView.setInfo("Connection failed. Try again.");
-            clientView.repaint();
+            setInfo("Connection failed. Try again.");
         } catch (IOException e) {
-            clientView.setInfo(e.getMessage());
+            setInfo(e.getMessage());
             log.debug(e);
         }
         return null;
@@ -141,6 +149,10 @@ public class ClientController extends Observable implements Runnable {
     public void setClientView(ClientView clientView) {
         this.clientView = clientView;
         addObserver(clientView);
+    }
+
+    private void setInfo(String info) {
+        clientView.setInfo(info);
     }
 
     public BombermanDTO getBombermanDTO() {

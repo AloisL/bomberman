@@ -7,7 +7,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
 
-public class PanelControl extends JPanel {
+public class PanelInputPreGame extends JPanel {
 
     ClientController clientController;
     ClientView clientView;
@@ -17,7 +17,7 @@ public class PanelControl extends JPanel {
 
     boolean ready = false;
 
-    public PanelControl(ClientController clientController, ClientView clientView) {
+    public PanelInputPreGame(ClientController clientController, ClientView clientView) {
         this.clientController = clientController;
         this.clientView = clientView;
         setLayout(new GridBagLayout());
@@ -45,6 +45,7 @@ public class PanelControl extends JPanel {
     public void initListeners() {
         initButton.addActionListener(event -> {
             clientController.initConnection((String) layoutChooser.getSelectedItem());
+            clientView.panelInput.inGameMode();
         });
 
         pauseButton.addActionListener(event -> {
@@ -52,7 +53,7 @@ public class PanelControl extends JPanel {
                 clientController.start();
                 pauseButton.setIcon(new ImageIcon("res/icones/icon_pause.png"));
             } else {
-                clientController.pause();
+                clientController.stop();
                 pauseButton.setIcon(new ImageIcon("res/icones/icon_step.png"));
             }
             if (clientView.panelBomberman != null) clientView.panelBomberman.grabFocus();
@@ -102,14 +103,14 @@ public class PanelControl extends JPanel {
     }
 
     public void gameOver() {
-        clientController.pause();
+        clientController.stop();
         initButton.setEnabled(true);
         pauseButton.setEnabled(false);
         clientView.getPanelBomberman().grabFocus();
     }
 
     public void gameWon() {
-        clientController.pause();
+        clientController.stop();
         initButton.setEnabled(true);
         pauseButton.setEnabled(false);
         clientView.getPanelBomberman().grabFocus();

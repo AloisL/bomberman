@@ -13,6 +13,7 @@ import engine.subsystems.DamageSystem;
 import engine.subsystems.ItemSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import server.GameServerInstance;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -24,12 +25,14 @@ public class BombermanGame extends Observable implements Runnable {
 
     final static Logger log = (Logger) LogManager.getLogger(BombermanGame.class);
 
-    public Boolean isRunning = false;
+    public volatile boolean isRunning = false;
+    public ArrayList<GameServerInstance> gameServerInstances = new ArrayList<>();
     public Integer currentTurn;
     public Long sleepTime = 350L;
     public int maxPlayers;
     public int currentPlayers;
     public String layout;
+    public ArrayList<AbstractAgent> players;
 
     private Map map;
     private ActionSystem actionSystem;
@@ -41,7 +44,6 @@ public class BombermanGame extends Observable implements Runnable {
     private ArrayList<InfoItem> items;
     private ArrayList<InfoBomb> bombs;
     private int nbPlayers;
-    private ArrayList<AbstractAgent> players;
 
     /**
      * Constructor
@@ -195,6 +197,7 @@ public class BombermanGame extends Observable implements Runnable {
     }
 
     public void stop() {
+        // TODO : gestion de fin de game terminée.
         isRunning = false;
         setChanged();
         notifyObservers();
@@ -204,13 +207,19 @@ public class BombermanGame extends Observable implements Runnable {
      * Méthode appelée en fin de jeu
      */
     public void gameOver() {
+        // TODO : passer en param le User perdant
         isRunning = false;
-        //bombermanController.gameOver();
+        for (GameServerInstance gmi : gameServerInstances) {
+            gmi.terminate();
+        }
     }
 
     public void gameWon() {
-        isRunning = false;
-        //bombermanController.gameWon();
+        // TODO : passer en param le User gagnant
+        stop();
+        for (GameServerInstance gmi : gameServerInstances) {
+            gmi.terminate();
+        }
     }
 
     /**

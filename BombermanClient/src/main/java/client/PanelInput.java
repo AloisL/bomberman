@@ -12,8 +12,9 @@ public class PanelInput extends JPanel {
 
     ClientController clientController;
     ClientView clientView;
-    PanelControl panelControl;
-    PanelLogin panelLogin;
+    PanelInputPreGame panelInputPreGame;
+    PanelInputLogin panelInputLogin;
+    PanelInputInGame panelInputInGame;
 
     /**
      * Constructeur du JPanel de commande
@@ -31,8 +32,9 @@ public class PanelInput extends JPanel {
      */
     private void init() {
         setLayout(new GridBagLayout());
-        panelLogin = new PanelLogin(clientController, clientView);
-        panelControl = new PanelControl(clientController, clientView);
+        panelInputLogin = new PanelInputLogin(clientController, clientView);
+        panelInputPreGame = new PanelInputPreGame(clientController, clientView);
+        panelInputInGame = new PanelInputInGame(clientController, clientView);
     }
 
     public void loginMode() {
@@ -47,12 +49,12 @@ public class PanelInput extends JPanel {
         gc.gridx = 0;
         add(clientView.infoLabel, gc);
         gc.gridy = 1;
-        add(panelLogin, gc);
+        add(panelInputLogin, gc);
         clientView.setVisible(true);
         clientView.repaint();
     }
 
-    public void controlMode() {
+    public void preGameMode() {
         if (getComponentCount() > 1)
             remove(1);
         GridBagConstraints gc = new GridBagConstraints();
@@ -64,7 +66,24 @@ public class PanelInput extends JPanel {
         gc.gridx = 0;
         add(clientView.infoLabel, gc);
         gc.gridy = 1;
-        add(panelControl, gc);
+        add(panelInputPreGame, gc);
+        clientView.setVisible(true);
+        clientView.repaint();
+    }
+
+    public void inGameMode() {
+        if (getComponentCount() > 1)
+            remove(1);
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.fill = GridBagConstraints.BOTH;
+        gc.weightx = 1;
+        gc.weighty = 2;
+        gc.insets = new Insets(5, 5, 5, 5);
+        gc.gridy = 0;
+        gc.gridx = 0;
+        add(clientView.infoLabel, gc);
+        gc.gridy = 1;
+        add(panelInputInGame, gc);
         clientView.setVisible(true);
         clientView.repaint();
     }

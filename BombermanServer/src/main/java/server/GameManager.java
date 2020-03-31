@@ -4,7 +4,7 @@ import engine.BombermanGame;
 
 import java.util.ArrayList;
 
-public class GameManagement {
+public class GameManager {
 
     static ArrayList<BombermanGame> onlineGames;
 
@@ -27,6 +27,10 @@ public class GameManagement {
         else if (layout.equals("niveau2.lay")) return 1;
         else if (layout.equals("niveau3.lay")) return 1;
         else return 0;
+    }
+
+    public void makePlayerReady() {
+
     }
 
 }

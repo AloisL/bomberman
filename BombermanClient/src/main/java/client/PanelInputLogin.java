@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-public class PanelLogin extends JPanel {
+public class PanelInputLogin extends JPanel {
 
     ClientController clientController;
     ClientView clientView;
@@ -26,7 +26,7 @@ public class PanelLogin extends JPanel {
     boolean usernameClicked = false;
     boolean passwordClicked = false;
 
-    public PanelLogin(ClientController clientController, ClientView clientView) {
+    public PanelInputLogin(ClientController clientController, ClientView clientView) {
         this.clientController = clientController;
         this.clientView = clientView;
         setLayout(new GridBagLayout());
@@ -109,7 +109,7 @@ public class PanelLogin extends JPanel {
                 // Si le token de connexion n'est pas vide, alors la connexion a été approuvée
                 if (clientController.login(serverField.getText(), usernameField.getText(), passwordField.getText()) != null) {
                     PanelInput panelInput = (PanelInput) getParent();
-                    panelInput.controlMode();
+                    panelInput.preGameMode();
                 }
             }
         });
