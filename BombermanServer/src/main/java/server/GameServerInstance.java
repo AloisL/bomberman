@@ -4,8 +4,6 @@ import common.BombermanDTO;
 import common.enums.AgentAction;
 import engine.BombermanGame;
 import engine.Map;
-import engine.agents.AbstractAgent;
-import engine.subsystems.ActionSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,22 +11,22 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 public class GameServerInstance implements Runnable, Observer {
 
     final static Logger log = (Logger) LogManager.getLogger(GameServerInstance.class);
-
+    public int playerIndex;
     GameServer gameServer;
     Socket socket;
     ObjectInputStream input;
     ObjectOutputStream output;
     User user;
     BombermanGame bombermanGame;
-    boolean isRunning;
-    boolean waiting;
+    volatile boolean isRunning;
+    volatile boolean ready;
+    volatile boolean isWaiting;
 
     GameServerInstance(GameServer gameServer, Socket socket) {
         this.gameServer = gameServer;
@@ -51,44 +49,50 @@ public class GameServerInstance implements Runnable, Observer {
             log.debug("Instance terminated");
         } catch (IOException e) {
             bombermanGame.gameOver();
-            log.debug(e);
+            log.error(e);
         } catch (NullPointerException npe) {
             bombermanGame.gameOver();
-            log.debug(npe);
+            log.error(npe);
         } catch (ClassNotFoundException e) {
             bombermanGame.gameOver();
-            log.debug(e);
+            log.error(e);
         }
     }
 
     private void initGame() throws IOException, ClassNotFoundException {
         String layout = (String) input.readObject();
         log.debug(layout);
-        bombermanGame = new BombermanGame(layout, 1);
+        ready = false;
+        isWaiting = true;
+
+        bombermanGame = GameManager.findOrCreateGame(layout);
         bombermanGame.addObserver(this);
         bombermanGame.gameServerInstances.add(this);
-        bombermanGame.init();
-        bombermanGame.launch();
+        playerIndex = bombermanGame.gameServerInstances.size() - 1;
+
+
+        String cmd = (String) input.readObject();
+        log.debug("cmd= " + cmd);
+        if (cmd.equals("$ready")) {
+            ready();
+        }
+        while (isWaiting) {
+            // Attente le temps que la partie se lance
+        }
+    }
+
+    private void ready() throws IOException, ClassNotFoundException {
+        ready = true;
+        GameManager.startIfPossible(bombermanGame);
     }
 
     private void gameLoop() throws IOException, ClassNotFoundException {
         isRunning = true;
         log.debug("Game started");
-        output.writeObject("Game Started");
+        sendText("Game Started");
         while (isRunning) {
             AgentAction action = (AgentAction) input.readObject();
-            ArrayList<AbstractAgent> players = bombermanGame.getPlayers();
-            if (!players.isEmpty()) {
-                AbstractAgent player = players.get(0);
-                // Le placement de la bombe doit être instantané, on byepasse donc la cadence du jeu.
-                if (action == AgentAction.PUT_BOMB) {
-                    ActionSystem actionSystem = new ActionSystem(bombermanGame);
-                    if (actionSystem.isLegalAction(player, action)) {
-                        actionSystem.doAction(player, action);
-                    }
-                }
-                if (player != null) player.setAgentAction(action);
-            }
+            bombermanGame.setAction(this, action);
         }
     }
 
@@ -103,7 +107,7 @@ public class GameServerInstance implements Runnable, Observer {
             output.writeObject(bombermanDTO);
             log.debug(bombermanDTO.toString() + " sent");
         } catch (IOException e) {
-            log.debug(e);
+            log.error(e);
         }
     }
 
@@ -116,12 +120,16 @@ public class GameServerInstance implements Runnable, Observer {
     public void terminate() {
         try {
             // TODO : gestion du message game gagnée ou perdue
-            output.writeObject("$end-Game Won! You may now start a new game.");
+            sendText("$end-Game Won! You may now start a new game.");
         } catch (IOException e) {
-            log.debug(e);
+            log.error(e);
         }
         // TODO : méthode à appeler lorsque la partie est terminée
         // termine la partie et renvoie tout les joueurs restants vers le menu de sélection de partie
+    }
+
+    public void sendText(String text) throws IOException {
+        output.writeObject(text);
     }
 
 }

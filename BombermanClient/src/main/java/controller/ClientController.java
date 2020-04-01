@@ -34,6 +34,7 @@ public class ClientController extends Observable implements Runnable {
     ObjectInputStream input;
     ObjectOutputStream output;
     volatile boolean isRunning;
+    volatile boolean isWaiting;
     private String token;
 
 
@@ -52,7 +53,6 @@ public class ClientController extends Observable implements Runnable {
     @Override
     public void run() {
         try {
-            isRunning = true;
             socket = new Socket(server, gamePort);
             log.debug("Connection initialized");
             output = new ObjectOutputStream(socket.getOutputStream());
@@ -60,8 +60,24 @@ public class ClientController extends Observable implements Runnable {
 
             output.writeObject(layout);
 
+            isRunning = false;
+            isWaiting = true;
+            // TODO : ready with ready button
+            output.writeObject("$ready");
+            do {
+                String startString = (String) input.readObject();
+                setInfo(startString);
+                if (startString.equals("$start")) {
+                    isWaiting = false;
+                    isRunning = true;
+                }
+            } while (isWaiting);
+
+
+            log.debug("running=" + isRunning);
             while (isRunning) {
                 Object receivedObject = input.readObject();
+                log.debug("object received= " + receivedObject);
                 if (receivedObject instanceof String) {
                     String str = (String) receivedObject;
                     if (str.startsWith("$end")) {
@@ -77,40 +93,43 @@ public class ClientController extends Observable implements Runnable {
                         clientView.addPanelBomberman(panelBomberman);
                         log.debug(bombermanDTO.toString());
                         clientView.repaint();
+
                     }
+                    log.debug(bombermanDTO.toString());
+                    setChanged();
+                    notifyObservers();
                 }
-                setChanged();
-                notifyObservers();
-                log.debug(bombermanDTO.toString());
             }
             log.debug("Connection closed");
             socket.close();
             clientView.postGame();
         } catch (UnknownHostException e) {
             log.debug(e);
+            stop();
             clientView.postGame();
         } catch (IOException e) {
             log.debug(e);
+            stop();
             clientView.postGame();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            stop();
             clientView.postGame();
         }
     }
 
     public void start() {
-        // useless
-        // méthode censée effectuer lancer le jeu;
-        // Sera utilisée pour mettre le joueur dans l'état pret
-        // Lorsque tous les joueurs sont prets, le serveur lance la partie
-        /**
-         * gameState = GameState.GAME_RUNNING;
-         * bombermanGame.launch();
-         */
+        isRunning = true;
     }
 
     public void stop() {
+        setInfo("Game aborted");
         isRunning = false;
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updatePlayerAction(AgentAction action) throws IOException {

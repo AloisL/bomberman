@@ -29,11 +29,9 @@ public class BombermanGame extends Observable implements Runnable {
     public ArrayList<GameServerInstance> gameServerInstances = new ArrayList<>();
     public Integer currentTurn;
     public Long sleepTime = 350L;
-    public int maxPlayers;
-    public int currentPlayers;
     public String layout;
     public ArrayList<AbstractAgent> players;
-
+    public int maxPlayers;
     private Map map;
     private ActionSystem actionSystem;
     private DamageSystem damageSystem;
@@ -43,17 +41,16 @@ public class BombermanGame extends Observable implements Runnable {
     private boolean[][] breakableWalls;
     private ArrayList<InfoItem> items;
     private ArrayList<InfoBomb> bombs;
-    private int nbPlayers;
 
     /**
      * Constructor
      *
      * @param layout
-     * @param nbPlayers
+     * @param maxPlayers
      */
-    public BombermanGame(String layout, int nbPlayers) {
+    public BombermanGame(String layout, int maxPlayers) {
         this.layout = layout;
-        this.nbPlayers = nbPlayers;
+        this.maxPlayers = maxPlayers;
         map = getMapFromLayout(layout);
     }
 
@@ -90,7 +87,7 @@ public class BombermanGame extends Observable implements Runnable {
         initAgents();
 
         for (AbstractAgent agent : agents) {
-            if (agent.getColor() != ColorAgent.BLEU) {
+            if (agent.getType() != 'B') {
                 agentsIa.add(agent);
             }
         }
@@ -117,7 +114,7 @@ public class BombermanGame extends Observable implements Runnable {
                         agent.getAgentAction(), agent.getColor(), false, false);
                 // ajout des joueurs
                 agents.add(abstractAgent);
-                if ((agent.getColor() == ColorAgent.BLEU) && (i < nbPlayers)) {
+                if ((agent.getType() == 'B') && (i < maxPlayers)) {
                     players.add(abstractAgent);
                     i++;
                 }
@@ -237,6 +234,22 @@ public class BombermanGame extends Observable implements Runnable {
             infoAgents.add(tmp);
         }
         return infoAgents;
+    }
+
+    public void setAction(GameServerInstance gameServerInstance, AgentAction agentAction) {
+        int playerIndex = gameServerInstance.playerIndex;
+        if (isRunning) {
+            AbstractAgent player = players.get(playerIndex);
+            // Le placement de la bombe doit être instantané, on byepasse donc la cadence du jeu.
+            // On ne peut malgré tout poser qu'un certain nombre de bombes définit dans les propriété de l'agent
+            if (agentAction == AgentAction.PUT_BOMB) {
+                ActionSystem actionSystem = new ActionSystem(this);
+                if (actionSystem.isLegalAction(player, agentAction)) {
+                    actionSystem.doAction(player, agentAction);
+                }
+            }
+            if (player != null) player.setAgentAction(agentAction);
+        }
     }
 
     /**

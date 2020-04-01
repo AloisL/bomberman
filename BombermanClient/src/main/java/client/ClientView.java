@@ -8,13 +8,17 @@ import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
 /**
  * Classe de gestion de la vue du jeu
+ * TODO : Ajouter un grid layout pour éviter les bugs de taille de fenêtre
  */
 public class ClientView extends JFrame implements Observer, WindowListener {
 
@@ -61,20 +65,6 @@ public class ClientView extends JFrame implements Observer, WindowListener {
         setTitle(title);
         setSize(new Dimension(500, 200));
         setLocationRelativeTo(null);
-
-        /* Permet la gestion du comportement lorsque l'on modifie la taille de la fenêtre */
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent componentEvent) {
-                if (clientController.getBombermanDTO() != null) {
-                    Integer sizeX = clientController.getBombermanDTO().getSizeX() * 50;
-                    Integer sizeY = clientController.getBombermanDTO().getSizeY() * 50;
-                    if (panelBomberman != null) panelBomberman.setSize(new Dimension(sizeX, sizeY));
-                }
-                repaint();
-            }
-        });
-
     }
 
     /**
@@ -114,9 +104,13 @@ public class ClientView extends JFrame implements Observer, WindowListener {
      * Méthode appelée lorsque la game est quittée ou terminée
      */
     public void postGame() {
-        panelBomberman.setVisible(false);
-        panelBomberman = null;
+        if (panelBomberman != null) {
+            panelBomberman.setVisible(false);
+            panelBomberman = null;
+            log.debug(this.getComponentCount());
+        }
         panelInput.preGameMode();
+        repaint();
         setSize(new Dimension(500, 200));
         setLocationRelativeTo(null);
         repaint();
@@ -129,7 +123,11 @@ public class ClientView extends JFrame implements Observer, WindowListener {
      */
     public void addPanelBomberman(PanelBomberman panelBomberman) {
         // Si un panel bomberman est déjà set, on le supprime
-        if (this.panelBomberman != null) mainPanel.remove(this.panelBomberman);
+        for (Component component : getComponents()) {
+            if (component.getClass() == PanelBomberman.class) {
+                remove(component);
+            }
+        }
 
         this.panelBomberman = panelBomberman;
 
@@ -137,18 +135,15 @@ public class ClientView extends JFrame implements Observer, WindowListener {
         int sizeX = clientController.getBombermanDTO().getSizeX() * 50;
         int sizeY = clientController.getBombermanDTO().getSizeY() * 50;
 
-        // Ajout du panel bomberman
-        panelBomberman.setSize(new Dimension(sizeX, sizeY));
-        mainPanel.add(panelBomberman, BorderLayout.CENTER);
+        mainPanel.add(panelBomberman);
         panelBomberman.grabFocus();
 
+        // Ajout des listeners clavier
         initKeyListener();
 
         // Taille et position de la fenêtre
-        setSize(sizeX, sizeY + panelInput.getHeight() + 40);
-        setLocationRelativeTo(null);
-        panelBomberman.setVisible(true);
-        panelBomberman.repaint();
+        setSize(new Dimension(sizeX, sizeY + panelInput.getHeight() + 40));
+        repaint();
 
     }
 
