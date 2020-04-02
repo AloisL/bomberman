@@ -7,6 +7,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -24,11 +27,11 @@ public class ClientView extends JFrame implements Observer, WindowListener {
 
     final static Logger log = (Logger) LogManager.getLogger(ClientView.class);
 
-    public JLabel infoLabel;
+    public JTextPane infoLabel;
     public PanelBomberman panelBomberman;
+    public PanelInput panelInput;
     ClientController clientController;
     JPanel mainPanel;
-    PanelInput panelInput;
     String title;
 
     /**
@@ -49,10 +52,12 @@ public class ClientView extends JFrame implements Observer, WindowListener {
      */
     public void init() {
         initFrame(title);
+        setInfoLabel();
         setPanels();
         setVisible(true);
         setFocusable(true);
     }
+
 
     /**
      * Méthode d'initialisation de la fenêtre
@@ -68,11 +73,21 @@ public class ClientView extends JFrame implements Observer, WindowListener {
     }
 
     /**
+     * Méthode d'initalisation de la zone d'informations
+     */
+    private void setInfoLabel() {
+        infoLabel = new JTextPane();
+        infoLabel.setFocusable(false);
+        StyledDocument doc = infoLabel.getStyledDocument();
+        SimpleAttributeSet center = new SimpleAttributeSet();
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+    }
+
+    /**
      * Méthode d'initialisation des Panel de la fenêtre
      */
     public void setPanels() {
-        infoLabel = new JLabel();
-        infoLabel.setHorizontalAlignment(JLabel.CENTER);
         if (mainPanel == null) {
             mainPanel = new JPanel(new BorderLayout());
             if (panelInput == null) {
@@ -96,7 +111,6 @@ public class ClientView extends JFrame implements Observer, WindowListener {
         BombermanDTO bombermanDTO = clientController.getBombermanDTO();
         panelBomberman.setInfoGame(bombermanDTO.getBreakableWalls(), bombermanDTO.getInfoAgents(),
                 bombermanDTO.getInfoItems(), bombermanDTO.getInfoBombs());
-        //displayUpdate();
         repaint();
     }
 
@@ -112,7 +126,6 @@ public class ClientView extends JFrame implements Observer, WindowListener {
         panelInput.preGameMode();
         repaint();
         setSize(new Dimension(500, 200));
-        setLocationRelativeTo(null);
         repaint();
     }
 

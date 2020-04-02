@@ -7,6 +7,7 @@ import engine.agents.AbstractAgent;
 import engine.agents.BombermanAgent;
 import engine.strategies.utils.Coordonnee;
 
+// TODO : cherche ennemi le plus proche
 public class StrategieAttaque extends StrategieAgents {
 
     public StrategieAttaque(BombermanGame bombermanGame, AbstractAgent agent) {

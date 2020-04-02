@@ -9,6 +9,7 @@ import engine.agents.AbstractAgent;
 import engine.agents.BombermanAgent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import server.GameServerInstance;
 
 import java.util.ArrayList;
 
@@ -94,6 +95,11 @@ public class DamageSystem extends AbstractSystem {
                 BombermanAgent bombermanAgent = (BombermanAgent) player;
                 if ((bombermanAgent != agent) && (agent.getX() == bombermanAgent.getX()) && (agent.getY() == bombermanAgent.getY())) {
                     hit(bombermanAgent, false);
+                    for (GameServerInstance gameServerInstance : bombermanGame.gameServerInstances) {
+                        if (gameServerInstance.bombermanAgent == bombermanAgent) {
+                            gameServerInstance.updateInfos();
+                        }
+                    }
                 }
             }
         }
@@ -193,8 +199,15 @@ public class DamageSystem extends AbstractSystem {
         for (AbstractAgent agent : agentsToBeRemoved) {
             agents.remove(agent);
             bombermanGame.getAgents().remove(agent);
-            if (agent.getClass() == BombermanAgent.class) players.remove(agent);
-            else bombermanGame.getAgentsIa().remove(agent);
+            if (agent.getClass() == BombermanAgent.class) {
+                players.remove(agent);
+                BombermanAgent bombermanAgent = (BombermanAgent) agent;
+                for (GameServerInstance gameServerInstance : bombermanGame.gameServerInstances) {
+                    if (gameServerInstance.bombermanAgent == bombermanAgent) {
+                        gameServerInstance.lost();
+                    }
+                }
+            } else bombermanGame.getAgentsIa().remove(agent);
         }
     }
 

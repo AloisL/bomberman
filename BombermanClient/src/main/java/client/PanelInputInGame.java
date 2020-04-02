@@ -19,13 +19,14 @@ public class PanelInputInGame extends JPanel {
     }
 
     private void initInputs() {
-        returnButton = new JButton("Return");
+        returnButton = new JButton("QUIT");
         add(returnButton);
     }
 
+    // TODO : JEE gérer la perte de la partie lorque l'on quitte une partie
     private void initListeners() {
         returnButton.addActionListener(actionEvent -> {
-            clientController.stop();
+            clientController.stop("Game aborted, will count as a loss.");
         });
     }
 

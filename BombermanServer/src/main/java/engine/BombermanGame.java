@@ -1,7 +1,6 @@
 package engine;
 
 import common.enums.AgentAction;
-import common.enums.ColorAgent;
 import common.infotypes.InfoAgent;
 import common.infotypes.InfoBomb;
 import common.infotypes.InfoItem;
@@ -85,6 +84,7 @@ public class BombermanGame extends Observable implements Runnable {
 
         breakableWalls = map.getBreakableWalls();
         initAgents();
+        linkInstances();
 
         for (AbstractAgent agent : agents) {
             if (agent.getType() != 'B') {
@@ -121,6 +121,25 @@ public class BombermanGame extends Observable implements Runnable {
                 log.debug("Agent initialisé ==> " + agents.get(agents.size() - 1).toString());
             } catch (Exception e) {
                 log.error(e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Méthode permettant de lier les agents bomberman aux instances de jeu par ordre d'entrée dans la partie
+     */
+    private void linkInstances() {
+        for (GameServerInstance gameServerInstance : gameServerInstances) {
+            BombermanAgent linkedBombermanAgent = gameServerInstance.bombermanAgent;
+            if (linkedBombermanAgent == null) {
+                for (AbstractAgent agent : players) {
+                    BombermanAgent bombermanAgent = (BombermanAgent) agent;
+                    if (!bombermanAgent.isLinked) {
+                        gameServerInstance.bombermanAgent = bombermanAgent;
+                        bombermanAgent.isLinked = true;
+                        break;
+                    }
+                }
             }
         }
     }
@@ -170,52 +189,63 @@ public class BombermanGame extends Observable implements Runnable {
      */
     public void takeTurn() {
         log.debug("Début du tour " + currentTurn);
-        // Exécution des sous-systèmes pour le tour courant
+
+        /** Appels des sous-systèmes pour le tour courant **/
+        // Gestion des actions
         actionSystem.run();
+        // Gestion des dégats
         damageSystem.run();
+        // Génération et obtention des objets
         itemSystem.run();
-        // Gestion de la fin de la partie
-        if (players.size() == 0) gameOver();
-        else if (agents.size() == 1) gameWon();
-        else {
-            for (AbstractAgent agent : agentsIa) {
-                if (agent.getColor() != ColorAgent.BLEU) {
-                    agent.setStrategie(this);
-                    AgentAction action = agent.getStrategie().doStrategie();
-                    if (actionSystem.isLegalAction(agent, action)) {
-                        agent.setAgentAction(action);
-                    } else actionSystem.doAction(agent, AgentAction.STOP);
-                }
-            }
-        }
+
+        gameStatus();
+
         setChanged();
         notifyObservers();
         log.debug("Fin du tour " + currentTurn);
     }
 
-    public void stop() {
-        // TODO : gestion de fin de game terminée.
-        isRunning = false;
-        setChanged();
-        notifyObservers();
+    /**
+     * Gestion de la fin de partie
+     */
+    private void gameStatus() {
+        if (players.size() == 0) stop();
+        else if (agents.size() == 1) stop();
     }
 
     /**
      * Méthode appelée en fin de jeu
      */
-    public void gameOver() {
-        // TODO : passer en param le User perdant
+    public void stop() {
+        // TODO : gestion de fin de game terminée.
         isRunning = false;
+        setChanged();
+        notifyObservers();
         for (GameServerInstance gmi : gameServerInstances) {
             gmi.terminate();
         }
     }
 
-    public void gameWon() {
-        // TODO : passer en param le User gagnant
-        stop();
-        for (GameServerInstance gmi : gameServerInstances) {
-            gmi.terminate();
+    /**
+     * Méthode de gestion des inputs joueur
+     *
+     * @param gameServerInstance
+     * @param agentAction
+     */
+    public void setAction(GameServerInstance gameServerInstance, AgentAction agentAction) {
+        if (isRunning) {
+            BombermanAgent player = gameServerInstance.bombermanAgent;
+
+            // Le placement de la bombe doit être instantané, on byepasse donc la cadence du jeu.
+            // On ne peut malgré tout poser qu'un certain nombre de bombes définit dans les propriété de l'agent
+            if (agentAction == AgentAction.PUT_BOMB) {
+                ActionSystem actionSystem = new ActionSystem(this);
+                if (actionSystem.isLegalAction(gameServerInstance.bombermanAgent, agentAction)) {
+                    actionSystem.doAction(player, agentAction);
+                }
+            }
+            // Dans tous les autres cas on définit la prochaine action a effectuer
+            player.setAgentAction(agentAction);
         }
     }
 
@@ -234,22 +264,6 @@ public class BombermanGame extends Observable implements Runnable {
             infoAgents.add(tmp);
         }
         return infoAgents;
-    }
-
-    public void setAction(GameServerInstance gameServerInstance, AgentAction agentAction) {
-        int playerIndex = gameServerInstance.playerIndex;
-        if (isRunning) {
-            AbstractAgent player = players.get(playerIndex);
-            // Le placement de la bombe doit être instantané, on byepasse donc la cadence du jeu.
-            // On ne peut malgré tout poser qu'un certain nombre de bombes définit dans les propriété de l'agent
-            if (agentAction == AgentAction.PUT_BOMB) {
-                ActionSystem actionSystem = new ActionSystem(this);
-                if (actionSystem.isLegalAction(player, agentAction)) {
-                    actionSystem.doAction(player, agentAction);
-                }
-            }
-            if (player != null) player.setAgentAction(agentAction);
-        }
     }
 
     /**
@@ -293,12 +307,18 @@ public class BombermanGame extends Observable implements Runnable {
         return agentsIa;
     }
 
-    public int getNblife() {
-        // TODO: Gestion des joueurs à revoir, ce code est douteux
-        BombermanAgent player = (BombermanAgent) players.get(0);
-        return player.getNbLifes();
-    }
+    public void killAfterDisconnection(GameServerInstance gameServerInstance) {
+        BombermanAgent playerToRemove = gameServerInstance.bombermanAgent;
 
+        if (players.contains(playerToRemove))
+            players.remove(playerToRemove);
+
+        if (agents.contains(playerToRemove))
+            agents.remove(playerToRemove);
+
+        if (gameServerInstances.contains(gameServerInstance))
+            gameServerInstances.remove(gameServerInstance);
+    }
 }
 
 

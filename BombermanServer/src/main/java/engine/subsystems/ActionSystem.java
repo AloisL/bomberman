@@ -40,6 +40,14 @@ public class ActionSystem extends AbstractSystem {
                         doAction(agent, agentAction);
                 } else doAction(agent, agentAction);
         }
+
+        for (AbstractAgent agent : bombermanGame.getAgentsIa()) {
+            agent.setStrategie(bombermanGame);
+            AgentAction action = agent.getStrategie().doStrategie();
+            if (isLegalAction(agent, action)) {
+                agent.setAgentAction(action);
+            } else doAction(agent, AgentAction.STOP);
+        }
     }
 
     /**

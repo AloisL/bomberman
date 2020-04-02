@@ -44,7 +44,7 @@ public class GameManager {
 
         int playersReady = 0;
         for (GameServerInstance gmi : bombermanGame.gameServerInstances) {
-            if (gmi.ready) playersReady++;
+            if (gmi.isReady) playersReady++;
         }
         log.debug("Players ready: " + playersReady);
 

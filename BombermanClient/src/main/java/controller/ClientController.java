@@ -47,6 +47,16 @@ public class ClientController extends Observable implements Runnable {
         instance.start();
     }
 
+    public void closeConnection() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+        instance.stop();
+        log.debug("Connection aborted");
+    }
+
     /**
      * Méthode daemon de communcation avec le serveur permettant d'obtenir toutes les infos du jeu.
      */
@@ -62,8 +72,7 @@ public class ClientController extends Observable implements Runnable {
 
             isRunning = false;
             isWaiting = true;
-            // TODO : ready with ready button
-            output.writeObject("$ready");
+
             do {
                 String startString = (String) input.readObject();
                 setInfo(startString);
@@ -73,6 +82,7 @@ public class ClientController extends Observable implements Runnable {
                 }
             } while (isWaiting);
 
+            clientView.panelInput.inGameMode();
 
             log.debug("running=" + isRunning);
             while (isRunning) {
@@ -81,8 +91,7 @@ public class ClientController extends Observable implements Runnable {
                 if (receivedObject instanceof String) {
                     String str = (String) receivedObject;
                     if (str.startsWith("$end")) {
-                        stop();
-                        setInfo(str.substring(5));
+                        stop(str.substring(5));
                     } else {
                         setInfo((String) receivedObject);
                     }
@@ -102,40 +111,43 @@ public class ClientController extends Observable implements Runnable {
             }
             log.debug("Connection closed");
             socket.close();
-            clientView.postGame();
         } catch (UnknownHostException e) {
-            log.debug(e);
-            stop();
-            clientView.postGame();
+            log.error(e.getStackTrace().toString());
+            stop(e.toString());
         } catch (IOException e) {
-            log.debug(e);
-            stop();
-            clientView.postGame();
+            log.error(e.getStackTrace().toString());
+            stop(e.toString());
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            stop();
-            clientView.postGame();
+            log.error(e.getStackTrace().toString());
+            stop(e.toString());
         }
     }
 
-    public void start() {
-        isRunning = true;
-    }
-
-    public void stop() {
-        setInfo("Game aborted");
+    public void stop(String info) {
+        setInfo(info);
         isRunning = false;
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        clientView.postGame();
+        closeConnection();
     }
 
     public void updatePlayerAction(AgentAction action) throws IOException {
         if (isRunning) {
             this.action = action;
             output.writeObject(action);
+        }
+    }
+
+    public void ready(boolean ready) {
+        try {
+            if (ready) {
+                output.writeObject("$ready");
+                log.debug("ready");
+            } else {
+                output.writeObject("$unready");
+                log.debug("unready");
+            }
+        } catch (IOException e) {
+            log.error(e.getStackTrace().toString());
         }
     }
 
@@ -154,13 +166,13 @@ public class ClientController extends Observable implements Runnable {
             token = response.body().string();
             log.debug("token --> " + token);
             if (!token.equals("") && responseCode == 200) {
-                setInfo("Connection successful. Choose a map and press READY.");
+                setInfo("Connection successful.\nSEARCH for a server and press READY.");
                 return token;
             }
             setInfo("Connection failed. Try again.");
         } catch (IOException e) {
             setInfo(e.getMessage());
-            log.debug(e);
+            log.error(e.getStackTrace().toString());
         }
         return null;
     }
@@ -170,16 +182,12 @@ public class ClientController extends Observable implements Runnable {
         addObserver(clientView);
     }
 
-    private void setInfo(String info) {
+    public void setInfo(String info) {
         clientView.setInfo(info);
     }
 
     public BombermanDTO getBombermanDTO() {
         return bombermanDTO;
-    }
-
-    public int getLifes() {
-        return lifes;
     }
 
 }

@@ -3,6 +3,7 @@ package client;
 import controller.ClientController;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 
 /**
@@ -55,6 +56,14 @@ public class PanelInput extends JPanel {
     }
 
     public void preGameMode() {
+        clientView.setSize(new Dimension(500, 200));
+        panelInputPreGame.ready = false;
+        panelInputPreGame.layoutChooser.setVisible(true);
+        panelInputPreGame.searchButton.setText("SEARCH");
+        panelInputPreGame.searchButton.setBackground(new ColorUIResource(238, 238, 238));
+        panelInputPreGame.searchButton.setEnabled(true);
+        panelInputPreGame.readyButton.setBackground(new ColorUIResource(238, 238, 238));
+        panelInputPreGame.readyButton.setEnabled(false);
         if (getComponentCount() > 1)
             remove(1);
         GridBagConstraints gc = new GridBagConstraints();
@@ -72,6 +81,7 @@ public class PanelInput extends JPanel {
     }
 
     public void inGameMode() {
+        panelInputPreGame.searching = false;
         if (getComponentCount() > 1)
             remove(1);
         GridBagConstraints gc = new GridBagConstraints();

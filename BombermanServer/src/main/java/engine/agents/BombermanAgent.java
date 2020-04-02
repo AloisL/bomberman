@@ -10,6 +10,7 @@ import engine.strategies.StrategieSafe;
 
 public class BombermanAgent extends AbstractAgent {
 
+    public boolean isLinked = false;
     private int nbMaxBomb;
     private int nbBombPlaced;
     private int bombRange;

@@ -3,6 +3,7 @@ package client;
 import controller.ClientController;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
@@ -11,11 +12,11 @@ public class PanelInputPreGame extends JPanel {
 
     ClientController clientController;
     ClientView clientView;
-    JButton initButton;
-    JButton pauseButton;
+    JButton searchButton;
+    JButton readyButton;
     JComboBox layoutChooser;
-
     boolean ready = false;
+    boolean searching = false;
 
     public PanelInputPreGame(ClientController clientController, ClientView clientView) {
         this.clientController = clientController;
@@ -30,36 +31,52 @@ public class PanelInputPreGame extends JPanel {
      * Méthode d'initialisation des entrées utilisateur
      */
     private void initInputs() {
-        initButton = new JButton(new ImageIcon("res/icones/icon_restart.png"));
-        pauseButton = new JButton(new ImageIcon("res/icones/icon_step.png"));
+        searchButton = new JButton("SEARCH");
+        readyButton = new JButton("READY");
         layoutChooser = new JComboBox<>();
-        String[] layouts = new File("res/layouts").list();
+        String[] layouts = new File("src/main/java/common/layouts").list();
         Arrays.sort(layouts);
         for (String layout : layouts) layoutChooser.addItem(layout);
     }
-
 
     /**
      * Méthode d'initialisation des listeners
      */
     public void initListeners() {
-        initButton.addActionListener(event -> {
-            clientController.initConnection((String) layoutChooser.getSelectedItem());
-            clientView.panelInput.inGameMode();
+        searchButton.addActionListener(event -> {
+            if (!searching) {
+                layoutChooser.setVisible(false);
+                clientController.initConnection((String) layoutChooser.getSelectedItem());
+                searchButton.setText("CANCEL");
+                searchButton.setBackground(Color.red);
+                readyButton.setEnabled(true);
+                searching = true;
+            } else {
+                clientController.closeConnection();
+                layoutChooser.setVisible(true);
+                searchButton.setText("SEARCH");
+                searchButton.setBackground(new ColorUIResource(238, 238, 238));
+                readyButton.setBackground(new ColorUIResource(238, 238, 238));
+                readyButton.setEnabled(false);
+                clientController.setInfo("SEARCH for a server and press READY.");
+                searching = false;
+            }
+
         });
 
-        pauseButton.addActionListener(event -> {
-            if (ready) {
-                clientController.start();
-                pauseButton.setIcon(new ImageIcon("res/icones/icon_pause.png"));
+        readyButton.addActionListener(event -> {
+            if (!ready) {
+                clientController.ready(true);
+                readyButton.setBackground(Color.green);
+                ready = true;
             } else {
-                clientController.stop();
-                pauseButton.setIcon(new ImageIcon("res/icones/icon_step.png"));
+                clientController.ready(false);
+                readyButton.setBackground(new ColorUIResource(238, 238, 238));
+                ready = false;
             }
-            if (clientView.panelBomberman != null) clientView.panelBomberman.grabFocus();
+
         });
     }
-
 
     private void placeWidgets() {
         JPanel infoPanel = new JPanel(new GridBagLayout());
@@ -81,10 +98,10 @@ public class PanelInputPreGame extends JPanel {
         gc.gridy = 1;
         gc.gridx = 1;
         gc.gridwidth = 1;
-        inputPanel.add(initButton, gc);
+        inputPanel.add(searchButton, gc);
 
         gc.gridx = 2;
-        inputPanel.add(pauseButton, gc);
+        inputPanel.add(readyButton, gc);
 
         GridBagConstraints gc2 = new GridBagConstraints();
 
@@ -101,20 +118,5 @@ public class PanelInputPreGame extends JPanel {
         gc2.gridy = 1;
         add(inputPanel, gc2);
     }
-
-    public void gameOver() {
-        clientController.stop();
-        initButton.setEnabled(true);
-        pauseButton.setEnabled(false);
-        clientView.getPanelBomberman().grabFocus();
-    }
-
-    public void gameWon() {
-        clientController.stop();
-        initButton.setEnabled(true);
-        pauseButton.setEnabled(false);
-        clientView.getPanelBomberman().grabFocus();
-    }
-
 
 }
