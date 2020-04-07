@@ -1,19 +1,20 @@
 package ua.info.m1.bomberman.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class User {
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     @Column(unique = true)
     private String username;
     @Column(unique = true)
     private String email;
     private String password;
     private String currentToken;
-
 
     public String getUsername() {
         return username;

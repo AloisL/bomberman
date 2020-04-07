@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class ConsultationCompte {
+
     @GetMapping("/consulteCompte")
     public String home() {
-
         return "consultationCompte";
     }
 

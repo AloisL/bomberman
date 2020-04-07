@@ -36,12 +36,12 @@ public class LoginController {
             userRepository.save(user);
             return ResponseEntity.status(HttpStatus.OK).body(token);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad Creditentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad creditentials");
         }
     }
 
     /**
-     * Génère un token aléatoire sur 24 charactères
+     * Génère un token de connection aléatoire sur 24 charactères
      *
      * @return random 24 char token
      */
