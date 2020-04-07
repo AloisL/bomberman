@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <link
         href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        rel="stylesheet" id="bootstrap-css">
+        id="bootstrap-css" rel="stylesheet">
 <script
         src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script
         src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
-<link rel="stylesheet" href="./css/connect.css">
+<link href="./css/connect.css" rel="stylesheet">
 <body>
 <div id="register">
     <div class="container">
-        <div id="login-row" class="row justify-content-center align-items-center">
-            <div id="login-column" class="col-md-6">
-                <div id="login-box" class="col-md-12">
-                    <form id="register-form" class="form" action="/bomberman/registernew" method="post">
+        <div class="row justify-content-center align-items-center" id="login-row">
+            <div class="col-md-6" id="login-column">
+                <div class="col-md-12" id="login-box">
+                    <form action="/bomberman/registernew" class="form" id="register-form" method="post">
                         </br>
                         </br>
                         </br>
@@ -23,24 +23,27 @@
                         </br>
                         </br>
                         </br>
+                        <div class="alert alert-danger" role="alert" th:if="${msg_error}" th:utext="${msg_error}"></div>
+                        <div class="alert alert-success" role="alert" th:if="${msg_success}"
+                             th:utext="${msg_success}"></div>
                         <div class="form-group">
-                            <label for="username" class="text-info">Username:</label>
-                            <input type="text" name="username" id="username" class="form-control">
+                            <label class="text-info" for="username">Username:</label>
+                            <input class="form-control" id="username" name="username" type="text">
                         </div>
                         <div class="form-group">
-                            <label for="password" class="text-info">Password:</label>
-                            <input type="password" name="password" id="password" class="form-control">
+                            <label class="text-info" for="password">Password:</label>
+                            <input class="form-control" id="password" name="password" type="password">
                         </div>
                         <div class="form-group">
-                            <label for="mail" class="text-info">Mail:</label>
-                            <input type="email" name="mail" id="mail" class="form-control">
+                            <label class="text-info" for="mail">Mail:</label>
+                            <input class="form-control" id="mail" name="mail" type="email">
                         </div>
                         <div class="form-group">
                             <br>
-                            <input type="submit" name="submit" class="btn btn-info btn-md" value="Valider">
+                            <input class="btn btn-info btn-md" name="submit" type="submit" value="Valider">
                         </div>
-                        <div id="register-link" class="text-right">
-                            <a href="${pageContext.request.contextPath}/bomberman/connection" class="text-info">Connexion
+                        <div class="text-right" id="register-link">
+                            <a class="text-info" href="/bomberman/connection">Connexion
                                 ?</a>
                         </div>
                     </form>

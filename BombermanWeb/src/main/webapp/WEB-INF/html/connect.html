@@ -1,46 +1,44 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org/" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <link
         href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        rel="stylesheet" id="bootstrap-css">
+        id="bootstrap-css" rel="stylesheet">
 <script
         src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script
         src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
-<link rel="stylesheet" href="./css/connect.css">
+<link href="./css/connect.css" rel="stylesheet">
 <body>
 <div id="login">
     <div class="container">
-        <div id="login-row" class="row justify-content-center align-items-center">
-            <div id="login-column" class="col-md-6">
-                <div id="login-box" class="col-md-12">
-                    <form id="login-form" class="form" action="/bomberman/login" method="post">
-                        </br>
-                        </br>
-                        </br>
+        <div class="row justify-content-center align-items-center" id="login-row">
+            <div class="col-md-6" id="login-column">
+                <div class="col-md-12" id="login-box">
+                    <form action="/bomberman/login" class="form" id="login-form" method="post">
+
+                        </br></br></br>
                         <h3 class="text-center text-info">Connection au compte de jeu:</h3>
-                        </br>
-                        </br>
-                        </br>
-                        <div class="alert alert-danger" role="alert" th:if="${msg_error}" th:utext="${msg_error}" ></div>
-                        
-                        
+                        </br></br></br>
+
+                        <div class="alert alert-danger" role="alert" th:if="${msg_error}" th:utext="${msg_error}"></div>
+                        <div class="alert alert-success" role="alert" th:if="${msg_success}"
+                             th:utext="${msg_success}"></div>
                         
                         <div class="form-group">
-                            <label for="username" class="text-info">Username:</label><br>
-                            <input type="text" name="username" id="username" class="form-control">
+                            <label class="text-info" for="username">Username:</label><br>
+                            <input class="form-control" id="username" name="username" type="text">
                         </div>
                         <div class="form-group">
-                            <label for="password" class="text-info">Password:</label><br>
-                            <input type="password" name="password" id="password" class="form-control">
+                            <label class="text-info" for="password">Password:</label><br>
+                            <input class="form-control" id="password" name="password" type="password">
                         </div>
                         <div class="form-group">
                             <br>
-                            <input type="submit" name="submit" class="btn btn-info btn-md" value="Connexion">
+                            <input class="btn btn-info btn-md" name="submit" type="submit" value="Connexion">
                         </div>
-                        <div id="register-link" class="text-right">
-                            <a href="${pageContext.request.contextPath}/bomberman/register" class="text-info">Pas de
+                        <div class="text-right" id="register-link">
+                            <a class="text-info" href="/bomberman/register">Pas de
                                 compte ?</a>
                         </div>
                     </form>

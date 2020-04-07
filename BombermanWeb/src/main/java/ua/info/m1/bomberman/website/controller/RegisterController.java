@@ -1,13 +1,11 @@
 package ua.info.m1.bomberman.website.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import ua.info.m1.bomberman.entities.User;
 import ua.info.m1.bomberman.repositories.UserRepository;
 
@@ -28,8 +26,7 @@ public class RegisterController {
      * @return 200/401 token/"Bad Creditentials"
      */
     @PostMapping(path = "/bomberman/registernew")
-    public @ResponseBody
-    ResponseEntity createAccount(@RequestParam String username, @RequestParam String password, @RequestParam String mail) {
+    String register(@RequestParam String username, @RequestParam String password, @RequestParam String mail, Model model) {
         User user = userRepository.findByUsername(username);
         // Si utilisateur inexistant
         if (user == null) {
@@ -38,9 +35,13 @@ public class RegisterController {
             user.setPassword(password);
             user.setEmail(mail);
             userRepository.save(user);
-            return ResponseEntity.status(HttpStatus.OK).body("Compte créé");
+            model.addAttribute("msg_success", "Inscription réussie");
+            model.addAttribute("alert", "alert");
+            return "connect";
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Création compte refusée");
+            model.addAttribute("msg_error", "Inscription échouée");
+            model.addAttribute("alert", "alert");
+            return "register";
         }
     }
 
