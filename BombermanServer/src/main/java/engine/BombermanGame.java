@@ -12,6 +12,7 @@ import engine.subsystems.DamageSystem;
 import engine.subsystems.ItemSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import server.GameManager;
 import server.GameServerInstance;
 
 import java.util.ArrayList;
@@ -50,7 +51,17 @@ public class BombermanGame extends Observable implements Runnable {
     public BombermanGame(String layout, int maxPlayers) {
         this.layout = layout;
         this.maxPlayers = maxPlayers;
+
         map = getMapFromLayout(layout);
+
+        AbstractAgent.resetId();
+
+        items = new ArrayList<>();
+        bombs = new ArrayList<>();
+        agentsIa = new ArrayList<>();
+
+        agents = new ArrayList<>();
+        players = new ArrayList<>();
     }
 
     /**
@@ -77,11 +88,6 @@ public class BombermanGame extends Observable implements Runnable {
         currentTurn = 0;
         isRunning = false;
 
-        AbstractAgent.resetId();
-        items = new ArrayList<>();
-        bombs = new ArrayList<>();
-        agentsIa = new ArrayList<>();
-
         breakableWalls = map.getBreakableWalls();
         initAgents();
         linkInstances();
@@ -105,8 +111,6 @@ public class BombermanGame extends Observable implements Runnable {
      * Méthode d'initialisation des agents du jeu
      */
     private void initAgents() {
-        agents = new ArrayList<>();
-        players = new ArrayList<>();
         for (InfoAgent agent : map.getInfoAgents()) {
             int i = 0;
             try {
@@ -224,6 +228,7 @@ public class BombermanGame extends Observable implements Runnable {
         for (GameServerInstance gmi : gameServerInstances) {
             gmi.terminate();
         }
+        GameManager.closeGame(this);
     }
 
     /**
@@ -307,7 +312,7 @@ public class BombermanGame extends Observable implements Runnable {
         return agentsIa;
     }
 
-    public void killAfterDisconnection(GameServerInstance gameServerInstance) {
+    public void removeInstanceLeftovers(GameServerInstance gameServerInstance) {
         BombermanAgent playerToRemove = gameServerInstance.bombermanAgent;
 
         if (players.contains(playerToRemove))

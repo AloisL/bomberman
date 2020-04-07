@@ -58,7 +58,7 @@ public class PanelInputPreGame extends JPanel {
                 searchButton.setBackground(new ColorUIResource(238, 238, 238));
                 readyButton.setBackground(new ColorUIResource(238, 238, 238));
                 readyButton.setEnabled(false);
-                clientController.setInfo("SEARCH for a server and press READY.");
+                clientController.setInfo("Search for a server");
                 searching = false;
             }
 

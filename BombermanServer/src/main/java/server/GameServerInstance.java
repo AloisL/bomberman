@@ -47,43 +47,49 @@ public class GameServerInstance implements Runnable, Observer {
             initGame();
             gameLoop();
 
+            bombermanGame.removeInstanceLeftovers(this);
             socket.close();
             log.debug("Instance terminated");
         } catch (Exception e) {
-            bombermanGame.killAfterDisconnection(this);
+            bombermanGame.removeInstanceLeftovers(this);
             log.error(e.getMessage(), e);
         }
     }
 
-    private void initGame() throws IOException, ClassNotFoundException {
+    private void initGame() throws IOException, ClassNotFoundException, InterruptedException {
         String layout = (String) input.readObject();
+        sendText("Searching for " + layout + "game");
         log.debug(layout);
         isReady = false;
         isWaiting = true;
 
         bombermanGame = GameManager.findOrCreateGame(layout);
+        sendText("Game found, press ready");
         bombermanGame.addObserver(this);
         bombermanGame.gameServerInstances.add(this);
 
-        String cmd = (String) input.readObject();
-        log.debug("cmd= " + cmd);
-        if (cmd.equals("$ready")) {
-            ready(true);
-        }
-        while (isWaiting) {
-            // Attente le temps que la partie se lance
-        }
+        log.debug("iswaiting = " + isWaiting);
+        do {
+            Object objectInput = input.readObject();
+            if (objectInput instanceof String) {
+                String cmd = (String) objectInput;
+                log.debug(cmd);
+                if (cmd.equals("$ready"))
+                    ready(true);
+                if (cmd.equals("$unready"))
+                    ready(false);
+            }
+        } while (isWaiting);
     }
 
     private void ready(boolean ready) throws IOException, ClassNotFoundException {
+        log.debug("ready = " + ready);
         this.isReady = ready;
         GameManager.startIfPossible(bombermanGame);
     }
 
     private void gameLoop() throws IOException, ClassNotFoundException {
         isRunning = true;
-        log.debug("Game started");
-        sendText("Game Started");
         while (isRunning) {
             AgentAction action = (AgentAction) input.readObject();
             bombermanGame.setAction(this, action);
@@ -100,6 +106,7 @@ public class GameServerInstance implements Runnable, Observer {
                     bombermanGame.getInfoAgents(), bombermanGame.getBombs(), bombermanGame.getItems());
             output.writeObject(bombermanDTO);
             log.debug(bombermanDTO.toString() + " sent");
+            updateInfos();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
@@ -107,11 +114,11 @@ public class GameServerInstance implements Runnable, Observer {
 
     public void lost() {
         hasLost = true;
-        // TODO méthode à appeler lorsque le joueur a perdu
-        // envoi l'instruction lui interdisant d'executer des actions
-        // lui permet tout de même de continuer à regarder la partie
     }
 
+    /**
+     * Méthode appelées en fin de partie, change les texte des infos
+     */
     public void terminate() {
         try {
             if (hasLost) sendText("$end-Game Lost! You may now start a new game.");
@@ -120,15 +127,19 @@ public class GameServerInstance implements Runnable, Observer {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
-        // TODO : méthode à appeler lorsque la partie est terminée
-        // termine la partie et renvoie tout les joueurs restants vers le menu de sélection de partie
     }
 
     public void sendText(String text) throws IOException {
         output.writeObject(text);
     }
 
-    // TODO Update des infos (vies bonus, portée bombe, etc...)
-    public void updateInfos() {
+    /**
+     * Update des infos (vies bonus, portée bombe, etc...)
+     */
+    public void updateInfos() throws IOException {
+        int nbVies = bombermanAgent.getNbLifes();
+        if (nbVies > 0)
+            output.writeObject("Life count: " + bombermanAgent.getNbLifes() + "/3");
+        else output.writeObject("You are dead");
     }
 }

@@ -7,8 +7,12 @@ import common.infotypes.InfoBomb;
 import engine.BombermanGame;
 import engine.strategies.StrategieAttaque;
 import engine.strategies.StrategieSafe;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class BombermanAgent extends AbstractAgent {
+
+    final static Logger log = (Logger) LogManager.getLogger(BombermanAgent.class);
 
     public boolean isLinked = false;
     private int nbMaxBomb;
@@ -28,8 +32,10 @@ public class BombermanAgent extends AbstractAgent {
     }
 
     public boolean canPlaceBomb() {
-        if (!isSick() && (nbBombPlaced < nbMaxBomb)) return true;
-        else return false;
+        if (!isSick() && (nbBombPlaced < nbMaxBomb)) {
+            log.debug("nbBombPlaced = " + nbBombPlaced);
+            return true;
+        } else return false;
     }
 
     @Override

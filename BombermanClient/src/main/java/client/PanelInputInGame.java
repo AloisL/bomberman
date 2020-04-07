@@ -26,7 +26,7 @@ public class PanelInputInGame extends JPanel {
     // TODO : JEE gérer la perte de la partie lorque l'on quitte une partie
     private void initListeners() {
         returnButton.addActionListener(actionEvent -> {
-            clientController.stop("Game aborted, will count as a loss.");
+            clientController.stop("Game aborted, count as a loss.");
         });
     }
 

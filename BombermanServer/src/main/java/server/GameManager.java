@@ -58,9 +58,13 @@ public class GameManager {
             bombermanGame.launch();
         } else {
             for (GameServerInstance gmi : bombermanGame.gameServerInstances) {
-                gmi.sendText("Players ready: " + playersReady + "/" + maxPlayers);
+                gmi.sendText("Game found, players ready: " + playersReady + "/" + maxPlayers);
             }
         }
     }
 
+    public static void closeGame(BombermanGame bombermanGame) {
+        if (onlineGames.contains(bombermanGame))
+            onlineGames.remove(bombermanGame);
+    }
 }

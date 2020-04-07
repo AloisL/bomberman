@@ -81,9 +81,10 @@ public class ActionSystem extends AbstractSystem {
                 if (agent.getClass() == BombermanAgent.class) {
                     BombermanAgent agentBomberman = (BombermanAgent) agent;
                     if (agentBomberman.canPlaceBomb()) return true;
+                    else return false;
                 } else return false;
             default:
-                log.error(agent.toString() + " ==> Action: " + action.toString() + " non reconnue");
+                log.error("ISLEGALACTION -> " + agent.toString() + " ==> Action: " + action.toString() + " non reconnue");
                 return false;
         }
     }
@@ -169,7 +170,7 @@ public class ActionSystem extends AbstractSystem {
                 }
                 return false;
             default:
-                log.error(agent.toString() + " ==> Action: " + action.toString() + " non reconnue");
+                log.error("CANMOVE -> " + agent.toString() + " ==> Action: " + action.toString() + " non reconnue");
                 return false;
         }
     }
@@ -227,7 +228,7 @@ public class ActionSystem extends AbstractSystem {
                 bombermanGame.getAgentsCopy().add(agent);
                 break;
             default:
-                log.debug("Action inconnue ==> " + action.toString());
+                log.debug("DOACTION -> Action inconnue ==> " + action.toString());
                 bombermanGame.getAgentsCopy().add(agent);
                 break;
         }

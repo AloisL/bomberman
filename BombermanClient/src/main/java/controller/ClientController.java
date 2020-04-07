@@ -166,10 +166,10 @@ public class ClientController extends Observable implements Runnable {
             token = response.body().string();
             log.debug("token --> " + token);
             if (!token.equals("") && responseCode == 200) {
-                setInfo("Connection successful.\nSEARCH for a server and press READY.");
+                setInfo("Connection successful \n Search for a server");
                 return token;
             }
-            setInfo("Connection failed. Try again.");
+            setInfo("Connection failed, try again");
         } catch (IOException e) {
             setInfo(e.getMessage());
             log.error(e.getStackTrace().toString());

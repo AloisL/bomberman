@@ -95,11 +95,6 @@ public class DamageSystem extends AbstractSystem {
                 BombermanAgent bombermanAgent = (BombermanAgent) player;
                 if ((bombermanAgent != agent) && (agent.getX() == bombermanAgent.getX()) && (agent.getY() == bombermanAgent.getY())) {
                     hit(bombermanAgent, false);
-                    for (GameServerInstance gameServerInstance : bombermanGame.gameServerInstances) {
-                        if (gameServerInstance.bombermanAgent == bombermanAgent) {
-                            gameServerInstance.updateInfos();
-                        }
-                    }
                 }
             }
         }
