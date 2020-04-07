@@ -26,7 +26,7 @@ public class LoginController {
      *
      * @return 200/401 token/"Bad Creditentials"
      */
-    @GetMapping(path = "/bomberman/login")
+    @GetMapping(path = "/bomberman/api/login")
     public @ResponseBody
     ResponseEntity login(@RequestParam String username, @RequestParam String password) {
         User user = userRepository.findByUsername(username);

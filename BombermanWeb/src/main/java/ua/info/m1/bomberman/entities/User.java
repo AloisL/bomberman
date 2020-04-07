@@ -5,16 +5,25 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class User {
+
     @Id
     @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotNull
     @Column(unique = true)
     private String username;
+
+    @NotNull
     @Column(unique = true)
     private String email;
+
+    @NotNull
     private String password;
+
     private String currentToken;
+
 
     public String getUsername() {
         return username;

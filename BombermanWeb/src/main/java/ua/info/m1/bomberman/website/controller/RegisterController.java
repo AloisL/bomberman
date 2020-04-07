@@ -17,7 +17,7 @@ public class RegisterController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/register")
+    @GetMapping("/bomberman/register")
     public String home() {
         return "register";
     }
@@ -27,20 +27,20 @@ public class RegisterController {
      *
      * @return 200/401 token/"Bad Creditentials"
      */
-    @PostMapping(path = "/registernew")
+    @PostMapping(path = "/bomberman/registernew")
     public @ResponseBody
-    ResponseEntity createAccount(@RequestParam String username, @RequestParam String password, @RequestParam String email) {
+    ResponseEntity createAccount(@RequestParam String username, @RequestParam String password, @RequestParam String mail) {
         User user = userRepository.findByUsername(username);
         // Si utilisateur inexistant
         if (user == null) {
             user = new User();
             user.setUsername(username);
             user.setPassword(password);
-            user.setEmail(email);
+            user.setEmail(mail);
             userRepository.save(user);
-            return ResponseEntity.status(HttpStatus.OK).body("page login compte creer");
+            return ResponseEntity.status(HttpStatus.OK).body("Compte créé");
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("page creation compte refusee");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Création compte refusée");
         }
     }
 

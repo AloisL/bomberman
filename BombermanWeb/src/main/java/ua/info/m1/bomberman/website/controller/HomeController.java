@@ -4,11 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class ConsultationCompte {
+public class HomeController {
 
-    @GetMapping("/bomberman/consulteCompte")
+    @GetMapping("/bomberman")
     public String home() {
-        return "consultationCompte";
+        return "connect";
     }
 
 }
