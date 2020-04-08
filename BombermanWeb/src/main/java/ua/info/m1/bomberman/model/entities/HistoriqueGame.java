@@ -2,7 +2,6 @@ package ua.info.m1.bomberman.model.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 @Entity
 public class HistoriqueGame {
@@ -21,10 +20,10 @@ public class HistoriqueGame {
     private String victoire;
 
     @Column(name = "datedebut")
-    private Date dateDebut;
+    private String dateDebut;
 
-    @Column(name = "datedebut")
-    private Date dateFin;
+    @Column(name = "datefin")
+    private String dateFin;
 
     public Long getIdUser() {
         return IdUser;
@@ -42,19 +41,19 @@ public class HistoriqueGame {
         this.victoire = victoire;
     }
 
-    public Date getDateDebut() {
+    public String getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(Date dateGame) {
+    public void setDateDebut(String dateGame) {
         this.dateDebut = dateDebut;
     }
 
-    public Date getDateFin() {
+    public String getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(Date dateGame) {
+    public void setDateFin(String dateGame) {
         this.dateFin = dateFin;
     }
 

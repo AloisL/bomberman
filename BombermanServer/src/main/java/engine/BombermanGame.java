@@ -16,6 +16,7 @@ import server.GameManager;
 import server.GameServerInstance;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Observable;
 
 /**
@@ -42,6 +43,10 @@ public class BombermanGame extends Observable implements Runnable {
     private ArrayList<InfoItem> items;
     private ArrayList<InfoBomb> bombs;
 
+    public Date dateDebut;
+    public Date dateFin;
+    public String winner;
+
     /**
      * Constructor
      *
@@ -49,6 +54,8 @@ public class BombermanGame extends Observable implements Runnable {
      * @param maxPlayers
      */
     public BombermanGame(String layout, int maxPlayers) {
+        dateDebut=new Date();
+
         this.layout = layout;
         this.maxPlayers = maxPlayers;
 

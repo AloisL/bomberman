@@ -9,4 +9,5 @@ public class GameHistoryApi {
 
     @Autowired
     private HistoriqueGameRepository historiqueGameRepository;
+
 }
