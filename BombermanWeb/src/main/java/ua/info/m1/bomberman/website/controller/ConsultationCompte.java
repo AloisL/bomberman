@@ -19,7 +19,7 @@ public class ConsultationCompte {
     
     @PostMapping("/bomberman/supprimer")
     public String supprimer() {
-        return "connect.html";
+        return "connect";
     }
 
 }
