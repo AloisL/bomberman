@@ -20,8 +20,10 @@ public class HistoriqueGame {
 	@Column(name="iduser")
     private Long IdUser;
 	
-	private boolean victoire;
+	@Column(name="victoire")
+	private String victoire;
 	
+	@Column(name="date")
 	private String dateGame;
 
 	public Long getIdUser() {
@@ -32,11 +34,11 @@ public class HistoriqueGame {
 		IdUser = idUser;
 	}
 
-	public boolean getVictoire() {
+	public String getVictoire() {
 		return victoire;
 	}
 
-	public void setNbvictoire(boolean victoire) {
+	public void setNbvictoire(String victoire) {
 		this.victoire = victoire;
 	}
 
