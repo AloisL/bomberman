@@ -29,6 +29,7 @@ public class HistoriqueController {
         String token = cookieToken.getValue();
         User user = userRepository.findUserByCurrentToken(token);
         if (user != null) {
+/*
             Long idLong = userRepository.findByUsername("Tom").getId();
 
             HistoriqueGame g1 = new HistoriqueGame();
@@ -48,8 +49,7 @@ public class HistoriqueController {
             g3.setIdUser(idLong);
             historiqueGameRepository.save(g1);
             historiqueGameRepository.save(g2);
-            historiqueGameRepository.save(g3);
-
+            historiqueGameRepository.save(g3);*/
             List<HistoriqueGame> games = historiqueGameRepository.findAll();
             model.addAttribute("games", games);
             model.addAttribute("id_user", user.getId());

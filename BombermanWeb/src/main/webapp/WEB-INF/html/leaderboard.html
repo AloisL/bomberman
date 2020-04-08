@@ -1,97 +1,86 @@
 <!DOCTYPE html>
 <html>
 <link
-        href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        id="bootstrap-css" rel="stylesheet">
+	href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	id="bootstrap-css" rel="stylesheet">
 <script
-        src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <link href="assets/css/bootstrap.css" rel="stylesheet">
 <script
-        src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <head>
-    <meta charset="UTF-8">
-    <title>Insert title here</title>
+<meta charset="UTF-8">
+<title>Bomberman Lader</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/bomberman/consulteCompte">Compte</a>
-    <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
-            data-target="#navbarNav" data-toggle="collapse" type="button">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="/bomberman/leaderboard">Leaderboard <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/bomberman/historique">Historique</a>
-            </li>
-            <li class="nav-item">
-                <form action="/bomberman/deconnection" class="form" id="deconnect-form"
-                      method="post">
-                    <input class="btn btn-danger" name="action"
-                           onClick='deconnectCompte()' type="submit"
-                           value="Déconnexion">
-                    <script language='javascript'>
-                        function deconnectCompte() {
-                            if (confirm("Confirmer la déconnexion ?")) {
-                                var form = document.getElementById("deconnect-form")
-                                form.submit();
-                            }
-                        }
-                    </script>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="/bomberman/consulteCompte">Compte</a>
+		<button aria-controls="navbarNav" aria-expanded="false"
+			aria-label="Toggle navigation" class="navbar-toggler"
+			data-target="#navbarNav" data-toggle="collapse" type="button">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav">
+				<li class="nav-item active"><a class="nav-link"
+					href="/bomberman/leaderboard">Leaderboard <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item"><a class="nav-link"
+					href="/bomberman/historique">Historique</a></li>
+				<li class="nav-item">
+					<form action="/bomberman/deconnection" class="form"
+						id="deconnect-form" method="post">
+						<input class="btn btn-danger" name="action"
+							onClick='deconnectCompte()' type="submit" value="Déconnexion">
+						<script language='javascript'>
+							function deconnectCompte() {
+								if (confirm("Confirmer la déconnexion ?")) {
+									var form = document
+											.getElementById("deconnect-form")
+									form.submit();
+								}
+							}
+						</script>
 
-                </form>
-        </ul>
-    </div>
-</nav>
+					</form>
+			</ul>
+		</div>
+	</nav>
 
 
-<table class="table table-striped table-dark">
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">UserName</th>
-        <th scope="col">Mail</th>
-        <th scope="col">Victoire</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto@gmail.com</td>
-        <td>100</td>
-    </tr>
-    <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton@gmail.com</td>
-        <td>70</td>
-    </tr>
-    <tr>
-        <th scope="row">3</th>
-        <td>Larry</td>
-        <td>the_Bird@gmail.com</td>
-        <td>50</td>
-    </tr>
-    </tbody>
-</table>
+	<table class="table table-striped table-dark">
+		<thead>
+			<tr>
+				<th scope="col">UserName</th>
+				<th scope="col">Victoire</th>
+				<th scope="col">Defaite</th>
+			</tr>
+		</thead>
+		<tbody>
+		<tr th:each="user: ${lader}">
+				
+				<td th:text="${user.getUsername()}"/> 
+				
+					
+				<td th:text="${user.getVictoire()}" />
+				
+				<td th:text="${user.getDefaite()}" />
+				
+		</tbody>
+	</table>
 
-<form action="/bomberman/leaderboard" class="form" id="leaderboard-form"
-      method="post">
-    <div class="btn-group">
-        <button aria-expanded="false" aria-haspopup="true"
-                class="btn btn-info dropdown-toggle" data-toggle="dropdown" type="button">
-            Action
-        </button>
-        <div class="dropdown-menu">
-            <a class="dropdown-item">Victoir <span class="oi" data-glyph="arrow-thick-bottom"></span> </a>
-            <a class="dropdown-item">Défaite</a>
-            <a class="dropdown-item">User</a>
-        </div>
-    </div>
-    </from>
+	<form action="/bomberman/leaderboard" class="form"
+		id="leaderboard-form" method="post">
+		<div class="btn-group">
+			<select class="custom-select">
+				<option value="victoire">Victoire</option>
+				<option value="defaite">Défaite</option>
+				<option value="ratio">Ration win</option>
+				
+			</select>
+		</div>
+		</button>
+		</div>
+		</from>
 </body>
 </html>

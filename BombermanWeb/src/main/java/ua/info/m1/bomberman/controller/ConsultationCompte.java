@@ -20,11 +20,13 @@ public class ConsultationCompte {
     private UserRepository userRepository;
 
     @GetMapping("/bomberman/consulteCompte")
-    public String consultation(HttpServletRequest request) {
+    public String consultation(HttpServletRequest request,Model model) {
         Cookie cookieToken = WebUtils.getCookie(request, "session");
         String token = cookieToken.getValue();
         User user = userRepository.findUserByCurrentToken(token);
-        if (user != null) return "consultationCompte";
+        if (user != null) {
+        	model.addAttribute("user",user);
+        	return "consultationCompte";}
         else return "connect";
     }
 
