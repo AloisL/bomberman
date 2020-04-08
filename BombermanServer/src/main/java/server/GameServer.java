@@ -15,16 +15,15 @@ public class GameServer {
 
     final static Logger log = (Logger) LogManager.getLogger(GameServer.class);
     public static String serverToken;
-    public static String server = "127.0.0.1";
+    public static String server;
     public static int apiPort = 8080;
-    int port;
+    int port = 8090;
     ServerSocket serverSocket;
     ArrayList<GameServerInstance> gameServerInstances = new ArrayList<>();
     String adminUser = "bomberman";
-    String adminPassword = "bomberman";
 
-    public GameServer(int port) {
-        this.port = port;
+    public GameServer(String server, String adminPassword) {
+        this.server = server;
         serverToken = login(adminUser, adminPassword);
         if (serverToken != null)
             start();
