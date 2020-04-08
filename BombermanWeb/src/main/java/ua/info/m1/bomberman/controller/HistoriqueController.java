@@ -33,18 +33,18 @@ public class HistoriqueController {
 
             HistoriqueGame g1 = new HistoriqueGame();
             g1.setVictoire("victoire");
-            g1.setDateDebut("02042020");
-            g1.setDateFin("02042020");
+            g1.setDateDebut("02/04/2020");
+            g1.setDateFin("02/04/2020");
             g1.setIdUser(idLong);
             HistoriqueGame g2 = new HistoriqueGame();
             g2.setVictoire("defaite");
-            g2.setDateDebut("04042020");
-            g2.setDateFin("04042020");
+            g2.setDateDebut("04/04/2020");
+            g2.setDateFin("04/04/2020");
             g2.setIdUser(idLong);
             HistoriqueGame g3 = new HistoriqueGame();
             g3.setVictoire("defaite");
-            g3.setDateDebut("06042020");
-            g3.setDateFin("06042020");
+            g3.setDateDebut("06/04/2020");
+            g3.setDateFin("06/04/2020");
             g3.setIdUser(idLong);
             historiqueGameRepository.save(g1);
             historiqueGameRepository.save(g2);
@@ -52,6 +52,7 @@ public class HistoriqueController {
 
             List<HistoriqueGame> games = historiqueGameRepository.findAll();
             model.addAttribute("games", games);
+            model.addAttribute("id_user", user.getId());
             return "historique";
         } else return "connect";
     }

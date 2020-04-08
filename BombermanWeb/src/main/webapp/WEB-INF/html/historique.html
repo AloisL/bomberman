@@ -57,31 +57,14 @@
 		</thead>
 		<tbody>
 			<tr th:each="game: ${games}">
-				
+				<span th:if="${id_user == game.getIdUser()}">
 				<td th:text="${game.getVictoire()}"/> 
 				
 					
 				<td th:text="${game.getDateFin()}" />
+				</span>
 			</tr>
 			
-			<tr>
-
-				<td>victoire</td>
-				<td>3</td>
-
-			</tr>
-			<tr>
-
-				<td>victoire</td>
-				<td>5</td>
-
-			</tr>
-			<tr>
-
-				<td>défaite</td>
-				<td>1</td>
-
-			</tr>
 		</tbody>
 	</table>
 
