@@ -16,7 +16,6 @@ public class User {
     private String username;
 
     @NotNull
-    @Column(unique = true)
     private String email;
 
     @NotNull
@@ -26,8 +25,9 @@ public class User {
 
 
     public Long getId() {
-		return id;
-	}
+        return id;
+    }
+
     public String getUsername() {
         return username;
     }

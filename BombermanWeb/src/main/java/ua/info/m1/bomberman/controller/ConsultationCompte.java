@@ -31,7 +31,7 @@ public class ConsultationCompte {
     }
 
     @PostMapping(value = "/bomberman/gestionCompte")
-    public String supprimer(@RequestParam String action, @RequestParam String password, @RequestParam String passwordvalid, @RequestParam String mail, Model model, HttpServletRequest request) {
+    public String supprimer(@RequestParam String action, @RequestParam String username, @RequestParam String password, @RequestParam String passwordvalid, @RequestParam String mail, Model model, HttpServletRequest request) {
         if (action.equals("Supprimer")) {
             Cookie cookieToken = WebUtils.getCookie(request, "session");
             String token = cookieToken.getValue();
@@ -45,19 +45,36 @@ public class ConsultationCompte {
             String token = cookieToken.getValue();
             User user = userRepository.findUserByCurrentToken(token);
             if (user != null) {
+
+                if (!username.isEmpty())
+                    if (userRepository.findByUsername(username) == null)
+                        user.setUsername(username);
+                    else {
+                        model.addAttribute("msg_error", "L'identifiant utilisateur est déjà existant'");
+                        model.addAttribute("alert", "alert");
+                        return "consultationCompte";
+                    }
+
                 if (!password.isEmpty() && password.equals(passwordvalid))
                     user.setPassword(password);
                 else {
-                    model.addAttribute("msg_error", "Les mots de passe ne coincident pas.");
+                    model.addAttribute("msg_error", "Les mots de passe ne coincident pas");
                     model.addAttribute("alert", "alert");
                     return "consultationCompte";
                 }
+
                 if (!mail.isEmpty())
                     user.setEmail(mail);
+
             }
-            userRepository.save(user);
-            model.addAttribute("msg_success", "Compte modifié");
-            model.addAttribute("alert", "alert");
+            try {
+                userRepository.save(user);
+                model.addAttribute("msg_success", "Compte modifié");
+                model.addAttribute("alert", "alert");
+            } catch (Exception e) {
+                model.addAttribute("msg_error", e.getMessage());
+                model.addAttribute("alert", "alert");
+            }
             return "consultationCompte";
         }
     }
