@@ -24,5 +24,27 @@ public class RatioGame {
 	
 	@Column(unique = true)
     private Long nbdefaite;
+
+	public User getUser() {
+		return user;
+	}
+
+	public Long getNbvictoire() {
+		return nbvictoire;
+	}
+
+	public void setNbvictoire(Long nbvictoire) {
+		this.nbvictoire = nbvictoire;
+	}
+
+	public Long getNbdefaite() {
+		return nbdefaite;
+	}
+
+	public void setNbdefaite(Long nbdefaite) {
+		this.nbdefaite = nbdefaite;
+	}
+	
+	
 	
 }
