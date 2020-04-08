@@ -29,15 +29,15 @@
                       method="post">
                     <input class="btn btn-danger" name="action"
                            onClick='deconnectCompte()' type="submit"
-                           value="Supprimer">
+                           value="Déconnexion">
                     <script language='javascript'>
-                            function deconnectCompte() {
-                                if (confirm("Confirmez vous vouloir vous deconnectez de votre compte?")) {
-                                    var form = document.getElementById("deconnect-form")
-                                    form.submit();
-                                }
+                        function deconnectCompte() {
+                            if (confirm("Confirmer la déconnexion ?")) {
+                                var form = document.getElementById("deconnect-form")
+                                form.submit();
                             }
-                        </script>
+                        }
+                    </script>
 
                 </form>
         </ul>

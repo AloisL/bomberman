@@ -9,75 +9,75 @@
         src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/bomberman/consulteCompte">Compte</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="/bomberman/leaderboard">Leaderboard <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/bomberman/historique">Historique</a>
-      </li>
-      <li class="nav-item">
-        <form action="/bomberman/deconnection" class="form" id="deconnect-form"
-              method="post">
-          <input class="btn btn-danger" name="action"
-                 onClick='deconnectCompte()' type="submit"
-                 value="Supprimer">
-          <script language='javascript'>
-                            function deconnectCompte() {
-                                if (confirm("Confirmez vous vouloir vous deconnectez de votre compte?")) {
-                                    var form = document.getElementById("deconnect-form")
-                                    form.submit();
-                                }
+    <a class="navbar-brand" href="/bomberman/consulteCompte">Compte</a>
+    <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+            data-target="#navbarNav" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/bomberman/leaderboard">Leaderboard <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/bomberman/historique">Historique</a>
+            </li>
+            <li class="nav-item">
+                <form action="/bomberman/deconnection" class="form" id="deconnect-form"
+                      method="post">
+                    <input class="btn btn-danger" name="action"
+                           onClick='deconnectCompte()' type="submit"
+                           value="Déconnexion">
+                    <script language='javascript'>
+                        function deconnectCompte() {
+                            if (confirm("Confirmer la déconnexion ?")) {
+                                var form = document.getElementById("deconnect-form")
+                                form.submit();
                             }
-                        </script>
+                        }
+                    </script>
 
-        </form>
-    </ul>
-  </div>
+                </form>
+        </ul>
+    </div>
 </nav>
 
 
 <table class="table table-striped">
-  <thead>
+    <thead>
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">Victoir/défaite</th>
-      <th scope="col">nombre de kill</th>
-      <th scope="col">Handle</th>
+        <th scope="col">#</th>
+        <th scope="col">Victoir/défaite</th>
+        <th scope="col">nombre de kill</th>
+        <th scope="col">Handle</th>
     </tr>
-  </thead>
-  <tbody>
+    </thead>
+    <tbody>
     <tr>
-      <th scope="row">1</th>
-      <td>victoire</td>
-      <td>3</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>victoire</td>
-      <td>5</td>
-      <td>@fat</td>
+        <th scope="row">1</th>
+        <td>victoire</td>
+        <td>3</td>
+        <td>@mdo</td>
     </tr>
     <tr>
-      <th scope="row">3</th>
-      <td>défaite</td>
-      <td>1</td>
-      <td>@twitter</td>
+        <th scope="row">2</th>
+        <td>victoire</td>
+        <td>5</td>
+        <td>@fat</td>
     </tr>
-  </tbody>
+    <tr>
+        <th scope="row">3</th>
+        <td>défaite</td>
+        <td>1</td>
+        <td>@twitter</td>
+    </tr>
+    </tbody>
 </table>
-
 
 
 </body>

@@ -17,10 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 public class ConsultationCompte {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @GetMapping("/bomberman/consulteCompte")
-    public String consultation(@RequestParam HttpServletRequest request) {
+    public String consultation(HttpServletRequest request) {
         Cookie cookieToken = WebUtils.getCookie(request, "session");
         String token = cookieToken.getValue();
         User user = userRepository.findUserByCurrentToken(token);

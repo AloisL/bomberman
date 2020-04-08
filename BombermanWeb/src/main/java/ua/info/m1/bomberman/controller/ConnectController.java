@@ -6,10 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.WebUtils;
 import ua.info.m1.bomberman.model.entities.User;
 import ua.info.m1.bomberman.model.repositories.UserRepository;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -54,6 +56,19 @@ public class ConnectController {
         byte[] randomBytes = new byte[24];
         secureRandom.nextBytes(randomBytes);
         return base64Encoder.encodeToString(randomBytes);
+    }
+
+    @PostMapping("/bomberman/deconnection")
+    public String disconnect(Model model, HttpServletRequest request, HttpServletResponse response) {
+        Cookie sessionCookie = WebUtils.getCookie(request, "session");
+        String token = sessionCookie.getValue();
+        User user = userRepository.findUserByCurrentToken(token);
+        user.setCurrentToken(token);
+        userRepository.save(user);
+        response.addCookie(new Cookie("session", ""));
+        model.addAttribute("msg_error", "Déconnecté");
+        model.addAttribute("alert", "alert");
+        return "connect";
     }
 
 }
