@@ -11,4 +11,6 @@ public class RatioController {
 	
 	@Autowired
     private RatioGameRepository ratioGameRepository;
+	
+	
 }
