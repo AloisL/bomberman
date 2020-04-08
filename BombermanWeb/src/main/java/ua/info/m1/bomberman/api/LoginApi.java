@@ -1,4 +1,4 @@
-package ua.info.m1.bomberman.webservice;
+package ua.info.m1.bomberman.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 @RestController
-public class LoginController {
+public class LoginApi {
 
     @Autowired
     private UserRepository userRepository;

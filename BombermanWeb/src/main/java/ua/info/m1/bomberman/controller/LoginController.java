@@ -17,7 +17,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 @Controller
-public class ConnectController {
+public class LoginController {
 
     @Autowired
     private UserRepository userRepository;
