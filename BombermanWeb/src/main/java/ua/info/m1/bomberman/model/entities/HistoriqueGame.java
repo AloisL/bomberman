@@ -38,7 +38,7 @@ public class HistoriqueGame {
         return victoire;
     }
 
-    public void setNbvictoire(String victoire) {
+    public void setVictoire(String victoire) {
         this.victoire = victoire;
     }
 
