@@ -68,7 +68,7 @@ public class ClientView extends JFrame implements Observer, WindowListener {
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle(title);
-        setSize(new Dimension(500, 200));
+        setSize(new Dimension(500, 220));
         setLocationRelativeTo(null);
     }
 
@@ -124,9 +124,7 @@ public class ClientView extends JFrame implements Observer, WindowListener {
             log.debug(this.getComponentCount());
         }
         panelInput.preGameMode();
-        repaint();
-        setSize(new Dimension(500, 200));
-        repaint();
+        setSize(new Dimension(500, 220));
     }
 
     /**
@@ -254,6 +252,10 @@ public class ClientView extends JFrame implements Observer, WindowListener {
     public void setInfo(String message) {
         infoLabel.setText(message);
         repaint();
+    }
+
+    public void serverConnectedAllowReady() {
+        panelInput.panelInputPreGame.readyButton.setEnabled(true);
     }
 
 }

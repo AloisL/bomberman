@@ -46,10 +46,9 @@ public class PanelInputPreGame extends JPanel {
         searchButton.addActionListener(event -> {
             if (!searching) {
                 layoutChooser.setVisible(false);
-                clientController.initConnection((String) layoutChooser.getSelectedItem());
+                clientController.init((String) layoutChooser.getSelectedItem());
                 searchButton.setText("CANCEL");
                 searchButton.setBackground(Color.red);
-                readyButton.setEnabled(true);
                 searching = true;
             } else {
                 clientController.closeConnection();

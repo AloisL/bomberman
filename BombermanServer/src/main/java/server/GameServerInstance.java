@@ -29,6 +29,7 @@ public class GameServerInstance implements Runnable, Observer {
     volatile boolean isReady;
     volatile boolean isWaiting;
     boolean hasLost;
+    String token;
 
     GameServerInstance(GameServer gameServer, Socket socket) {
         this.gameServer = gameServer;
@@ -44,6 +45,8 @@ public class GameServerInstance implements Runnable, Observer {
             output = new ObjectOutputStream(socket.getOutputStream());
             input = new ObjectInputStream(socket.getInputStream());
 
+            verifyConnection();
+
             initGame();
             gameLoop();
 
@@ -54,6 +57,11 @@ public class GameServerInstance implements Runnable, Observer {
             bombermanGame.removeInstanceLeftovers(this);
             log.error(e.getMessage(), e);
         }
+    }
+
+    private void verifyConnection() throws IOException, ClassNotFoundException {
+        token = (String) input.readObject();
+        //TODO Vérification token pas déjà connecté
     }
 
     private void initGame() throws IOException, ClassNotFoundException, InterruptedException {

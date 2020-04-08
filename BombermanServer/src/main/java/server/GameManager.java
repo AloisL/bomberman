@@ -13,6 +13,13 @@ public class GameManager {
 
     static ArrayList<BombermanGame> onlineGames = new ArrayList<>();
 
+    /**
+     * En fonction du layout choisi:
+     * Cherche une partie en attente de démarrage non pleine ou créer une nouvelle partie
+     *
+     * @param layout
+     * @return
+     */
     public static BombermanGame findOrCreateGame(String layout) {
         log.debug("Online games count: " + onlineGames.size());
         for (BombermanGame onlineGame : onlineGames) {
@@ -26,7 +33,13 @@ public class GameManager {
         return newBombermanGame;
     }
 
+    /**
+     * Retourne le nombre max de joueurx en fonction de la carte
+     * @param layout
+     * @return
+     */
     private static int getMaxPlayers(String layout) {
+        // TODO: Compter le nombre de 'B' par layout pour obtenir le nombre de max de joueurs de manière automatique
         if (layout.equals("alone.lay")) return 1;
         else if (layout.equals("arene.lay")) return 10;
         else if (layout.equals("exemple.lay")) return 3;
@@ -38,6 +51,11 @@ public class GameManager {
         else return 0;
     }
 
+    /**
+     * Démarre la partie si et seulement si le nombre de joueurs max est atteint et les joueurs sont tous prêts
+     * @param bombermanGame
+     * @throws IOException
+     */
     public static void startIfPossible(BombermanGame bombermanGame) throws IOException {
         int maxPlayers = bombermanGame.maxPlayers;
         log.debug("Max player count: " + maxPlayers);
@@ -63,6 +81,10 @@ public class GameManager {
         }
     }
 
+    /**
+     * Supprimer de la liste des parties en cours la partie passée en paramètre
+     * @param bombermanGame
+     */
     public static void closeGame(BombermanGame bombermanGame) {
         if (onlineGames.contains(bombermanGame))
             onlineGames.remove(bombermanGame);

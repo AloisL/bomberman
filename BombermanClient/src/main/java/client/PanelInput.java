@@ -56,14 +56,17 @@ public class PanelInput extends JPanel {
     }
 
     public void preGameMode() {
-        clientView.setSize(new Dimension(500, 200));
+        clientView.setSize(new Dimension(500, 220));
         panelInputPreGame.ready = false;
         panelInputPreGame.layoutChooser.setVisible(true);
         panelInputPreGame.searchButton.setText("SEARCH");
         panelInputPreGame.searchButton.setBackground(new ColorUIResource(238, 238, 238));
         panelInputPreGame.searchButton.setEnabled(true);
-        panelInputPreGame.readyButton.setBackground(new ColorUIResource(238, 238, 238));
         panelInputPreGame.readyButton.setEnabled(false);
+        panelInputPreGame.searching = false;
+        panelInputPreGame.readyButton.setBackground(new ColorUIResource(238, 238, 238));
+
+
         if (getComponentCount() > 1)
             remove(1);
         GridBagConstraints gc = new GridBagConstraints();
