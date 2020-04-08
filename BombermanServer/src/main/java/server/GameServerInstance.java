@@ -19,6 +19,8 @@ public class GameServerInstance implements Runnable, Observer {
 
     final static Logger log = (Logger) LogManager.getLogger(GameServerInstance.class);
     public BombermanAgent bombermanAgent = null;
+    public boolean hasLost;
+    public String username;
     GameServer gameServer;
     Socket socket;
     ObjectInputStream input;
@@ -27,8 +29,6 @@ public class GameServerInstance implements Runnable, Observer {
     volatile boolean isRunning;
     volatile boolean isReady;
     volatile boolean isWaiting;
-    boolean hasLost;
-    String token;
 
     GameServerInstance(GameServer gameServer, Socket socket) {
         this.gameServer = gameServer;
@@ -53,14 +53,15 @@ public class GameServerInstance implements Runnable, Observer {
             socket.close();
             log.debug("Instance terminated");
         } catch (Exception e) {
+            hasLost = true;
             bombermanGame.removeInstanceLeftovers(this);
             log.error(e.getMessage(), e);
         }
     }
 
     private void verifyConnection() throws IOException, ClassNotFoundException {
-        token = (String) input.readObject();
-        //TODO Vérification token pas déjà connecté
+        username = (String) input.readObject();
+        //TODO Vérification utilisateur pas déjà conencté
     }
 
     private void initGame() throws IOException, ClassNotFoundException, InterruptedException {
@@ -146,7 +147,7 @@ public class GameServerInstance implements Runnable, Observer {
     public void updateInfos() throws IOException {
         int nbVies = bombermanAgent.getNbLifes();
         if (nbVies > 0)
-            output.writeObject("Life count: " + bombermanAgent.getNbLifes() + "/3");
+            output.writeObject(username + "\n" + bombermanAgent.getColor() + "\n" + bombermanAgent.getNbLifes() + "/3");
         else output.writeObject("You are dead");
     }
 }

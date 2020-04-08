@@ -19,7 +19,7 @@ import java.util.Observable;
 public class ClientController extends Observable implements Runnable {
 
     final static Logger log = (Logger) LogManager.getLogger(ClientController.class);
-
+    String token;
     ClientView clientView;
     BombermanDTO bombermanDTO;
     String layout;
@@ -33,7 +33,7 @@ public class ClientController extends Observable implements Runnable {
     ObjectOutputStream output;
     volatile boolean isRunning;
     volatile boolean isWaiting;
-    private String token;
+    private String username;
 
     public ClientController() {
     }
@@ -108,7 +108,7 @@ public class ClientController extends Observable implements Runnable {
         input = new ObjectInputStream(socket.getInputStream());
 
         // Envoi du token de connection au server
-        output.writeObject(token);
+        output.writeObject(username);
 
         // Envoi du layout choisi au server
         output.writeObject(layout);
@@ -216,6 +216,7 @@ public class ClientController extends Observable implements Runnable {
      */
     public String login(String server, String username, String password) {
         this.server = server;
+        this.username = username;
         String url = "http://" + server + ":" + apiPort + "/bomberman/api/login?username=" + username + "&password=" + password;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();

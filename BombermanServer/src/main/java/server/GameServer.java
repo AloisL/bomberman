@@ -14,13 +14,12 @@ import java.util.ArrayList;
 public class GameServer {
 
     final static Logger log = (Logger) LogManager.getLogger(GameServer.class);
-
+    public static String serverToken;
+    public static String server = "127.0.0.1";
+    public static int apiPort = 8080;
     int port;
     ServerSocket serverSocket;
     ArrayList<GameServerInstance> gameServerInstances = new ArrayList<>();
-    public String serverToken;
-    String server = "127.0.0.1";
-    int apiPort = 8080;
     String adminUser = "bomberman";
     String adminPassword = "bomberman";
 

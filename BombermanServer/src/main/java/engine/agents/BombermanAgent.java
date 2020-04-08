@@ -32,7 +32,7 @@ public class BombermanAgent extends AbstractAgent {
     }
 
     public boolean canPlaceBomb() {
-        if (!isSick() && (nbBombPlaced < nbMaxBomb)) {
+        if (!isDead() && !isSick() && (nbBombPlaced < nbMaxBomb)) {
             log.debug("nbBombPlaced = " + nbBombPlaced);
             return true;
         } else return false;

@@ -37,7 +37,7 @@ public class ConsultationCompte {
             if (user != null) userRepository.delete(user);
             model.addAttribute("msg_error", "Compte supprimé");
             model.addAttribute("alert", "alert");
-            return "consultationCompte";
+            return "connect";
         } else {
             Cookie cookieToken = WebUtils.getCookie(request, "session");
             String token = cookieToken.getValue();

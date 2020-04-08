@@ -33,6 +33,10 @@ public class BombermanGame extends Observable implements Runnable {
     public String layout;
     public ArrayList<AbstractAgent> players;
     public int maxPlayers;
+    public Date dateDebut;
+    public Date dateFin;
+    public String winner;
+    public ArrayList<String> loosers = new ArrayList<>();
     private Map map;
     private ActionSystem actionSystem;
     private DamageSystem damageSystem;
@@ -43,10 +47,6 @@ public class BombermanGame extends Observable implements Runnable {
     private ArrayList<InfoItem> items;
     private ArrayList<InfoBomb> bombs;
 
-    public Date dateDebut;
-    public Date dateFin;
-    public String winner;
-
     /**
      * Constructor
      *
@@ -54,7 +54,7 @@ public class BombermanGame extends Observable implements Runnable {
      * @param maxPlayers
      */
     public BombermanGame(String layout, int maxPlayers) {
-        dateDebut=new Date();
+        dateDebut = new Date();
 
         this.layout = layout;
         this.maxPlayers = maxPlayers;
@@ -228,13 +228,17 @@ public class BombermanGame extends Observable implements Runnable {
      * Méthode appelée en fin de jeu
      */
     public void stop() {
-        // TODO : gestion de fin de game terminée.
         isRunning = false;
+        dateFin = new Date();
         setChanged();
         notifyObservers();
         for (GameServerInstance gmi : gameServerInstances) {
+            if (gmi.hasLost == false)
+                winner = gmi.username;
+            else loosers.add(gmi.username);
             gmi.terminate();
         }
+        GameManager.sendStats(this);
         GameManager.closeGame(this);
     }
 
