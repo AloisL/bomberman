@@ -7,4 +7,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     User findByUsername(String login);
 
+    User findUserByCurrentToken(String token);
+
 }

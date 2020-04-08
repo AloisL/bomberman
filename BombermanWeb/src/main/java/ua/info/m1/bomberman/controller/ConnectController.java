@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ua.info.m1.bomberman.model.entities.User;
 import ua.info.m1.bomberman.model.repositories.UserRepository;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.security.SecureRandom;
+import java.util.Base64;
+
 @Controller
 public class ConnectController {
 
@@ -21,18 +26,34 @@ public class ConnectController {
     }
 
     @PostMapping("/bomberman/login")
-    public String login(@RequestParam String username, @RequestParam String password, Model model) {
+    public String login(@RequestParam String username, @RequestParam String password, Model model, HttpServletResponse response) {
         User user = userRepository.findByUsername(username);
         if (user != null && user.getPassword().equals(password)) {
-            userRepository.save(user);
             model.addAttribute("msg_success", "Connexion réussie");
             model.addAttribute("alert", "alert");
+            String token = generateToken();
+            user.setCurrentToken(token);
+            userRepository.save(user);
+            response.addCookie(new Cookie("session", token));
             return "consultationCompte";
         } else {
             model.addAttribute("msg_error", "Identifiants erronées");
             model.addAttribute("alert", "alert");
             return "connect";
         }
+    }
+
+    /**
+     * Génère un token de connection aléatoire sur 24 charactères
+     *
+     * @return random 24 char token
+     */
+    private String generateToken() {
+        SecureRandom secureRandom = new SecureRandom();
+        Base64.Encoder base64Encoder = Base64.getUrlEncoder();
+        byte[] randomBytes = new byte[24];
+        secureRandom.nextBytes(randomBytes);
+        return base64Encoder.encodeToString(randomBytes);
     }
 
 }

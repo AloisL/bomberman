@@ -11,22 +11,22 @@
 <link href="./css/connect.css" rel="stylesheet">
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/bomberman/consulteCompte">Compte</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="/bomberman/leaderboard">Leaderboard <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/bomberman/historique">Historique</a>
-      </li>
-    </ul>
-  </div>
+    <a class="navbar-brand" href="/bomberman/consulteCompte">Compte</a>
+    <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+            data-target="#navbarNav" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/bomberman/leaderboard">Leaderboard <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/bomberman/historique">Historique</a>
+            </li>
+        </ul>
+    </div>
 </nav>
-
 
 
 <div id="register">
@@ -35,7 +35,7 @@
              id="login-row">
             <div class="col-md-6" id="login-column">
                 <div class="col-md-12" id="login-box">
-                    <form action="/bomberman/consultation" class="form" id="login-form" method="post">
+                    <form action="/bomberman/gestionCompte" class="form" id="login-form" method="post">
 
                         </br> </br> </br>
                         <h3 class="text-center text-info">Consultation du compte :</h3>
@@ -64,29 +64,28 @@
                                 class="form-control" id="mail" name="mail" type="email">
                         </div>
                         <div class="form-group">
-                            <br> <input class="btn btn-info btn-md" name="submit"
+                            <br> <input class="btn btn-info btn-md" name="action"
                                         type="submit" value="Modifier">
                         </div>
-                    </form>
-                    <form action="/bomberman/supprimer" class="form" id="login-form"
-                          method="post">
-                        <div>
-                            <br> <input class="btn btn-danger" name="submit"
-                                        onClick='ConfirmerSupprimer()' type="submit"
-                                        value="Supprimer Compte">
-                            <script language='javascript'>
-                                function ConfirmerAge() {
-                                    if (confirm("Confirmez vous vouloir supprimer votre compte?")) {
-                                        formulaire.submit();
-                                    }
+                        <br> <input class="btn btn-danger" name="action"
+                                    onClick='supprimerCompte()' type="submit"
+                                    value="Supprimer">
+                        <script language='javascript'>
+                            function supprimerCompte() {
+                                if (confirm("Confirmez vous vouloir supprimer votre compte?")) {
+                                    var form = document.getElementById("login-form")
+                                    form.submit();
                                 }
-                            </script>
-                        </div>
+                            }
+                        </script>
                     </form>
+
                 </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 </div>
 </body>
 </html>

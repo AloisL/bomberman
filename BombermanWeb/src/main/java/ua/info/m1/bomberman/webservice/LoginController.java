@@ -52,4 +52,5 @@ public class LoginController {
         secureRandom.nextBytes(randomBytes);
         return base64Encoder.encodeToString(randomBytes);
     }
+
 }
