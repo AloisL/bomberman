@@ -31,20 +31,20 @@ public class HistoriqueController {
         String token = cookieToken.getValue();
         User user = userRepository.findUserByCurrentToken(token);
         if (user != null) { 
-        	//Long idLong = userRepository.findByUsername("Tom").getId();
+        	Long idLong = userRepository.findByUsername("Tom").getId();
         	
         	HistoriqueGame g1= new HistoriqueGame();
         	g1.setVictoire("true");
         	g1.setDateGame("02/04/2020");
-        	//g1.setIdUser(idLong); 
+        	g1.setIdUser(idLong); 
         	HistoriqueGame g2= new HistoriqueGame();
         	g2.setVictoire("false");
         	g2.setDateGame("04/04/2020");
-        	//g2.setIdUser(idLong); 
+        	g2.setIdUser(idLong); 
         	HistoriqueGame g3= new HistoriqueGame();
         	g3.setVictoire("true");
         	g3.setDateGame("06/04/2020");
-        	//g3.setIdUser(idLong); 
+        	g3.setIdUser(idLong); 
         	historiqueGameRepository.save(g1);
         	historiqueGameRepository.save(g2);
         	historiqueGameRepository.save(g3);
