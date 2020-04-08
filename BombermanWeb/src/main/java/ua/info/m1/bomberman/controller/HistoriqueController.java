@@ -32,16 +32,19 @@ public class HistoriqueController {
             Long idLong = userRepository.findByUsername("Tom").getId();
 
             HistoriqueGame g1 = new HistoriqueGame();
-            g1.setVictoire("true");
-            g1.setDateFin("02/04/2020");
+            g1.setVictoire("victoire");
+            g1.setDateDebut("02042020");
+            g1.setDateFin("02042020");
             g1.setIdUser(idLong);
             HistoriqueGame g2 = new HistoriqueGame();
-            g2.setVictoire("false");
-            g2.setDateFin("04/04/2020");
+            g2.setVictoire("defaite");
+            g2.setDateDebut("04042020");
+            g2.setDateFin("04042020");
             g2.setIdUser(idLong);
             HistoriqueGame g3 = new HistoriqueGame();
-            g3.setVictoire("true");
-            g3.setDateFin("06/04/2020");
+            g3.setVictoire("defaite");
+            g3.setDateDebut("06042020");
+            g3.setDateFin("06042020");
             g3.setIdUser(idLong);
             historiqueGameRepository.save(g1);
             historiqueGameRepository.save(g2);

@@ -57,11 +57,11 @@
 		</thead>
 		<tbody>
 			<tr th:each="game: ${games}">
-				<td>
+				
 				<td th:text="${game.getVictoire()}"/> 
 				
-					</td>
-				<td th:text="${game.getDategame()}" />
+					
+				<td th:text="${game.getDateFin()}" />
 			</tr>
 			
 			<tr>
