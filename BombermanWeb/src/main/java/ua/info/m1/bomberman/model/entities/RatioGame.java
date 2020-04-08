@@ -24,8 +24,16 @@ public class RatioGame {
     public Long getIdUser() {
         return IdUser;
     }
+    
+    
 
-    public Long getNbvictoire() {
+    public void setIdUser(Long idUser) {
+		IdUser = idUser;
+	}
+
+
+
+	public Long getNbvictoire() {
         return nbvictoire;
     }
 
