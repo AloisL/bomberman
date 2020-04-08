@@ -1,5 +1,8 @@
 package server;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,10 +18,19 @@ public class GameServer {
     int port;
     ServerSocket serverSocket;
     ArrayList<GameServerInstance> gameServerInstances = new ArrayList<>();
+    public String serverToken;
+    String server = "127.0.0.1";
+    int apiPort = 8080;
+    String adminUser = "bomberman";
+    String adminPassword = "bomberman";
 
     public GameServer(int port) {
         this.port = port;
-        start();
+        serverToken = login(adminUser, adminPassword);
+        if (serverToken != null)
+            start();
+        else
+            log.error("Server stopped, api connection failed");
     }
 
     private void start() {
@@ -39,6 +51,31 @@ public class GameServer {
             log.info("GameServer ERROR" + e.getMessage());
         }
 
+    }
+
+    /**
+     * @param username
+     * @param password
+     * @return token de connexion
+     */
+    public String login(String username, String password) {
+        String token;
+        String url = "http://" + server + ":" + apiPort + "/bomberman/api/login?username=" + username + "&password=" + password;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+        try (Response response = client.newCall(request).execute()) {
+            int responseCode = response.code();
+            token = response.body().string();
+            log.debug("token --> " + token);
+            if (!token.equals("") && responseCode == 200) {
+                log.debug("Connection successful");
+                return token;
+            }
+            log.error("Connection failed, try again");
+        } catch (IOException e) {
+            log.error(e.getStackTrace(), e);
+        }
+        return null;
     }
 
 }
