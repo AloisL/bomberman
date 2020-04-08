@@ -1,54 +1,61 @@
 package ua.info.m1.bomberman.model.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Entity
 public class HistoriqueGame {
-	
-	@Id
+
+    @Id
     @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
+    @Column(name = "id")
     private Long id;
-	
-	@NotNull
-	@Column(name="iduser")
+
+    @NotNull
+    @Column(name = "iduser")
     private Long IdUser;
-	
-	@Column(name="victoire")
-	private String victoire;
-	
-	@Column(name="date")
-	private String dateGame;
 
-	public Long getIdUser() {
-		return IdUser;
-	}
+    @Column(name = "victoire")
+    private String victoire;
 
-	public void setIdUser(Long idUser) {
-		IdUser = idUser;
-	}
+    @Column(name = "datedebut")
+    private Date dateDebut;
 
-	public String getVictoire() {
-		return victoire;
-	}
+    @Column(name = "datedebut")
+    private Date dateFin;
 
-	public void setNbvictoire(String victoire) {
-		this.victoire = victoire;
-	}
+    public Long getIdUser() {
+        return IdUser;
+    }
 
-	public String getDateGame() {
-		return dateGame;
-	}
+    public void setIdUser(Long idUser) {
+        IdUser = idUser;
+    }
 
-	public void setDateGame(String dateGame) {
-		this.dateGame = dateGame;
-	}
-	
-	
+    public String getVictoire() {
+        return victoire;
+    }
+
+    public void setNbvictoire(String victoire) {
+        this.victoire = victoire;
+    }
+
+    public Date getDateDebut() {
+        return dateDebut;
+    }
+
+    public void setDateGame(String dateGame) {
+        this.dateDebut = dateDebut;
+    }
+
+    public Date getDateFin() {
+        return dateFin;
+    }
+
+    public void setDateFin(String dateGame) {
+        this.dateFin = dateFin;
+    }
+
 }
