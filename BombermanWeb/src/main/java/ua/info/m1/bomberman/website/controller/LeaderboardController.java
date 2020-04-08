@@ -19,6 +19,7 @@ import ua.info.m1.bomberman.repositories.UserRepository;
 @Controller
 public class LeaderboardController {
 
+	
 	@Autowired
     private RatioGameRepository ratioGameRepository;
 	

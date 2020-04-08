@@ -14,9 +14,14 @@ public class RegisterController {
 
     @Autowired
     private UserRepository userRepository;
-
+    
     @GetMapping("/bomberman/register")
     public String home() {
+    	User tomUser = new User();
+    	tomUser.setUsername("Tom");
+        tomUser.setPassword("mdp");
+        tomUser.setEmail("tom@gmail.com");
+    	userRepository.save(tomUser);
         return "register";
     }
 
