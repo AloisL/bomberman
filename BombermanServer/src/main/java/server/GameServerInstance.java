@@ -23,7 +23,6 @@ public class GameServerInstance implements Runnable, Observer {
     Socket socket;
     ObjectInputStream input;
     ObjectOutputStream output;
-    User user;
     BombermanGame bombermanGame;
     volatile boolean isRunning;
     volatile boolean isReady;
