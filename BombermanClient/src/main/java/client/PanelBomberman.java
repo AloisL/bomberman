@@ -13,7 +13,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -71,19 +70,16 @@ public class PanelBomberman extends JPanel {
 
             for (int y = 0; y < taille_y; y++) {
                 if (walls[x][y]) {
-
                     try {
-                        Image img = ImageIO.read(new File("./image/wall.png"));
+                        Image img = ImageIO.read(getClass().getResourceAsStream("/image/wall.png"));
                         g.drawImage(img, (int) position_x, (int) position_y, (int) stepx, (int) stepy, this);
-
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else if (breakable_walls[x][y]) {
 
                     try {
-                        Image img = ImageIO.read(new File("./image/brique_2.png"));
+                        Image img = ImageIO.read(getClass().getResource("/image/brique_2.png"));
                         g.drawImage(img, (int) position_x, (int) position_y, (int) stepx, (int) stepy, this);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -91,7 +87,7 @@ public class PanelBomberman extends JPanel {
 
                 } else {
                     try {
-                        Image img = ImageIO.read(new File("./image/grass.png"));
+                        Image img = ImageIO.read(getClass().getResource("/image/grass.png"));
                         g.drawImage(img, (int) position_x, (int) position_y, (int) stepx, (int) stepy, this);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -151,9 +147,9 @@ public class PanelBomberman extends JPanel {
 
         try {
             if (infoAgent.getType() == 'R') {
-                img = ImageIO.read(new File("./image/" + infoAgent.getType() + direction + cpt % 2 + ".png"));
+                img = ImageIO.read(getClass().getResource("/image/" + infoAgent.getType() + direction + cpt % 2 + ".png"));
             } else {
-                img = ImageIO.read(new File("./image/" + infoAgent.getType() + direction + cpt % 3 + ".png"));
+                img = ImageIO.read(getClass().getResource("/image/" + infoAgent.getType() + direction + cpt % 3 + ".png"));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -218,7 +214,7 @@ public class PanelBomberman extends JPanel {
 
         if (item.getType() == ItemType.FIRE_UP) {
             try {
-                Image img = ImageIO.read(new File("./image/Item_FireUp.png"));
+                Image img = ImageIO.read(getClass().getResource("/image/Item_FireUp.png"));
                 g.drawImage(img, (int) pos_x, (int) pos_y, (int) stepx, (int) stepy, this);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -226,7 +222,7 @@ public class PanelBomberman extends JPanel {
         }
         if (item.getType() == ItemType.FIRE_DOWN) {
             try {
-                Image img = ImageIO.read(new File("./image/Item_FireDown.png"));
+                Image img = ImageIO.read(getClass().getResource("/image/Item_FireDown.png"));
                 g.drawImage(img, (int) pos_x, (int) pos_y, (int) stepx, (int) stepy, this);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -234,7 +230,7 @@ public class PanelBomberman extends JPanel {
         }
         if (item.getType() == ItemType.BOMB_UP) {
             try {
-                Image img = ImageIO.read(new File("./image/Item_BombUp.png"));
+                Image img = ImageIO.read(getClass().getResource("/image/Item_BombUp.png"));
                 g.drawImage(img, (int) pos_x, (int) pos_y, (int) stepx, (int) stepy, this);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -242,7 +238,7 @@ public class PanelBomberman extends JPanel {
         }
         if (item.getType() == ItemType.BOMB_DOWN) {
             try {
-                Image img = ImageIO.read(new File("./image/Item_BombDown.png"));
+                Image img = ImageIO.read(getClass().getResource("/image/Item_BombDown.png"));
                 g.drawImage(img, (int) pos_x, (int) pos_y, (int) stepx, (int) stepy, this);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -250,7 +246,7 @@ public class PanelBomberman extends JPanel {
         }
         if (item.getType() == ItemType.FIRE_SUIT) {
             try {
-                Image img = ImageIO.read(new File("./image/Item_FireSuit.png"));
+                Image img = ImageIO.read(getClass().getResource("/image/Item_FireSuit.png"));
                 g.drawImage(img, (int) pos_x, (int) pos_y, (int) stepx, (int) stepy, this);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -258,7 +254,7 @@ public class PanelBomberman extends JPanel {
         }
         if (item.getType() == ItemType.SKULL) {
             try {
-                Image img = ImageIO.read(new File("./image/Item_Skull.png"));
+                Image img = ImageIO.read(getClass().getResource("/image/Item_Skull.png"));
                 g.drawImage(img, (int) pos_x, (int) pos_y, (int) stepx, (int) stepy, this);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -282,7 +278,7 @@ public class PanelBomberman extends JPanel {
         if (bomb.getStateBomb() == StateBomb.Step1) {
 
             try {
-                Image img = ImageIO.read(new File("./image/Bomb_0.png"));
+                Image img = ImageIO.read(getClass().getResource("/image/Bomb_0.png"));
                 g.drawImage(img, (int) pos_x, (int) pos_y, (int) stepx, (int) stepy, this);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -290,7 +286,7 @@ public class PanelBomberman extends JPanel {
         } else if (bomb.getStateBomb() == StateBomb.Step2) {
 
             try {
-                Image img = ImageIO.read(new File("./image/Bomb_1_jaune.png"));
+                Image img = ImageIO.read(getClass().getResource("/image/Bomb_1_jaune.png"));
                 g.drawImage(img, (int) pos_x, (int) pos_y, (int) stepx, (int) stepy, this);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -298,7 +294,7 @@ public class PanelBomberman extends JPanel {
         } else if (bomb.getStateBomb() == StateBomb.Step3) {
 
             try {
-                Image img = ImageIO.read(new File("./image/Bomb_2_rouge.png"));
+                Image img = ImageIO.read(getClass().getResource("/image/Bomb_2_rouge.png"));
                 g.drawImage(img, (int) pos_x, (int) pos_y, (int) stepx, (int) stepy, this);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -307,7 +303,7 @@ public class PanelBomberman extends JPanel {
         } else if (bomb.getStateBomb() == StateBomb.Boom) {
 
             try {
-                Image img = ImageIO.read(new File("./image/Range_CENTRE.png"));
+                Image img = ImageIO.read(getClass().getResource(".image/Range_CENTRE.png"));
                 g.drawImage(img, (int) pos_x, (int) pos_y, (int) stepx, (int) stepy, this);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -320,14 +316,14 @@ public class PanelBomberman extends JPanel {
                 if (py + i < bombermanDTO.getSizeY()) {
                     if (i == range) {
                         try {
-                            Image img = ImageIO.read(new File("./image/Range_SOUTH_Fin.png"));
+                            Image img = ImageIO.read(getClass().getResource("/image/Range_SOUTH_Fin.png"));
                             g.drawImage(img, (int) pos_x, (int) (pos_y + (stepy * i)), (int) stepx, (int) stepy, this);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     } else {
                         try {
-                            Image img = ImageIO.read(new File("./image/Range_SOUTH.png"));
+                            Image img = ImageIO.read(getClass().getResource("/image/Range_SOUTH.png"));
                             g.drawImage(img, (int) pos_x, (int) (pos_y + (stepy * i)), (int) stepx, (int) stepy, this);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -338,14 +334,14 @@ public class PanelBomberman extends JPanel {
                 if (py - i >= 0) {
                     if (i == range) {
                         try {
-                            Image img = ImageIO.read(new File("./image/Range_NORTH_Fin.png"));
+                            Image img = ImageIO.read(getClass().getResource("/image/Range_NORTH_Fin.png"));
                             g.drawImage(img, (int) pos_x, (int) (pos_y - (stepy * i)), (int) stepx, (int) stepy, this);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     } else {
                         try {
-                            Image img = ImageIO.read(new File("./image/Range_NORTH.png"));
+                            Image img = ImageIO.read(getClass().getResource("/image/Range_NORTH.png"));
                             g.drawImage(img, (int) pos_x, (int) (pos_y - (stepy * i)), (int) stepx, (int) stepy, this);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -356,7 +352,7 @@ public class PanelBomberman extends JPanel {
                 if (px + i < bombermanDTO.getSizeX()) {
                     if (i == range) {
                         try {
-                            Image img = ImageIO.read(new File("./image/Range_EAST_Fin.png"));
+                            Image img = ImageIO.read(getClass().getResource("/image/Range_EAST_Fin.png"));
                             g.drawImage(img, (int) (pos_x + (stepy * i)), (int) (pos_y), (int) stepx, (int) stepy,
                                     this);
                         } catch (IOException e) {
@@ -364,7 +360,7 @@ public class PanelBomberman extends JPanel {
                         }
                     } else {
                         try {
-                            Image img = ImageIO.read(new File("./image/Range_EAST.png"));
+                            Image img = ImageIO.read(getClass().getResource("/image/Range_EAST.png"));
                             g.drawImage(img, (int) (pos_x + (stepy * i)), (int) (pos_y), (int) stepx, (int) stepy,
                                     this);
                         } catch (IOException e) {
@@ -376,7 +372,7 @@ public class PanelBomberman extends JPanel {
                 if (px - i >= 0) {
                     if (i == range) {
                         try {
-                            Image img = ImageIO.read(new File("./image/Range_WEST_Fin.png"));
+                            Image img = ImageIO.read(getClass().getResource("/image/Range_WEST_Fin.png"));
                             g.drawImage(img, (int) (pos_x - (stepy * i)), (int) (pos_y), (int) stepx, (int) stepy,
                                     this);
                         } catch (IOException e) {
@@ -384,7 +380,7 @@ public class PanelBomberman extends JPanel {
                         }
                     } else {
                         try {
-                            Image img = ImageIO.read(new File("./image/Range_WEST.png"));
+                            Image img = ImageIO.read(getClass().getResource("/image/Range_WEST.png"));
                             g.drawImage(img, (int) (pos_x - (stepy * i)), (int) (pos_y), (int) stepx, (int) stepy,
                                     this);
                         } catch (IOException e) {

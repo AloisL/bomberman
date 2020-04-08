@@ -4,7 +4,10 @@ import common.enums.AgentAction;
 import common.enums.ColorAgent;
 import common.infotypes.InfoAgent;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -27,7 +30,7 @@ public class Map implements Serializable {
     public Map(String filename) {
         this.filename = filename;
         try {
-            InputStream flux = new FileInputStream(filename);
+            InputStream flux = getClass().getResourceAsStream(filename);
             InputStreamReader lecture = new InputStreamReader(flux);
             BufferedReader tampon = new BufferedReader(lecture);
 
@@ -52,7 +55,7 @@ public class Map implements Serializable {
             walls = new boolean[size_x][size_y];
             breakableWalls = new boolean[size_x][size_y];
 
-            flux = new FileInputStream(filename);
+            flux = getClass().getResourceAsStream(filename);
             lecture = new InputStreamReader(flux);
             tampon = new BufferedReader(lecture);
             int y = 0;

@@ -78,7 +78,7 @@ public class BombermanGame extends Observable implements Runnable {
      * @return
      */
     private Map getMapFromLayout(String layout) {
-        String layoutPath = "src/main/resources/layouts/" + layout;
+        String layoutPath = "/layouts/" + layout;
         try {
             map = new Map(layoutPath);
         } catch (Exception e) {

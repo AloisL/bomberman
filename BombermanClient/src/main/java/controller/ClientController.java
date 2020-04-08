@@ -159,7 +159,6 @@ public class ClientController extends Observable implements Runnable {
                     clientView.addPanelBomberman(panelBomberman);
                     log.debug(bombermanDTO.toString());
                     clientView.repaint();
-
                 }
                 log.debug(bombermanDTO.toString());
                 setChanged();
