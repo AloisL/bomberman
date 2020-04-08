@@ -13,13 +13,14 @@ public class HistoriqueGame {
 	@Id
     @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="id")
     private Long id;
 	
 	@NotNull
-    @Column(unique = true)
+	@Column(name="iduser")
     private Long IdUser;
 	
-	private Long nbvictoire;
+	private boolean victoire;
 	
 	private String dateGame;
 
@@ -31,12 +32,12 @@ public class HistoriqueGame {
 		IdUser = idUser;
 	}
 
-	public Long getNbvictoire() {
-		return nbvictoire;
+	public boolean getVictoire() {
+		return victoire;
 	}
 
-	public void setNbvictoire(Long nbvictoire) {
-		this.nbvictoire = nbvictoire;
+	public void setNbvictoire(boolean victoire) {
+		this.victoire = victoire;
 	}
 
 	public String getDateGame() {
