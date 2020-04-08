@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class RatioGame {
+public class RatioGame  {
 
 	@Id
     @NotNull
@@ -44,6 +44,8 @@ public class RatioGame {
 	public void setNbdefaite(Long nbdefaite) {
 		this.nbdefaite = nbdefaite;
 	}
+
+
 	
 	
 	

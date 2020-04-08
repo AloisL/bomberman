@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <link
-        href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        id="bootstrap-css" rel="stylesheet">
+	href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	id="bootstrap-css" rel="stylesheet">
 <script
-        src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script
-        src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -15,36 +15,49 @@
 
 
 
-<table class="table table-striped table-dark">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">UserName</th>
-      <th scope="col">Mail</th>
-      <th scope="col">Victoire</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto@gmail.com</td>
-      <td>100</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton@gmail.com</td>
-      <td>70</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the_Bird@gmail.com</td>
-      <td>50</td>
-    </tr>
-  </tbody>
-</table>
+	<table class="table table-striped table-dark">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">UserName</th>
+				<th scope="col">Mail</th>
+				<th scope="col">Victoire</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th scope="row">1</th>
+				<td>Mark</td>
+				<td>Otto@gmail.com</td>
+				<td>100</td>
+			</tr>
+			<tr>
+				<th scope="row">2</th>
+				<td>Jacob</td>
+				<td>Thornton@gmail.com</td>
+				<td>70</td>
+			</tr>
+			<tr>
+				<th scope="row">3</th>
+				<td>Larry</td>
+				<td>the_Bird@gmail.com</td>
+				<td>50</td>
+			</tr>
+		</tbody>
+	</table>
 
+	<form action="/bomberman/leaderboard" class="form" id="leaderboard-form"
+		method="post">
+		<div class="btn-group">
+			<button type="button" class="btn btn-info dropdown-toggle"
+				data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Action</button>
+			<div class="dropdown-menu">
+				<a class="dropdown-item">Victoir <span class="oi" data-glyph="arrow-thick-bottom"></span> </a> 
+				<a class="dropdown-item">Défaite</a>
+				<a class="dropdown-item">User</a>
+			</div>
+		</div>
+		</from>
 </body>
 </html>
