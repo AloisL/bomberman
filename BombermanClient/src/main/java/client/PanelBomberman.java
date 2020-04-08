@@ -303,7 +303,7 @@ public class PanelBomberman extends JPanel {
         } else if (bomb.getStateBomb() == StateBomb.Boom) {
 
             try {
-                Image img = ImageIO.read(getClass().getResource(".image/Range_CENTRE.png"));
+                Image img = ImageIO.read(getClass().getResource("/image/Range_CENTRE.png"));
                 g.drawImage(img, (int) pos_x, (int) pos_y, (int) stepx, (int) stepy, this);
             } catch (IOException e) {
                 e.printStackTrace();

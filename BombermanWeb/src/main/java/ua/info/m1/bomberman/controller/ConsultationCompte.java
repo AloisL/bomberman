@@ -20,18 +20,18 @@ public class ConsultationCompte {
     private UserRepository userRepository;
 
     @GetMapping("/bomberman/consulteCompte")
-    public String consultation(HttpServletRequest request,Model model) {
+    public String consultation(HttpServletRequest request, Model model) {
         Cookie cookieToken = WebUtils.getCookie(request, "session");
         String token = cookieToken.getValue();
         User user = userRepository.findUserByCurrentToken(token);
         if (user != null) {
-        	model.addAttribute("user",user);
-        	return "consultationCompte";}
-        else return "connect";
+            model.addAttribute("user", user);
+            return "consultationCompte";
+        } else return "connect";
     }
 
     @PostMapping(value = "/bomberman/gestionCompte")
-    public String supprimer(@RequestParam String action, @RequestParam String username, @RequestParam String password, Model model, HttpServletRequest request) {
+    public String supprimer(@RequestParam String action, @RequestParam String password, @RequestParam String passwordvalid, @RequestParam String mail, Model model, HttpServletRequest request) {
         if (action.equals("Supprimer")) {
             Cookie cookieToken = WebUtils.getCookie(request, "session");
             String token = cookieToken.getValue();
@@ -44,7 +44,18 @@ public class ConsultationCompte {
             Cookie cookieToken = WebUtils.getCookie(request, "session");
             String token = cookieToken.getValue();
             User user = userRepository.findUserByCurrentToken(token);
-            //if (user != null) userRepository.delete(user);
+            if (user != null) {
+                if (!password.isEmpty() && password.equals(passwordvalid))
+                    user.setPassword(password);
+                else {
+                    model.addAttribute("msg_error", "Les mots de passe ne coincident pas.");
+                    model.addAttribute("alert", "alert");
+                    return "consultationCompte";
+                }
+                if (!mail.isEmpty())
+                    user.setEmail(mail);
+            }
+            userRepository.save(user);
             model.addAttribute("msg_success", "Compte modifié");
             model.addAttribute("alert", "alert");
             return "consultationCompte";
