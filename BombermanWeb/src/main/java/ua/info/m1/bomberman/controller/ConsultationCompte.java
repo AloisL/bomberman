@@ -44,8 +44,8 @@ public class ConsultationCompte {
             Cookie cookieToken = WebUtils.getCookie(request, "session");
             String token = cookieToken.getValue();
             User user = userRepository.findUserByCurrentToken(token);
+            model.addAttribute("user", user);
             if (user != null) {
-
                 if (!username.isEmpty())
                     if (userRepository.findByUsername(username) == null)
                         user.setUsername(username);

@@ -1,10 +1,6 @@
 # Projet bomberman
 
 # Setup BDD:
-
-MYSQL_USERNAME=root	#user mysql
-PASSWORD_USERNAME=root	#password mysql
-
 MYSQL_USER=bomberman
 MYSQL_PASSWORD=bomberman
 DATABASE=bomberman_db
@@ -14,11 +10,14 @@ mysql -u$MYSQL_USERNAME -p$PASSWORD_USERNAME -e "CREATE USER '$MYSQL_USER'@'%' I
 mysql -u$MYSQL_USERNAME -p$PASSWORD_USERNAME -e "GRANT ALL ON $DATABASE.* TO '$MYSQL_USER'@'%'"
 
 # Configuration et lancement
+Ouverture des ports:
 Le serveur web utilise le port 8080 (non paramétrable #todo)
 Le serveur de jeu utilise le port 8090 (non paramétrable #todo)
 
-Les deux serveurs (BombermanWeb & BombermanServer) doivent pour le moment êtres sur la même ip. (#todo possibilité de configurer ce point)
+Les deux serveurs (BombermanWeb & BombermanServer) doivent pour le moment être sur la même ip. (#todo possibilité de configurer ce point)
 
+Démarrage du serveur web:
+java -jar BombermanWeb.jar
 Le site web est accessible à l'adresse: http://[ip_serveur_web_sans_port]:8080/bomberman
 
 Il est nécessaire de créer un utilisateur "bomberman" qui sera l'administrateur du jeu avant de pouvoir lancer le serveur de jeu.

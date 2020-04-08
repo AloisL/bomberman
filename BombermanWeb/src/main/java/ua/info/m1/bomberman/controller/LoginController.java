@@ -36,6 +36,7 @@ public class LoginController {
             String token = generateToken();
             user.setCurrentToken(token);
             userRepository.save(user);
+            model.addAttribute("user", user);
             response.addCookie(new Cookie("session", token));
             return "consultationCompte";
         } else {

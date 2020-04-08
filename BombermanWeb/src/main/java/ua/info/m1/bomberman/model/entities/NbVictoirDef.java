@@ -20,10 +20,10 @@ public class NbVictoirDef {
         if (historiques.size() != 0) {
             for (HistoriqueGame historiqueGame : historiques) {
                 if (id == historiqueGame.getIdUser()) {
-                    if (historiqueGame.getVictoire().equals("victoire"))
-                        victoire += 1;
-                    else
+                    if (historiqueGame.getVictoire().equals("oui")) victoire += 1;
+                    else {
                         defaite += 1;
+                    }
                 }
             }
         }
