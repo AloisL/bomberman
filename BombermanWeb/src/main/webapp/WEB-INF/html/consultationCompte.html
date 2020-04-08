@@ -9,6 +9,10 @@
         src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
 <link href="./css/connect.css" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <title>Bomberman Compte</title>
+</head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/bomberman/consulteCompte">Compte</a>
@@ -63,16 +67,11 @@
                              th:utext="${msg_success}"></div>
                         <div class="form-group">
                             <label class="text-info" for="username">Username:</label> <input
-                                class="form-control" id="username" name="username" type="text">
+                                class="form-control" id="username" name="username" type="text" placeholder=th:utext="${user.getUsername()}">
                         </div>
                         <div class="form-group">
                             <label class="text-info" for="password">Password:</label> <input
                                 class="form-control" id="password" name="password"
-                                type="password">
-                        </div>
-                        <div class="form-group">
-                            <label class="text-info" for="password">Password:</label> <input
-                                class="form-control" id="passwordverif" name="password"
                                 type="password">
                         </div>
                         <div class="form-group">
