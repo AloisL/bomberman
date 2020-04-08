@@ -46,7 +46,7 @@ public class HistoriqueGame {
         return dateDebut;
     }
 
-    public void setDateGame(String dateGame) {
+    public void setDateDebut(Date dateGame) {
         this.dateDebut = dateDebut;
     }
 
@@ -54,7 +54,7 @@ public class HistoriqueGame {
         return dateFin;
     }
 
-    public void setDateFin(String dateGame) {
+    public void setDateFin(Date dateGame) {
         this.dateFin = dateFin;
     }
 
