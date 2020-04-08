@@ -25,6 +25,9 @@ public class User {
     private String currentToken;
 
 
+    public Long getId() {
+		return id;
+	}
     public String getUsername() {
         return username;
     }
