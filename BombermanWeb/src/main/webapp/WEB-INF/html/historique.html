@@ -48,36 +48,42 @@
 </nav>
 
 
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">Victoir/défaite</th>
-        <th scope="col">nombre de kill</th>
-        <th scope="col">Handle</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <th scope="row">1</th>
-        <td>victoire</td>
-        <td>3</td>
-        <td>@mdo</td>
-    </tr>
-    <tr>
-        <th scope="row">2</th>
-        <td>victoire</td>
-        <td>5</td>
-        <td>@fat</td>
-    </tr>
-    <tr>
-        <th scope="row">3</th>
-        <td>défaite</td>
-        <td>1</td>
-        <td>@twitter</td>
-    </tr>
-    </tbody>
-</table>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">Victoir/défaite</th>
+				<th scope="col">Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="game: ${games}">
+				<td>
+				<td th:text="${game.getVictoire()}"/> 
+				
+					</td>
+				<td th:text="${game.getDategame()}" />
+			</tr>
+			
+			<tr>
+
+				<td>victoire</td>
+				<td>3</td>
+
+			</tr>
+			<tr>
+
+				<td>victoire</td>
+				<td>5</td>
+
+			</tr>
+			<tr>
+
+				<td>défaite</td>
+				<td>1</td>
+
+			</tr>
+		</tbody>
+	</table>
 
 
 </body>
