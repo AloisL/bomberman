@@ -5,8 +5,7 @@ import controller.ClientController;
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
-import java.io.File;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class PanelInputPreGame extends JPanel {
 
@@ -34,8 +33,15 @@ public class PanelInputPreGame extends JPanel {
         searchButton = new JButton("SEARCH");
         readyButton = new JButton("READY");
         layoutChooser = new JComboBox<>();
-        String[] layouts = new File("src/main/java/common/layouts").list();
-        Arrays.sort(layouts);
+        ArrayList<String> layouts = new ArrayList<>();
+        layouts.add("alone.lay");
+        layouts.add("arene.lay");
+        layouts.add("exemple.lay");
+        layouts.add("jeu1.lay");
+        layouts.add("jeu_symetrique.lay");
+        layouts.add("niveau1.lay");
+        layouts.add("niveau2.lay");
+        layouts.add("niveau3.lay");
         for (String layout : layouts) layoutChooser.addItem(layout);
     }
 
