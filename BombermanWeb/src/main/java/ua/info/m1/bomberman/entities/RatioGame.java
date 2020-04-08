@@ -1,6 +1,7 @@
 package ua.info.m1.bomberman.entities;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,16 +18,16 @@ public class RatioGame  {
 	
 	@NotNull
     @Column(unique = true)
-    private User user;
+    private Long IdUser;
 	
-	@Column(unique = true)
+	
     private Long nbvictoire;
 	
-	@Column(unique = true)
+	
     private Long nbdefaite;
 
-	public User getUser() {
-		return user;
+	public Long getIdUser() {
+		return IdUser;
 	}
 
 	public Long getNbvictoire() {
