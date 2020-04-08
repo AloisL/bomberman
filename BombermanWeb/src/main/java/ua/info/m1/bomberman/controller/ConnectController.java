@@ -1,4 +1,4 @@
-package ua.info.m1.bomberman.website.controller;
+package ua.info.m1.bomberman.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ua.info.m1.bomberman.entities.User;
-import ua.info.m1.bomberman.repositories.UserRepository;
+import ua.info.m1.bomberman.model.entities.User;
+import ua.info.m1.bomberman.model.repositories.UserRepository;
 
 @Controller
 public class ConnectController {

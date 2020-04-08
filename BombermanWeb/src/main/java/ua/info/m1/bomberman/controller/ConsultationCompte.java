@@ -1,4 +1,4 @@
-package ua.info.m1.bomberman.website.controller;
+package ua.info.m1.bomberman.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,12 +11,12 @@ public class ConsultationCompte {
     public String consultation() {
         return "consultationCompte";
     }
-    
+
     @PostMapping("/bomberman/consulteCompte")
     public String modifier() {
         return "consultationCompte";
     }
-    
+
     @PostMapping("/bomberman/supprimer")
     public String supprimer() {
         return "connect";

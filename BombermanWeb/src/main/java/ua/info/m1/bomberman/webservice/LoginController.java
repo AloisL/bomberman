@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import ua.info.m1.bomberman.entities.User;
-import ua.info.m1.bomberman.repositories.UserRepository;
+import ua.info.m1.bomberman.model.entities.User;
+import ua.info.m1.bomberman.model.repositories.UserRepository;
 
 import java.security.SecureRandom;
 import java.util.Base64;

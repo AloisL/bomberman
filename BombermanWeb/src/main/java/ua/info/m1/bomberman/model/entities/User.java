@@ -1,11 +1,11 @@
-package ua.info.m1.bomberman.entities;
+package ua.info.m1.bomberman.model.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class User {
-	
+
     @Id
     @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
